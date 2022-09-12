@@ -1,0 +1,61 @@
+{
+  "class": {
+    "prefix": ["class"],
+    "body": [
+      "/**",
+      " * @author ${VIM:\\$USER}",
+      " */",
+      "public class ${TM_FILENAME_BASE} {",
+      "$0",
+      "}"
+    ]
+  },
+  "interface": {
+    "prefix": ["interface"],
+    "body": [
+      "/**",
+      " * @author ${VIM:\\$USER}",
+      " */",
+      "public interface ${TM_FILENAME_BASE} {",
+      "$0",
+      "}"
+    ]
+  },
+  "enum": {
+    "prefix": ["enum"],
+    "body": [
+      "/**",
+      " * @author ${VIM:\\$USER}",
+      " */",
+      "public enum ${TM_FILENAME_BASE} {",
+      "$0",
+      "}"
+    ]
+  },
+  "record": {
+    "prefix": ["record"],
+    "body": [
+      "/**",
+      " * @author ${VIM:\\$USER}",
+      " */",
+      "public record ${TM_FILENAME_BASE} {",
+      "$0",
+      "}"
+    ]
+  },
+  "@interface": {
+    "prefix": ["@interface", "annotation"],
+    "body": [
+      "/**",
+      " * @author ${VIM:\\$USER}",
+      " */",
+      "public @interface ${TM_FILENAME_BASE} {",
+      "$0",
+      "}"
+    ]
+  },
+  "log": {
+    "prefix": ["log"],
+    "body": ["private final Logger log = LoggerFactory.getLogger(getClass());"]
+  }
+}
