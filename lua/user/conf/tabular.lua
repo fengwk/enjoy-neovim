@@ -2,8 +2,6 @@
 
 -- :h tabular
 
-
-
 -- vim.cmd([[
 --   command! Tabularize 
 -- ]])

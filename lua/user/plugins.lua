@@ -42,7 +42,9 @@
 
 -- use_rocks: install lua lib
 
-return require("packer").startup(function(use)
+local packer = require "packer"
+
+return packer.startup(function(use)
 
   -- packer can manage itself
   use "wbthomason/packer.nvim"

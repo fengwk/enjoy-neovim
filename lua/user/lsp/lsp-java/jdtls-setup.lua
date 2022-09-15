@@ -8,20 +8,48 @@ local stdpath_config = vim.fn.stdpath("config")
 local stdpath_data = vim.fn.stdpath("data")
 local stdpath_cache = vim.fn.stdpath("cache")
 
+local java_home = os.getenv("JAVA_HOME_17")
+local cp_sp = utils.os_name == "win" and ";" or ":"
+local cp = "." .. cp_sp .. java_home .. "/lib/dt.jar" .. cp_sp .. java_home .. "/lib/tools.jar"
+
+local java = java_home .. "/bin/java"
+local jdtls_home = stdpath_data .. "/mason/packages/jdtls"
+local lombok_jar = jdtls_home .. "/lombok.jar"
+local launcher_jar = vim.fn.glob(jdtls_home .. "/plugins/org.eclipse.equinox.launcher_*.jar")
+local config_dir = jdtls_home .. (utils.os_name == "win" and "/config_win" or "/config_linux")
+
 local M = {}
 
 M.setup = function()
 
-  -- 不同环境使用不同脚本
-  local jdtls_cmd = utils.fs_concat { stdpath_config, "lua", "user", "lsp", "lsp-java", "jdtls-runner" .. (utils.os_name == "win" and ".bat" or ".sh") }
-
   -- 获取工作目录
   local workspace_dir = utils.find_root_dir({ "mvnw", "gradlew", "pom.xml" }) or vim.fn.getcwd()
-  -- 获取工作目录名称
-  local workspace_name = vim.fn.fnamemodify(workspace_dir, ":p:h:t")
+  -- 转义工作目录作为名称
+  local workspace_name = string.gsub(workspace_dir, "/", "__")
+  -- 数据目录
+  local data_dir = stdpath_cache .. "/lsp/jdtls/" .. workspace_name
 
-  -- 配置
+  -- jdtls配置
   local config = {}
+
+  -- jdtls启动命令
+  config.cmd = {
+    java,
+    "-cp", cp,
+    "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+    "-Dosgi.bundles.defaultStartLevel=4",
+    "-Declipse.product=org.eclipse.jdt.ls.core.product",
+    "-Dlog.protocol=true",
+    "-Dlog.level=ALL",
+    "-Xmx2G",
+    "-javaagent:" .. lombok_jar,
+    "-jar", launcher_jar,
+    "-configuration", config_dir,
+    "-data", data_dir,
+    "--add-modules=ALL-SYSTEM",
+    "--add-opens java.base/java.util=ALL-UNNAMED",
+    "--add-opens java.base/java.lang=ALL-UNNAMED",
+  }
 
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
@@ -41,12 +69,12 @@ M.setup = function()
 
   config.capabilities = lsp_common.make_capabilities()
 
-  config.cmd = {
-    jdtls_cmd,
-    stdpath_data,
-    stdpath_cache,
-    workspace_name,
-  }
+  -- config.cmd = {
+  --   jdtls_cmd,
+  --   stdpath_data,
+  --   stdpath_cache,
+  --   workspace_name,
+  -- }
 
   config.root_dir = workspace_dir
 

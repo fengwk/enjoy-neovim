@@ -1,8 +1,10 @@
 -- https://github.com/phaazon/hop.nvim
 
+local hop = require "hop"
+
 -- you can configure Hop the way you like here; see :h hop-config
 -- require("hop").setup({ keys = "etovxqpdygfblzhckisuran" })
-require("hop").setup({ keys = "qwerasdfzxcv" })
+hop.setup({ keys = "qwerasdfzxcv" })
 
 -- see :h hop-extension
 -- place this in one of your configuration file(s)

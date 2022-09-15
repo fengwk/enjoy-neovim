@@ -1,6 +1,8 @@
 -- https://github.com/norcalli/nvim-colorizer.lua
 
-require("colorizer").setup(
+local colorizer = require "colorizer"
+
+colorizer.setup(
   {
     "*",
     css = { names = true },

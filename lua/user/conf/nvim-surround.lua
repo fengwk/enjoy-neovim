@@ -11,4 +11,6 @@
     delete(functi*on calls)     dsf             function calls
 ]]
 
-require("nvim-surround").setup()
+local nvim_surround = require("nvim-surround")
+
+nvim_surround.setup()

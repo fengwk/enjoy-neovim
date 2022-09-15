@@ -1,3 +1,5 @@
+local M = {}
+
 -- os_name当前操作系统的名称：win、wsl、linux
 local os_name, fs_separator
 if vim.fn.has("win32") == 1 then
@@ -65,12 +67,13 @@ end
 
 -- 执行命令并返回输出
 -- @param cmd string 必须，命令内容
-local function exec_cmd (cmd)
-  local f = io.popen(cmd)
+local function exec_cmd(cmd)
+  -- popen到标准输出，因此需将标准错误输出重定向
+  local f = io.popen(cmd .. " 2>&1")
   if f == nil then
     return nil
   end
-  local res = f:read("*a")
+  local res = f:read("*all")
   io.close(f)
   return res
 end
@@ -94,7 +97,7 @@ local function require_conf (conf_name)
   return require("user.conf." .. conf_name)
 end
 
--- 如果v不是table，将其适配为table
+-- 如果v不是table，将其适配为table array
 local function adapt_array(v)
   if v == nil then
     return {}
@@ -110,14 +113,14 @@ local function get_current_filetype()
   return vim.bo.filetype
 end
 
-return {
-  os_name = os_name,
-  fs_separator = fs_separator,
-  fs_concat = fs_concat,
-  find_root_dir = find_root_dir,
-  exec_cmd = exec_cmd,
-  is_tty = is_tty,
-  require_conf = require_conf,
-  adapt_array = adapt_array,
-  get_current_filetype = get_current_filetype,
-}
+M.os_name = os_name
+M.fs_separator = fs_separator
+M.exec_cmd = exec_cmd
+M.fs_concat = fs_concat
+M.find_root_dir = find_root_dir
+M.is_tty = is_tty
+M.require_conf = require_conf
+M.adapt_array = adapt_array
+M.get_current_filetype = get_current_filetype
+
+return M

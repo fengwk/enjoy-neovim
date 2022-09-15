@@ -1,18 +1,20 @@
 -- https://github.com/kyazdani42/nvim-tree.lua
 
+local nvim_tree = require "nvim-tree"
 local utils = require "user.utils"
+
 -- :h nvim-tree-setup
 local config = {}
 
-config.sort_by = "case_sensitive"
+config.sort_by = "case_sensitive" -- 文件按照字符排序，大小写敏感
 config.sync_root_with_cwd = true -- 使root与cwd保持一致
 
 config.view = {
   adaptive_size = true, -- 根据文件名自适应宽度
-  -- number = true,
-  -- relativenumber = true,
+  -- number = true, -- 等效于 set nu
+  -- relativenumber = true, -- 等效于 set rnu
   mappings = {
-    custom_only = true,
+    custom_only = true, -- 仅使用自定义快捷键映射
     list = {
       { key = { "<CR>", "o", "<2-LeftMouse>" }, action = "edit" },
       { key = "<C-e>",                          action = "edit_in_place" },
@@ -69,7 +71,7 @@ config.renderer = {
 }
 
 config.filters = {
-  -- dotfiles = true,
+  -- dotfiles = true, -- 过滤.文件
 }
 
 -- 适配tty
@@ -81,7 +83,7 @@ if utils.is_tty() then
   }
 end
 
-require("nvim-tree").setup(config)
+nvim_tree.setup(config)
 
 -- 展开或关闭NvimTree，如果是展开将定位到文件对应的NvimTree位置
 vim.api.nvim_set_keymap("n", "tt", "<Cmd>NvimTreeFindFileToggle<CR>", { noremap = true, silent = true, desc = "NvimTree Find File Toggle" })

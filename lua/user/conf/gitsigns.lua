@@ -1,7 +1,9 @@
 -- https://github.com/lewis6991/gitsigns.nvim
 
--- 适配tty
+local gitsigns = require "gitsigns"
 local utils = require "user.utils"
+
+-- 适配tty
 if utils.is_tty() then
   return
 end
@@ -28,7 +30,7 @@ config.current_line_blame_opts = {
 config.current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>"
 
 
-require("gitsigns").setup(config)
+gitsigns.setup(config)
 
 -- 打开/关闭责任人
 vim.keymap.set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { noremap = true, silent = true, desc = "Show Git Blame" })

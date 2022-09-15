@@ -5,11 +5,16 @@ vim.g.mapleader = ' '
 -- 历史命令记录条数
 vim.g.history = 200
 
+-- 搜索高亮，默认true
+vim.o.hlsearch = true
+-- 搜索时定位到目标位置，默认true
+vim.o.incsearch = true
+
 -- 背景色：dark、light
 -- vim.o.bg = 'dark'
 -- vim.o.bg = 'light'
 
--- 支持鼠标
+-- 允许鼠标控制光标，nv代表normal和visual
 -- vim.o.mouse = 'nv'
 
 -- 显示行号

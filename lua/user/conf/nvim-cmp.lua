@@ -1,5 +1,7 @@
 -- https://github.com/hrsh7th/nvim-cmp
 
+local cmp = require "cmp"
+local lspkind = require "lspkind"
 local utils = require "user.utils"
 
 local has_words_before = function()
@@ -11,21 +13,26 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
--- nvim-cmp setup
-local cmp = require("cmp")
+-- 安装cmp
 cmp.setup({
+  -- snippets
   snippet = {
     expand = function(args)
+      -- 安装vsnip
       vim.fn["vsnip#anonymous"](args.body)
     end,
   },
+  -- 快捷键映射
   mapping = cmp.mapping.preset.insert({
+    -- 向上滚动补全项文档
     ["<C-k>"] = cmp.mapping.scroll_docs(-4),
+    -- 向下滚动补全项文档
     ["<C-j>"] = cmp.mapping.scroll_docs(4),
+    -- 关闭补全项窗口
     ["<C-e>"] = cmp.mapping.abort(),
-    -- 确认
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
-    -- 向下
+    -- 确认补全项，select如果为true表示没有选项时默认选择第一个，false则不做选择进行换行
+    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+    -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
@@ -37,7 +44,7 @@ cmp.setup({
         fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`.
       end
     end, { "i", "s" }),
-    -- 向上
+    -- 上一个补全项
     ["<S-Tab>"] = cmp.mapping(function()
       if cmp.visible() then
         cmp.select_prev_item()
@@ -46,12 +53,14 @@ cmp.setup({
       end
     end, { "i", "s" }),
   }),
+  -- 窗口样式
   window = {
-    completion = cmp.config.window.bordered(), -- 补全边框
-    documentation = cmp.config.window.bordered(), -- 文档边框
+    completion = cmp.config.window.bordered(), -- 补全窗口边框
+    documentation = cmp.config.window.bordered(), -- 文档窗口边框
   },
+  -- 补全项格式
   formatting = utils.is_tty() and {} or {
-    format = require('lspkind').cmp_format({
+    format = lspkind.cmp_format({
       mode = "symbol_text",
       menu = ({
         nvim_lsp = "[Lsp]",
@@ -62,9 +71,11 @@ cmp.setup({
       })
     }),
   },
+  -- 实验性参数
   experimental = {
     ghost_text = false, -- 暗纹展示最有可能补全的文本
   },
+  -- 补全来源
   sources = {
     { name = "vsnip" },    -- snippets
     { name = "nvim_lsp" }, -- lsp

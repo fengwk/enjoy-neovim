@@ -1,5 +1,6 @@
 -- https://github.com/folke/which-key.nvim
 
+local wk = require("which-key")
 local utils = require "user.utils"
 
 local config = {
@@ -18,4 +19,4 @@ if utils.is_tty() then
   }
 end
 
-require("which-key").setup(config)
+wk.setup(config)

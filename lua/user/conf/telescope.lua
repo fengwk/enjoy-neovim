@@ -21,7 +21,11 @@
 -- <C-q>        Send all items not filtered to quickfixlist (qflist)
 -- <M-q>        Send all selected items to qflist
 
-require("telescope").setup {
+local telescope = require "telescope"
+local telescope_themes = require "telescope.themes"
+local telescope_builtin = require "telescope.builtin"
+
+telescope.setup {
   defaults = {
     -- Default configuration for telescope goes here:
     -- config_key = value,
@@ -55,18 +59,21 @@ require("telescope").setup {
     -- builtin picker
     find_files = {
       theme = "dropdown",
-      previewer = false,
+      -- previewer = false,
     },
     live_grep = {
       theme = "ivy",
     },
     buffers = {
       theme = "dropdown",
-      previewer = false,
+      -- previewer = false,
     },
     oldfiles = {
       theme = "dropdown",
-      previewer = false,
+      -- previewer = false,
+    },
+    help_tags = {
+      theme = "ivy",
     },
     lsp_references = {
       theme = "ivy",
@@ -106,7 +113,7 @@ require("telescope").setup {
     -- }
     -- please take a look at the readme of the extension you want to configure
     ["ui-select"] = {
-      require("telescope.themes").get_dropdown {
+      telescope_themes.get_dropdown {
         -- even more opts
       }
 
@@ -129,11 +136,11 @@ require("telescope").setup {
 
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
-require("telescope").load_extension("ui-select")
+telescope.load_extension("ui-select")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
-  require("telescope.builtin").buffers({
+  telescope_builtin.buffers({
     -- {show_all_buffers}      (boolean)  if true, show all buffers,
     --                                    including unloaded buffers
     --                                    (default: true)
@@ -159,7 +166,7 @@ end
 
 -- :h telescope.builtin.find_files()
 local function telescope_builtin_find_files(show_all)
-  require("telescope.builtin").find_files({
+  telescope_builtin.find_files({
     -- {cwd}              (string)          root dir to search from (default:
     --                                      cwd, use utils.buffer_dir() to
     --                                      search relative to open buffer)
@@ -187,7 +194,7 @@ end
 
 -- :h telescope.builtin.live_grep()
 local function telescope_builtin_live_grep()
-  require("telescope.builtin").live_grep({
+  telescope_builtin.live_grep({
     -- {cwd}                 (string)        root dir to search from
     --                                       (default: cwd, use
     --                                       utils.buffer_dir() to search
@@ -214,10 +221,15 @@ end
 
 -- :h telescope.builtin.oldfiles()
 local function telescope_builtin_oldfiles()
-  require("telescope.builtin").oldfiles({
+  telescope_builtin.oldfiles({
     -- {only_cwd} (boolean)  show only files in the cwd (default: false)
     -- {cwd_only} (boolean)  alias for only_cwd
   })
+end
+
+-- :h telescope.builtin.help_tags()
+local function telescope_builtin_help_tags()
+  telescope_builtin.help_tags()
 end
 
 vim.keymap.set("n", "<leader>fb", function() telescope_builtin_buffers(false) end, { noremap = true, silent = true, desc = "Telescope Buffers" })
@@ -226,5 +238,4 @@ vim.keymap.set("n", "<leader>ff", function() telescope_builtin_find_files(false)
 vim.keymap.set("n", "<leader>fF", function() telescope_builtin_find_files(true) end, { noremap = true, silent = true, desc = "Telescope Find Files (Show All)" })
 vim.keymap.set("n", "<leader>fg", telescope_builtin_live_grep, { noremap = true, silent = true, desc = "Telescope Live Grep" })
 vim.keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, silent = true, desc = "Telescope Oldfiles" })
--- :h telescope.builtin.help_tags()
--- vim.keymap.set("n", "<leader>fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", { noremap = true, silent = true, desc = "Telescope Help Tags" })
+vim.keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })

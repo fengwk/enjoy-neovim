@@ -42,6 +42,7 @@ local function on_attach(client, bufnr)
   local function telescope_builtin_lsp_references()
     require("telescope.builtin").lsp_references({
       show_line = false,
+      -- trim_text = true,
     })
   end
 

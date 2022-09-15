@@ -26,28 +26,3 @@ vim.api.nvim_create_autocmd(
   { 'BufLeave' },
   { pattern = '*.md', callback = init_paste_dir }
 )
-return function(use)
-  -- https://github.com/md-img-paste-devs/md-img-paste.vim
-  use({
-    'md-img-paste-devs/md-img-paste.vim',
-    ft = 'markdown',
-    config = function()
-      -- 注册复制图片快捷键
-      vim.api.nvim_set_keymap('n', '<leader>p', ':call mdip#MarkdownClipboardImage()<CR>', { noremap = true, silent = true })
-
-      -- 每次切换缓冲区都重置初始化设置
-      vim.api.nvim_create_autocmd(
-        { 'BufCreate' },
-        { pattern = '*.md', command = ':call v:lua.init_md_img_paste()' }
-      )
-      vim.api.nvim_create_autocmd(
-        { 'BufEnter' },
-        { pattern = '*.md', command = ':call v:lua.init_md_img_paste()' }
-      )
-      vim.api.nvim_create_autocmd(
-        { 'BufLeave' },
-        { pattern = '*.md', command = ':call v:lua.init_md_img_paste()' }
-      )
-    end,
-  })
-end

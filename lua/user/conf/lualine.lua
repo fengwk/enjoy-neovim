@@ -1,5 +1,7 @@
 -- https://github.com/nvim-lualine/lualine.nvim
 
+local lualine = require "lualine"
+
 function _G._lualine_lsp_status()
   if vim.lsp.buf_get_clients() > 0 then
     return require("lsp-status").status()
@@ -18,7 +20,7 @@ local diagnostics = {
   always_visible = false,
 }
 
-require("lualine").setup {
+lualine.setup {
   options = {
     icons_enabled = true,
     theme = "auto",

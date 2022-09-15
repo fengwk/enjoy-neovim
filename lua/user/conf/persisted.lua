@@ -8,7 +8,10 @@
 -- :SessionLoadLast - Load the last session
 -- :SessionDelete - Delete the current session
 
-require("persisted").setup({
+local persisted = require "persisted"
+local telescope = require "telescope"
+
+persisted.setup({
   save_dir = vim.fn.expand(vim.fn.stdpath("cache") .. "/persisted/"), -- directory where session files are saved
   command = "VimLeavePre", -- the autocommand for which the session is saved
   use_git_branch = false, -- create session files based on the branch of the git enabled repository
@@ -43,5 +46,5 @@ require("persisted").setup({
   },
 })
 
-require("telescope").load_extension("persisted") -- To load the telescope extension
+telescope.load_extension("persisted") -- To load the telescope extension
 vim.keymap.set("n", "<leader>fs", "<Cmd>Telescope persisted theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Persisted" })

@@ -60,10 +60,10 @@ end
 
 -- 自动切换输入法
 local function auto_switch_im(mode)
-  if utils.osname == "win" then
+  if utils.os_name == "win" then
     return auto_switch_micro_pinyin(mode)
   else
-    if utils.osname == "wsl" then
+    if utils.os_name == "wsl" then
       return auto_switch_micro_pinyin_wsl(mode)
     else
       return auto_switch_fcitx5(mode)
@@ -78,7 +78,7 @@ end
 -- :help api-autocmd
 vim.api.nvim_create_autocmd(
   { "InsertLeave" },
-  { pattern = "*", callback = function() auto_switch_fcitx5('out') end }
+  { pattern = "*", callback = function() auto_switch_im('out') end }
 )
 vim.api.nvim_create_autocmd(
   { "InsertEnter" },
@@ -91,17 +91,17 @@ vim.api.nvim_create_autocmd(
   end}
 )
 -- windows切换输入法成本较高，降低切换频率
-if utils.osname ~= "win" then
+if utils.os_name ~= "win" then
   vim.api.nvim_create_autocmd(
     { "BufCreate" },
-    { pattern = "*", callback = function() auto_switch_fcitx5('out') end }
+    { pattern = "*", callback = function() auto_switch_im('out') end }
   )
   vim.api.nvim_create_autocmd(
     { "BufEnter" },
-    { pattern = "*", callback = function() auto_switch_fcitx5('out') end }
+    { pattern = "*", callback = function() auto_switch_im('out') end }
   )
   vim.api.nvim_create_autocmd(
     { "BufLeave" },
-    { pattern = "*", callback = function() auto_switch_fcitx5('out') end }
+    { pattern = "*", callback = function() auto_switch_im('out') end }
   )
 end
