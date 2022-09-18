@@ -23,7 +23,9 @@ local diagnostics = {
 lualine.setup {
   options = {
     icons_enabled = true,
-    theme = "auto",
+    -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
+    -- theme = "auto",
+    theme = "onedark",
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
     disabled_filetypes = {

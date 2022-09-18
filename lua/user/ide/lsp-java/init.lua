@@ -3,6 +3,5 @@
 -- https://github.com/mfussenegger/nvim-jdtls
 
 return {
-  ts = "java",
   lsp = "jdtls",
 }

@@ -2,7 +2,7 @@
 
 local jdtls = require "jdtls"
 local utils = require "user.utils"
-local lsp_common = require "user.lsp.lsp-common"
+local lsp_utils = require "user.ide.lsp-utils"
 
 local stdpath_config = vim.fn.stdpath("config")
 local stdpath_data = vim.fn.stdpath("data")
@@ -54,7 +54,7 @@ M.setup = function()
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
   config.on_attach = function(client, bufnr)
-    lsp_common.on_attach(client, bufnr)
+    lsp_utils.on_attach(client, bufnr)
     -- jdtls特性
     jdtls.setup_dap({ hotcodereplace = "auto" })
     jdtls.setup.add_commands()
@@ -67,7 +67,7 @@ M.setup = function()
 
   end
 
-  config.capabilities = lsp_common.make_capabilities()
+  config.capabilities = lsp_utils.make_capabilities()
 
   -- config.cmd = {
   --   jdtls_cmd,

@@ -284,6 +284,25 @@ local imgdir = vim.fn.expand('%:t:r') .. '.assets'
 
 使用`z{motion}`可以进行代码折叠，例如`zf%`可以折叠相应括号中的内容，使用`zo`可以打开折叠的内容。
 
+## Quickfix
+
+|命令           |用途                                   |
+|---------------|---------------                        |
+|:cnext :cn     |跳到下一项                             |
+|:cprev :cp     |跳到上一项                             |
+|:cfirst        |跳到第一项                             |
+|:clast         |跳到最后一项                           |
+|:cnfile        |跳到下个文件的第一项                   |
+|:cpfile        |跳到上个文件的最后一项                 |
+|:cc {n}        |跳到第n项目                            |
+|:copen         |打开quickfix窗口                       |
+|:cclose        |关闭quickfix窗口                       |
+|:cdo           |在quickfix列表中的每一行上执行{cmd}    |
+|:cfdo          |在quickfix列表中的每一个文件上执行{cmd}|
+
+- 使用`:cdo`配合`s#{pattern}#{string}#g`命令可以替换所有选中行的内容。
+- 使用`:cfdo`配合`%s#{pattern}#{string}#g`命令可以替换所有选中文件的内容。
+
 # 插件（Plugin）
 
 ## tabular

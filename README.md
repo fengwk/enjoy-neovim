@@ -1,3 +1,3 @@
 # My Neovim Config
 
-My neovim IDE (Integrated Development Environment).
+My neovim IDE (Integrated Development Environment) Config.

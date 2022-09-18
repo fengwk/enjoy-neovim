@@ -49,6 +49,9 @@ return packer.startup(function(use)
   -- packer can manage itself
   use "wbthomason/packer.nvim"
 
+  -- 中文版vimdoc
+  use "syscall0x80/vimdoccn"
+
   -- doom-one.nvim
   -- use "NTBBloodbath/doom-one.nvim"
   -- github-nvim-theme
@@ -84,6 +87,18 @@ return packer.startup(function(use)
   --   end
   -- }
 
+  -- nvim-bqf
+  use {
+    "kevinhwang91/nvim-bqf",
+    ft = "qf",
+  }
+  -- use {
+  --   "junegunn/fzf",
+  --   run = function()
+  --       vim.fn['fzf#install']()
+  --   end
+  -- }
+
   -- nvim-tree
   use {
     "kyazdani42/nvim-tree.lua",
@@ -92,6 +107,26 @@ return packer.startup(function(use)
       require "user.conf.nvim-tree"
     end,
   }
+  -- use {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   branch = "v2.x",
+  --   requires = {
+  --     "nvim-lua/plenary.nvim",
+  --     "kyazdani42/nvim-web-devicons", -- not strictly required, but recommended
+  --     "MunifTanjim/nui.nvim",
+  --     {
+  --       -- only needed if you want to use the commands with "_with_window_picker" suffix
+  --       "s1n7ax/nvim-window-picker",
+  --       tag = "v1.*",
+  --       config = function()
+  --         require "user.conf.nvim-window-picker"
+  --       end,
+  --     }
+  --   },
+  --   config = function()
+  --     require "user.conf.neo-tree"
+  --   end
+  -- }
 
   -- bufferline
   -- use {
@@ -203,14 +238,16 @@ return packer.startup(function(use)
   -- telescope
   use {
     "nvim-telescope/telescope.nvim",
-    requires = "nvim-lua/plenary.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-ui-select.nvim",
+      "nvim-telescope/telescope-live-grep-args.nvim",
+    },
     tag = "0.1.0",
     config = function()
       require "user.conf.telescope"
     end,
   }
-  -- telescope-ui-select
-  use "nvim-telescope/telescope-ui-select.nvim"
 
   -- gitsigns
   use {
@@ -257,62 +294,33 @@ return packer.startup(function(use)
   -- nvim-treesitter
   use {
     "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
     config = function()
-      require "user.lsp.treesitter"
+      require "user.conf.treesitter"
     end
   }
 
-  -- nvim-lspconfig
-  use {
-    "neovim/nvim-lspconfig",
-    config = function()
-      require "user.lsp.nvim-lspconfig"
-    end,
-  }
   -- mason：lsp包管理软件
-  use {
-    "williamboman/mason.nvim",
-    config = function()
-      require "user.lsp.mason"
-    end,
-  }
+  use "williamboman/mason.nvim"
   -- mason-lspconfig
-  use {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require "user.lsp.mason-lspconfig"
-    end
-  }
+  use "williamboman/mason-lspconfig.nvim"
+  -- nvim-lspconfig
+  use "neovim/nvim-lspconfig"
   -- nvim-jdtls
   use "mfussenegger/nvim-jdtls"
+  -- nvim-dap
+  use "mfussenegger/nvim-dap"
+  use "theHamsta/nvim-dap-virtual-text"
+  use "rcarriga/nvim-dap-ui"
+
   -- lsp-status
   use "nvim-lua/lsp-status.nvim"
+
   -- vim-illuminate
   use {
     "RRethy/vim-illuminate",
     config = function()
       require "user.conf.vim-illuminate"
-    end,
-  }
-
-  -- nvim-dap
-  use {
-    "mfussenegger/nvim-dap",
-    config = function()
-      require "user.lsp.nvim-dap"
-    end,
-  }
-  use {
-    "theHamsta/nvim-dap-virtual-text",
-    config = function()
-      require "user.lsp.nvim-dap-virtual-text"
-    end,
-  }
-  use {
-    "rcarriga/nvim-dap-ui",
-    requires = "mfussenegger/nvim-dap",
-    config = function()
-      require "user.lsp.nvim-dap-ui"
     end,
   }
 

@@ -1,8 +1,8 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 
-local utils = require "user.utils"
-local lsp_config = require "user.lsp.lsp-config"
-local treesitter_config = require "nvim-treesitter.configs"
+-- local utils = require "user.utils"
+-- local lsp_config = require "user.ide.lsp-config"
+-- local treesitter_config = require "nvim-treesitter.configs"
 
 local config = {
   -- A list of parser names, or "all"
@@ -38,9 +38,9 @@ local config = {
   },
 }
 
-for _, ts in ipairs(utils.adapt_array(lsp_config)) do
-  table.insert(config.ensure_installed, ts)
-end
+-- for _, ts in ipairs(utils.adapt_array(lsp_config)) do
+--   table.insert(config.ensure_installed, ts)
+-- end
 
 
 require("nvim-treesitter.configs").setup(config)
