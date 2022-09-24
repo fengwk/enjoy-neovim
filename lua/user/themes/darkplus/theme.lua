@@ -365,10 +365,12 @@ theme.set_highlights = function()
 
   -- StatusLine
   hl(0, "StatusLine", { fg = c.context, bg = c.bg })
-  hl(0, "StatusLineNC", { fg = c.line, bg = c.bg })
+  -- hl(0, "StatusLineNC", { fg = c.line, bg = c.bg })
+  hl(0, "StatusLineNC", { fg = c.light_gray, bg = c.bg })
   hl(0, "StatusLineSeparator", { fg = c.line, bg = 'NONE' })
   hl(0, "StatusLineTerm", { fg = c.line, bg = 'NONE' })
-  hl(0, "StatusLineTermNC", { fg = c.line, bg = 'NONE' })
+  -- hl(0, "StatusLineTermNC", { fg = c.line, bg = 'NONE' })
+  hl(0, "StatusLineTermNC", { fg = c.light_gray, bg = 'NONE' })
 
   -- IndentBlankline
   hl(0, "IndentBlanklineContextChar", { fg = c.context, bg = 'NONE' })

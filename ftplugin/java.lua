@@ -1,2 +1,2 @@
-local jdtls_setup = require "user.ide.lsp-java.jdtls-setup"
+local jdtls_setup = require "user.ide.jdtls.setup"
 jdtls_setup.setup()

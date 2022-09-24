@@ -59,6 +59,12 @@ M.setup = function()
     jdtls.setup_dap({ hotcodereplace = "auto" })
     jdtls.setup.add_commands()
 
+    -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
+    -- 注册用于调试的主类，如果是新增的main方法需要使用:JdtRefreshDebugConfigs命令刷新
+    require("jdtls.dap").setup_dap_main_class_configs()
+    -- 运行当前类的main方法
+    -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
+
     -- 注册调试命令
     vim.cmd([[
       command! JdtTestClass lua require'jdtls'.test_class()
@@ -69,13 +75,6 @@ M.setup = function()
 
   config.capabilities = lsp_utils.make_capabilities()
 
-  -- config.cmd = {
-  --   jdtls_cmd,
-  --   stdpath_data,
-  --   stdpath_cache,
-  --   workspace_name,
-  -- }
-
   config.root_dir = workspace_dir
 
   config.settings = {
@@ -83,6 +82,7 @@ M.setup = function()
       signatureHelp = { enabled = true },
       contentProvider = { preferred = "fernflower" },
       completion = {
+        -- 这些包使用静态成员
         favoriteStaticMembers = {
           "org.hamcrest.MatcherAssert.assertThat",
           "org.hamcrest.Matchers.*",
@@ -94,9 +94,10 @@ M.setup = function()
         }
       },
       sources = {
+        -- 不在import中使用*
         organizeImports = {
-          starThreshold = 9999,
-          staticStarThreshold = 9999,
+          starThreshold = 999,
+          staticStarThreshold = 999,
         },
       },
       configuration = {
@@ -128,17 +129,13 @@ M.setup = function()
     },
   }
 
-  -- Language server `initializationOptions`
-  -- You need to extend the `bundles` with paths to jar files
-  -- if you want to use additional eclipse.jdt.ls plugins.
-  --
   -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
-  --
-  -- If you don"t plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
+  -- debug插件
   local bundles = {
-      vim.fn.glob(utils.fs_concat({ stdpath_config, "lua", "user", "lsp", "lsp-java", "jdtls-plugins", "java-debug", "com.microsoft.java.debug.plugin-*.jar" })),
+      vim.fn.glob(stdpath_config .. "/lua/user/ide/jdtls/plugins/java-debug/com.microsoft.java.debug.plugin-*.jar"),
   }
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ stdpath_config, "lua", "user", "lsp", "lsp-java", "jdtls-plugins", "vscode-java-test", "*.jar" })), "\n"))
+  -- 单元测试插件
+  vim.list_extend(bundles, vim.split(vim.fn.glob(stdpath_config .. "/lua/user/ide/jdtls/plugins/vscode-java-test/*.jar" ), "\n"))
 
   local extendedClientCapabilities = jdtls.extendedClientCapabilities
   extendedClientCapabilities.resolveAdditionalTextEditsSupport = true

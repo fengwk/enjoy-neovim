@@ -14,7 +14,7 @@ else
 end
 
 -- 使用当前操作系统的文件分隔符连接文件路径的多个部分
--- @param array 文件系统路径部分的数组
+-- @param parts list 文件系统路径部分的数组
 local function fs_concat(parts)
   if parts == nil or #parts == 0 then
     return ""
@@ -43,7 +43,7 @@ local function is_match(s, parts)
 end
 
 -- 从当前文件目录向上查找与pats中任一项匹配的文件夹
--- @param pats array 必须，模式数组
+-- @param pats list 必须，模式数组
 -- @param stop number 可选，匹配到几次模式停止，如果是-1那么一直向上查找直到最后一个模式匹配的路径，默认为-1
 local function find_root_dir (pats, stop)
   if stop == nil then stop = -1 end
@@ -89,7 +89,6 @@ end
 local function require_conf (conf_name)
   if is_tty() then
     local ok, m = pcall(require, "user.conf-tty." .. conf_name)
-    print(ok, m)
     if ok then
       return m
     end
@@ -113,6 +112,54 @@ local function get_current_filetype()
   return vim.bo.filetype
 end
 
+-- 过滤列表中符合条件的元素
+local function table_filter(tab, predicate)
+  local new_tab = {}
+  for k, v in pairs(tab) do
+    if predicate({ key = k, value = v }) then
+      new_tab[k] = v
+    end
+  end
+  return new_tab
+end
+
+-- 检查元素非空
+local function non_nil(v)
+  return v ~= nil
+end
+
+-- 检查列表中是否包含指定元素
+-- @param list list 指定列表
+-- @param other any|list 比较的元素或列表
+local function list_contains(list, other)
+  for _, v1 in pairs(list) do
+    for _, v2 in pairs(adapt_array(other)) do
+      if v1 == v2 then
+        return true
+      end
+    end
+  end
+  return false
+end
+
+-- 合并列表
+local function list_merge(l1, l2)
+  if l1 == nil then
+    return l2
+  end
+  if l2 == nil then
+    return l1
+  end
+  local new_list = {}
+  for _, v in ipairs(l1) do
+    table.insert(new_list, v)
+  end
+  for _, v in ipairs(l2) do
+    table.insert(new_list, v)
+  end
+  return new_list
+end
+
 M.os_name = os_name
 M.fs_separator = fs_separator
 M.exec_cmd = exec_cmd
@@ -122,5 +169,8 @@ M.is_tty = is_tty
 M.require_conf = require_conf
 M.adapt_array = adapt_array
 M.get_current_filetype = get_current_filetype
-
+M.table_filter = table_filter
+M.non_nil = non_nil
+M.list_contains = list_contains
+M.list_merge = list_merge
 return M

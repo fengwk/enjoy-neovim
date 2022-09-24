@@ -71,10 +71,19 @@ return packer.startup(function(use)
     end,
   }
 
+  -- indent-blankline.nvim | 垂直缩进线
+  use {
+    "lukas-reineke/indent-blankline.nvim",
+    config = function()
+      require "user.conf.indent-blankline"
+    end,
+ }
+
   -- statusline，已集成了lsp-status
   use {
     "beauwilliams/statusline.lua",
-    config = function ()
+    requires =  "nvim-lua/lsp-status.nvim",
+    config = function()
       require "user.conf.statusline"
     end
   }
@@ -158,6 +167,7 @@ return packer.startup(function(use)
   -- nvim-cmp
   use {
     "hrsh7th/nvim-cmp",
+    requires = "onsails/lspkind.nvim", -- 补全格式的美化支持
     config = function()
       require "user.conf.nvim-cmp"
     end,
@@ -165,7 +175,7 @@ return packer.startup(function(use)
   use "hrsh7th/cmp-nvim-lsp"         -- lsp补全源
   use "hrsh7th/cmp-buffer"           -- 缓冲区补全源
   use "hrsh7th/cmp-path"             -- 文件系统路径补全源
-  use "hrsh7th/cmp-cmdline"          -- 命令行路径补全源
+  -- use "hrsh7th/cmp-cmdline"          -- 命令行路径补全源
   use "hrsh7th/cmp-vsnip"            -- 将vim-vsnip桥接到nvim-cmp上
   use {                              -- vscode规范的snippets补全
     "hrsh7th/vim-vsnip",
@@ -174,7 +184,6 @@ return packer.startup(function(use)
     end,
   }
   use "rafamadriz/friendly-snippets" -- 现成的snippets
-  use "onsails/lspkind.nvim"         -- 美化支持
 
   -- nvim-autopairs
   use {
@@ -184,7 +193,7 @@ return packer.startup(function(use)
     end,
   }
 
-  -- hop, like easymotion
+  -- hop | like easymotion
   use {
     "phaazon/hop.nvim",
     branch = "v2", -- optional but strongly recommended
@@ -201,15 +210,14 @@ return packer.startup(function(use)
     end,
   }
 
-  -- vim-visual-multi
+  -- vim-visual-multi | 多光标
   use "mg979/vim-visual-multi"
 
 
-  -- tabular
+  -- tabular | 自定义对齐格式化
   use "godlygeek/tabular"
 
-  -- veen.nvim
-  -- use to draw ASCII graph
+  -- veen.nvim | 绘制ASCII图
   use {
     "jbyuki/venn.nvim",
     config = function()
@@ -249,7 +257,7 @@ return packer.startup(function(use)
     end,
   }
 
-  -- gitsigns
+  -- gitsigns | Git签名状态
   use {
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -257,7 +265,7 @@ return packer.startup(function(use)
     end,
   }
 
-  -- which-key
+  -- which-key | 快捷键管理与提示
   use({
     "folke/which-key.nvim",
     config = function()
@@ -265,7 +273,7 @@ return packer.startup(function(use)
     end,
   })
 
-  -- markdown-preview
+  -- markdown-preview | 在浏览器中预览Markdown
   use {
     "iamcco/markdown-preview.nvim",
     run = "cd app && yarn install",
@@ -274,7 +282,7 @@ return packer.startup(function(use)
       require "user.conf.markdown-preview"
     end
   }
-  -- md-img-paste
+  -- md-img-paste | 黏贴剪切板中的图片到Markdown
   use {
     "md-img-paste-devs/md-img-paste.vim",
     ft = "markdown",
@@ -291,7 +299,7 @@ return packer.startup(function(use)
     end
   }
 
-  -- nvim-treesitter
+  -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {
     "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -300,23 +308,22 @@ return packer.startup(function(use)
     end
   }
 
-  -- mason：lsp包管理软件
+  -- null-ls | 支持在没有语言服务器情况下的CodeAction、Diagnostics、Formatting、Hover、Completion功能
+  -- use "jose-elias-alvarez/null-ls.nvim"
+  -- mason | LSP包管理软件
   use "williamboman/mason.nvim"
   -- mason-lspconfig
   use "williamboman/mason-lspconfig.nvim"
   -- nvim-lspconfig
   use "neovim/nvim-lspconfig"
-  -- nvim-jdtls
+  -- nvim-jdtls | Java LSP Client增强
   use "mfussenegger/nvim-jdtls"
-  -- nvim-dap
+  -- nvim-dap | Debug Adapter Protocol
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
   use "rcarriga/nvim-dap-ui"
 
-  -- lsp-status
-  use "nvim-lua/lsp-status.nvim"
-
-  -- vim-illuminate
+  -- vim-illuminate | 代码符号高亮，并支持在符号之间跳跃
   use {
     "RRethy/vim-illuminate",
     config = function()
