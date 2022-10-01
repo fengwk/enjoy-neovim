@@ -9,6 +9,9 @@ vim.g.history = 200
 vim.o.hlsearch = true
 -- 搜索时定位到目标位置，默认true
 vim.o.incsearch = true
+-- 只有输入大写字符时才进行大小写敏感匹配
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
 -- 背景色：dark、light
 -- vim.o.bg = 'dark'
@@ -80,7 +83,7 @@ vim.o.fileencoding = "utf-8"
 -- zr zm的反向操作
 -- zR 打开所有折叠
 vim.o.foldmethod = "indent"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false
 vim.o.foldlevel = 99
 

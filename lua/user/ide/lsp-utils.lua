@@ -2,7 +2,7 @@
 local function on_attach(client, bufnr)
 
   -- lsp-status
-  require("lsp-status").on_attach(client)
+  -- require("lsp-status").on_attach(client)
 
   -- 使用cmp-nvim-lsp代替omnifunc
   -- Enable completion triggered by <c-x><c-o>
@@ -32,37 +32,47 @@ local function on_attach(client, bufnr)
   vim.keymap.set("v", "<leader>ca", "<Esc><Cmd>lua vim.lsp.buf.range_code_action()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Code Action" })
   vim.keymap.set("v", "<leader>fm", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
 
-  local function telescope_builtin_lsp_references()
-    require("telescope.builtin").lsp_references({
-      show_line = false,
-      -- trim_text = true,
-    })
-  end
+  -- local function telescope_builtin_lsp_references()
+  --   require("telescope.builtin").lsp_references({
+  --     show_line = false,
+  --     -- trim_text = true,
+  --   })
+  -- end
+  --
+  -- local function telescope_builtin_lsp_workspace_symbols()
+  --   local q = vim.fn.input("Query: ")
+  --   require("telescope.builtin").lsp_workspace_symbols({
+  --     query = q,
+  --   })
+  -- end
+  --
+  -- -- telescope
+  -- vim.keymap.set("n", "gr", telescope_builtin_lsp_references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
+  -- vim.keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
+  -- vim.keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbols" })
+  -- vim.keymap.set("n", "gj", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  -- vim.keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  -- vim.keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
 
-  local function telescope_builtin_lsp_workspace_symbols()
-    local q = vim.fn.input("Query: ")
-    require("telescope.builtin").lsp_workspace_symbols({
-      query = q,
-    })
-  end
-
-  -- telescope
-  vim.keymap.set("n", "gr", telescope_builtin_lsp_references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
-  vim.keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-  vim.keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbols" })
-  vim.keymap.set("n", "gj", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
-  vim.keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
-  vim.keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
-
+  -- local function lsp_workspace_symbols()
+  --   local q = vim.fn.input("Query: ")
+  --   if not string.match(q, "^*") then
+  --     q = "*" .. q
+  --   end
+  --   if not string.match(q, "*$") then
+  --     q = q .. "*"
+  --   end
+  --   vim.lsp.buf.workspace_symbol(q);
+  -- end
 
   -- lsp native
-  -- vim.keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
-  -- vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
-  -- vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  -- vim.keymap.set("n", "gj", vim.lsp.buf.implementation, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
-  -- vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Declaration" })
-  -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
-  -- vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
+  vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  vim.keymap.set("n", "gj", vim.lsp.buf.implementation, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Declaration" })
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
 
   -- 在attatch成功后改变vim的cwd
   local rootdir = vim.lsp.buf.list_workspace_folders()

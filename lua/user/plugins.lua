@@ -61,7 +61,7 @@ return packer.startup(function(use)
   -- themer
   -- use "themercorp/themer.lua"
   -- darkplus
-  -- use "fengwk/darkplus.nvim"
+  use "LunarVim/darkplus.nvim"
 
   -- nvim-colorizer
   use {
@@ -77,24 +77,25 @@ return packer.startup(function(use)
     config = function()
       require "user.conf.indent-blankline"
     end,
- }
-
-  -- statusline，已集成了lsp-status
-  use {
-    "beauwilliams/statusline.lua",
-    requires =  "nvim-lua/lsp-status.nvim",
-    config = function()
-      require "user.conf.statusline"
-    end
   }
-  -- lualine
+
+  -- statusline
+  -- use "nvim-lua/lsp-status.nvim"
+  -- statusline，已集成了lsp-status
   -- use {
-  --   "nvim-lualine/lualine.nvim",
-  --   requires = { "kyazdani42/nvim-web-devicons", opt = true },
+  --   "beauwilliams/statusline.lua",
   --   config = function()
-  --     require "user.conf.lualine"
+  --     require "user.conf.statusline"
   --   end
   -- }
+  -- lualine
+  use {
+    "nvim-lualine/lualine.nvim",
+    requires = { "kyazdani42/nvim-web-devicons", opt = true },
+    config = function()
+      require "user.conf.lualine"
+    end
+  }
 
   -- nvim-bqf
   use {
@@ -152,7 +153,7 @@ return packer.startup(function(use)
     "akinsho/toggleterm.nvim",
     tag = "v2.*",
     config = function()
-      require "user.conf.terminal"
+      require "user.conf.toggleterm"
     end,
   }
 
@@ -215,7 +216,10 @@ return packer.startup(function(use)
 
 
   -- tabular | 自定义对齐格式化
-  use "godlygeek/tabular"
+  use {
+    "godlygeek/tabular",
+    cmd = "Tabularize",
+  }
 
   -- veen.nvim | 绘制ASCII图
   use {
@@ -227,6 +231,14 @@ return packer.startup(function(use)
 
   -- editorconfig
   use "gpanders/editorconfig.nvim"
+
+  -- dashboard-nvim
+  -- use {
+  --   "glepnir/dashboard-nvim",
+  --   config = function()
+  --     require "user.conf.dashboard-nvim"
+  --   end
+  -- }
 
   -- neovim-session-manager
   use {
@@ -249,7 +261,7 @@ return packer.startup(function(use)
     requires = {
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-ui-select.nvim",
-      "nvim-telescope/telescope-live-grep-args.nvim",
+      -- "nvim-telescope/telescope-live-grep-args.nvim",
     },
     tag = "0.1.0",
     config = function()
@@ -280,7 +292,7 @@ return packer.startup(function(use)
     ft = "markdown",
     config = function()
       require "user.conf.markdown-preview"
-    end
+    end,
   }
   -- md-img-paste | 黏贴剪切板中的图片到Markdown
   use {
@@ -288,24 +300,31 @@ return packer.startup(function(use)
     ft = "markdown",
     config = function()
       require "user.conf.md-img-paste"
-    end
+    end,
   }
 
   -- translator
+  -- use {
+  --   "voldikss/vim-translator",
+  --   config = function()
+  --     require "user.conf.translator"
+  --   end
+  -- }
   use {
-    "voldikss/vim-translator",
+    "fengwk/vim-translator",
+    branch = "fix/goole-translator",
     config = function()
       require "user.conf.translator"
-    end
+    end,
   }
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
+    -- run = ":TSUpdate",
     config = function()
       require "user.conf.treesitter"
-    end
+    end,
   }
 
   -- null-ls | 支持在没有语言服务器情况下的CodeAction、Diagnostics、Formatting、Hover、Completion功能

@@ -12,12 +12,12 @@ local themes = {
   ["themer"] = {
     config = "user.themes.themer",
   },
-  ["darkplus"] = {
-    colorscheme = "darkplus",
+  ["my-darkplus"] = {
+    colorscheme = "my-darkplus",
   },
 }
 
-local theme = themes["darkplus"]
+local theme = themes["my-darkplus"]
 if theme.config ~= nil then
   require(theme.config)
 end

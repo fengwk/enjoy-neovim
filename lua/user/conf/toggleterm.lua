@@ -31,8 +31,8 @@ toggleterm.setup({
 local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<A-`>", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
 vim.api.nvim_set_keymap("t", "<A-`>", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
-vim.api.nvim_set_keymap("n", "<A-~>", "<Cmd>call v:lua._toggleterm_toggle_curdir('horizontal')<CR>", opts)
-vim.api.nvim_set_keymap("n", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
-vim.api.nvim_set_keymap("t", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "<A-~>", "<Cmd>call v:lua._toggleterm_toggle_curdir('float')<CR>", opts)
+-- vim.api.nvim_set_keymap("n", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
+-- vim.api.nvim_set_keymap("t", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "tv", ":ToggleTerm direction=vertical dir=" .. termdir .."<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "tf", ":ToggleTerm direction=float dir=" .. termdir .."<CR>", opts)

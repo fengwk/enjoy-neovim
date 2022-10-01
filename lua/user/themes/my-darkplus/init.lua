@@ -1,7 +1,7 @@
 -- 从darkplus.nvim中复刻并修改
 -- https://github.com/LunarVim/darkplus.nvim
 
-local theme = require "user.themes.darkplus.theme"
+local theme = require "user.themes.my-darkplus.theme"
 
 local M = {}
 

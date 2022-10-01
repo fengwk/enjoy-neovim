@@ -23,7 +23,14 @@ local M = {}
 M.setup = function()
 
   -- 获取工作目录
-  local workspace_dir = utils.find_root_dir({ "mvnw", "gradlew", "pom.xml" }) or vim.fn.getcwd()
+  local workspace_dir = utils.find_root_dir({
+    'build.xml', -- Ant
+    "mvnw", -- Maven
+    'pom.xml', -- Maven
+    'settings.gradle', -- Gradle
+    'settings.gradle.kts', -- Gradle
+    "gradlew", -- Gradle
+  }) or vim.fn.getcwd()
   -- 转义工作目录作为名称
   local workspace_name = string.gsub(workspace_dir, "/", "__")
   -- 数据目录
@@ -65,12 +72,24 @@ M.setup = function()
     -- 运行当前类的main方法
     -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 
+    -- local dap = require('dap')
+    -- dap.configurations.java = {
+    --   {
+    --     type = 'java';
+    --     request = 'attach';
+    --     name = "Debug (Attach) - Remote";
+    --     hostName = "127.0.0.1";
+    --     port = 5005;
+    --   },
+    -- }
     -- 注册调试命令
     vim.cmd([[
       command! JdtTestClass lua require'jdtls'.test_class()
       command! JdtTestMethod lua require'jdtls'.test_nearest_method()
+      command! JdtRemoteDebug lua require'dap'.run({type='java',request='attach', name='Debug (Attach) - Remote', hostName=vim.fn.input("Host: "), port=vim.fn.input("Port: ")})
     ]])
 
+      -- command! JdtAttach lua require('dap').run({type='java',request='attach', name='Attach', hostName=vim.fn.input("Host: "), port=vim.fn.input("Port: ")})<CR>
   end
 
   config.capabilities = lsp_utils.make_capabilities()

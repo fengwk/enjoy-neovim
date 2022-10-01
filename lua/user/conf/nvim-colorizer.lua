@@ -5,6 +5,7 @@ local colorizer = require "colorizer"
 colorizer.setup(
   {
     "*",
+    "!json", -- 无法处理大json文件
     css = { names = true },
     html = { names = true },
   },

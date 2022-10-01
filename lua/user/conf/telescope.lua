@@ -62,7 +62,7 @@ telescope.setup {
       -- previewer = false,
     },
     live_grep = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     buffers = {
       theme = "dropdown",
@@ -73,37 +73,37 @@ telescope.setup {
       -- previewer = false,
     },
     help_tags = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_references = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_incoming_calls = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_outgoing_calls = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_document_symbols = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_workspace_symbols = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_dynamic_workspace_symbols = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     diagnostics = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_implementations = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_definitions = {
-      theme = "ivy",
+      theme = "dropdown",
     },
     lsp_type_definitions = {
-      theme = "ivy",
+      theme = "dropdown",
     },
   },
   extensions = {
@@ -132,15 +132,30 @@ telescope.setup {
       -- }
     },
 
-    ["live_grep_args"] = {
-      auto_quoting = true, -- enable/disable auto-quoting
-      -- override default mappings
-      -- default_mappings = {},
-      mappings = { -- extend mappings
-        i = {
-          -- ["<C-k>"] = lga_actions.quote_prompt(),
-          ["<C-k>"] = "move_selection_previous", -- 修改默认加引号行为
-        }
+    -- ["live_grep_args"] = {
+    --   auto_quoting = true, -- enable/disable auto-quoting
+    --   -- override default mappings
+    --   -- default_mappings = {},
+    --   mappings = { -- extend mappings
+    --     i = {
+    --       -- ["<C-k>"] = lga_actions.quote_prompt(),
+    --       ["<C-k>"] = "move_selection_previous", -- 修改默认加引号行为
+    --     }
+    --   },
+    -- },
+
+    ["lsp_handlers"] = {
+      location = {
+        telescope = require('telescope.themes').get_dropdown({}),
+      },
+      symbol = {
+        telescope = require('telescope.themes').get_dropdown({}),
+      },
+      call_hierarchy = {
+        telescope = require('telescope.themes').get_dropdown({}),
+      },
+      code_action = {
+        telescope = require('telescope.themes').get_dropdown({}),
       },
     },
   },
@@ -149,7 +164,8 @@ telescope.setup {
 -- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
-telescope.load_extension("live_grep_args")
+-- telescope.load_extension("live_grep_args")
+telescope.load_extension('lsp_handlers')
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
@@ -216,30 +232,30 @@ local function telescope_builtin_live_grep_args()
   -- -g 通配符文件或文件夹，可以用!来取反
   -- -F fixed-string 原意字符串，类似python的 r'xxx'
   -- 例如使用`-g **/lsp/* require`查找lsp目录下所有require字符
-  telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_ivy())
-  -- telescope_builtin.live_grep({
-  --   -- {cwd}                 (string)        root dir to search from
-  --   --                                       (default: cwd, use
-  --   --                                       utils.buffer_dir() to search
-  --   --                                       relative to open buffer)
-  --   -- {grep_open_files}     (boolean)       if true, restrict search to open
-  --   --                                       files only, mutually exclusive
-  --   --                                       with `search_dirs`
-  --   -- {search_dirs}         (table)         directory/directories/files to
-  --   --                                       search, mutually exclusive with
-  --   --                                       `grep_open_files`
-  --   -- {glob_pattern}        (string|table)  argument to be used with
-  --   --                                       `--glob`, e.g. "*.toml", can use
-  --   --                                       the opposite "!*.toml"
-  --   -- {type_filter}         (string)        argument to be used with
-  --   --                                       `--type`, e.g. "rust", see `rg
-  --   --                                       --type-list`
-  --   -- {additional_args}     (function)      function(opts) which returns a
-  --   --                                       table of additional arguments to
-  --   --                                       be passed on
-  --   -- {max_results}         (number)        define a upper result value
-  --   -- {disable_coordinates} (boolean)       don't show the line & row
-  -- })
+  -- telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_dropdown())
+  telescope_builtin.live_grep({
+    -- {cwd}                 (string)        root dir to search from
+    --                                       (default: cwd, use
+    --                                       utils.buffer_dir() to search
+    --                                       relative to open buffer)
+    -- {grep_open_files}     (boolean)       if true, restrict search to open
+    --                                       files only, mutually exclusive
+    --                                       with `search_dirs`
+    -- {search_dirs}         (table)         directory/directories/files to
+    --                                       search, mutually exclusive with
+    --                                       `grep_open_files`
+    -- {glob_pattern}        (string|table)  argument to be used with
+    --                                       `--glob`, e.g. "*.toml", can use
+    --                                       the opposite "!*.toml"
+    -- {type_filter}         (string)        argument to be used with
+    --                                       `--type`, e.g. "rust", see `rg
+    --                                       --type-list`
+    -- {additional_args}     (function)      function(opts) which returns a
+    --                                       table of additional arguments to
+    --                                       be passed on
+    -- {max_results}         (number)        define a upper result value
+    -- {disable_coordinates} (boolean)       don't show the line & row
+  })
 end
 
 -- :h telescope.builtin.oldfiles()

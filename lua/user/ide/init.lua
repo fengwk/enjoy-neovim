@@ -27,14 +27,16 @@ local lsp_tab = utils.table_filter({
   "gopls",                                                -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                             -- { "groovy" }
   "html",                                                 -- { "html" }
-  "jsonls",                                               -- { "json", "jsonc" }
+  -- "jsonls",                                               -- { "json", "jsonc" }
   [ "sumneko_lua" ] = require "user.ide.lsp-sumneko_lua", -- { "lua" }
   utils.os_name == "win" and "powershell_es" or nil,      -- { "ps1" }
   "pyright",                                              -- { "python" }
-  "sqls",                                                 -- { "sql", "mysql" }
+  -- "pylsp",
+  -- "sqls",                                                 -- { "sql", "mysql" }
   "tsserver",                                             -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "vimls",                                                -- { "vim" }
   "yamlls",                                               -- { "yaml", "yaml.docker-compose" }
+  "lemminx",                                              -- { "xml", "xsd", "xsl", "xslt", "svg" }
 }, utils.non_nil)
 
 -- 安装LSP
@@ -145,6 +147,6 @@ mason_lspconfig.setup {
 vim.keymap.set("n", "[e", vim.diagnostic.goto_prev, { noremap = true, silent = true, desc = "Diagnostic Prev" })
 vim.keymap.set("n", "]e", vim.diagnostic.goto_next, { noremap = true, silent = true, desc = "Diagnostic Next" })
 -- 使用telescope搜索诊断信息
--- vim.keymap.set("n", "ge", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { noremap = true, silent = true, desc = "Lsp Diagnostics" })
+vim.keymap.set("n", "ge", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { noremap = true, silent = true, desc = "Telescope Diagnostics" })
 -- 打开带有所有诊断信息的quickfix
-vim.keymap.set("n", "ge", vim.diagnostic.setloclist, { noremap = true, silent = true, desc = "Diagnostic Quickfix" })
+-- vim.keymap.set("n", "ge", vim.diagnostic.setloclist, { noremap = true, silent = true, desc = "Diagnostic Quickfix" })

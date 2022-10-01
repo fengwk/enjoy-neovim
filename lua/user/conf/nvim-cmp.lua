@@ -30,8 +30,9 @@ cmp.setup({
     ["<C-j>"] = cmp.mapping.scroll_docs(4),
     -- 关闭补全项窗口
     ["<C-e>"] = cmp.mapping.abort(),
+    -- ["<Esc>"] = cmp.mapping.abort(),
     -- 确认补全项，select如果为true表示没有选项时默认选择第一个，false则不做选择进行换行
-    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then

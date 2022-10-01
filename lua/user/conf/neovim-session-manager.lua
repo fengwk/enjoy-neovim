@@ -1,4 +1,4 @@
--- https://github.com/jcoleman/tomcat-redis-session-manager
+-- https://github.com/Shatur/neovim-session-manager
 
 local session_manager = require "session_manager"
 local Path = require("plenary.path")
