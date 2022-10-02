@@ -32,7 +32,7 @@ cmp.setup({
     ["<C-e>"] = cmp.mapping.abort(),
     -- ["<Esc>"] = cmp.mapping.abort(),
     -- 确认补全项，select如果为true表示没有选项时默认选择第一个，false则不做选择进行换行
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    ["<CR>"] = cmp.mapping.confirm({ select = false }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
@@ -96,6 +96,16 @@ cmp.setup({
         end
       },
     },
+  },
+  enabled = function()
+    return vim.api.nvim_buf_get_option(0, "buftype") ~= "prompt"
+        or require("cmp_dap").is_dap_buffer()
+  end,
+})
+
+require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+  sources = {
+    { name = "dap" },
   },
 })
 

@@ -185,6 +185,7 @@ return packer.startup(function(use)
     end,
   }
   use "rafamadriz/friendly-snippets" -- 现成的snippets
+  use "rcarriga/cmp-dap"             -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 
   -- nvim-autopairs
   use {
@@ -260,13 +261,17 @@ return packer.startup(function(use)
     "nvim-telescope/telescope.nvim",
     requires = {
       "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-ui-select.nvim",
-      -- "nvim-telescope/telescope-live-grep-args.nvim",
     },
     tag = "0.1.0",
     config = function()
       require "user.conf.telescope"
     end,
+  }
+  use "nvim-telescope/telescope-ui-select.nvim"
+  -- use "nvim-telescope/telescope-live-grep-args.nvim"
+  use {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    run = "make",
   }
 
   -- gitsigns | Git签名状态

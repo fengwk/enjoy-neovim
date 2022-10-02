@@ -116,20 +116,6 @@ telescope.setup {
       telescope_themes.get_dropdown {
         -- even more opts
       },
-
-      -- pseudo code / specification for writing custom displays, like the one
-      -- for "codeactions"
-      -- specific_opts = {
-      --   [kind] = {
-      --     make_indexed = function(items) -> indexed_items, width,
-      --     make_displayer = function(widths) -> displayer
-      --     make_display = function(displayer) -> function(e)
-      --     make_ordinal = function(e) -> string
-      --   },
-      --   -- for example to disable the custom builtin "codeactions" display
-      --      do the following
-      --   codeactions = false,
-      -- }
     },
 
     -- ["live_grep_args"] = {
@@ -158,14 +144,30 @@ telescope.setup {
         telescope = require('telescope.themes').get_dropdown({}),
       },
     },
+
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    },
   },
 }
 
--- To get ui-select loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
 -- telescope.load_extension("live_grep_args")
 telescope.load_extension('lsp_handlers')
+-- Token      Match type                    Description
+-- sbtrkt     fuzzy-match                   Items that match sbtrkt
+-- 'wild      exact-match (quoted)          Items that include wild
+-- ^music     prefix-exact-match            Items that start with music
+-- .mp3$      suffix-exact-match            Items that end with .mp3
+-- !fire      inverse-exact-match           Items that do not include fire
+-- !^music    inverse-prefix-exact-match    Items that do not start with music
+-- !.mp3$     inverse-suffix-exact-match    Items that do not end with .mp3
+telescope.load_extension('fzf')
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)

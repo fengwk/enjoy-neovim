@@ -1,6 +1,6 @@
 -- https://github.com/mfussenegger/nvim-dap
-local dap = require "dap"
-local utils = require "user.utils"
+-- local dap = require "dap"
+-- local utils = require "user.utils"
 
 -- dap.set_log_level("DEBUG")
 
@@ -20,7 +20,7 @@ local utils = require "user.utils"
 --   })
 -- end
 
-vim.keymap.set("n", "<leader>du", "<Cmd>lua require('dapui').toggle()<CR>", { noremap = true, silent = true, desc = "Dap UI Toggle" })
+vim.keymap.set("n", "<leader>du", "<Cmd>lua require('dapui').toggle({reset=true})<CR>", { noremap = true, silent = true, desc = "Dap UI Toggle" })
 -- vim.keymap.set("n", "<leader>dd", dap_launch, { noremap = true, silent = true, desc = "Dap Debug (Launch)" })
 -- vim.keymap.set("n", "<leader>da", dap_attach, { noremap = true, silent = true, desc = "Dap Attach" })
 vim.keymap.set("n", "<leader>db", "<Cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
@@ -33,3 +33,4 @@ vim.keymap.set("n", "<F6>", "<Cmd>lua require('dap').step_over()<CR>", { noremap
 vim.keymap.set("n", "<F7>", "<Cmd>lua require('dap').step_out()<CR>", { noremap = true, silent = true, desc = "Dap Setp Out" })
 -- 这个命令同时可以启动debug
 vim.keymap.set("n", "<F8>", "<Cmd>lua require('dap').continue()<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
+vim.keymap.set("n", "<leader>dt", "<Cmd>lua require('dap').terminate()<CR>", { noremap = true, silent = true, desc = "Dap Terminate" })
