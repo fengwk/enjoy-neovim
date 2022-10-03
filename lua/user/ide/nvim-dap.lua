@@ -20,11 +20,30 @@
 --   })
 -- end
 
+-- https://github.com/Weissle/persistent-breakpoints.nvim
+-- 持久化断点
+-- require("persistent-breakpoints").setup{
+-- 	save_dir = vim.fn.stdpath("cache") .. "/persistent-breakpoints",
+-- 	perf_record = false,
+-- }
+-- vim.api.nvim_create_autocmd({"BufReadPost"},{ callback = require("persistent-breakpoints.api").load_breakpoints })
+-- vim.keymap.set("n", "<leader>db", "<Cmd>lua require('persistent-breakpoints.api').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
+-- vim.keymap.set("n", "<leader>dB", function()
+--   vim.ui.input({ prompt = "Condition: " }, function(cond)
+--     require("persistent-breakpoints.api").set_breakpoint(cond)
+--   end)
+-- end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
+-- vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })
+
+-- vim.keymap.set("n", "<leader>db", "<Cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
+-- vim.keymap.set("n", "<leader>dB", function()
+--   vim.ui.input({ prompt = "Condition: " }, function(cond)
+--     require("dap").set_breakpoint(cond)
+--   end)
+-- end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
+-- vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('dap').clear_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })
+
 vim.keymap.set("n", "<leader>du", "<Cmd>lua require('dapui').toggle({reset=true})<CR>", { noremap = true, silent = true, desc = "Dap UI Toggle" })
--- vim.keymap.set("n", "<leader>dd", dap_launch, { noremap = true, silent = true, desc = "Dap Debug (Launch)" })
--- vim.keymap.set("n", "<leader>da", dap_attach, { noremap = true, silent = true, desc = "Dap Attach" })
-vim.keymap.set("n", "<leader>db", "<Cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
-vim.keymap.set("n", "<leader>dB", "<cmd>lua require'dap'.set_breakpoint(vim.fn.input '[Condition] > ')<cr>", { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
 -- vim.keymap.set("n", "<leader>dr", "<Cmd>lua require('dap').repl.open()<CR>", { noremap = true, silent = true })
 -- vim.keymap.set("n", "<leader>dl", "lua require'dap'.run_last()<cr>", { noremap = true, silent = true })
 -- vim.keymap.set("n", "<leader>de", "<cmd>lua require'dapui'.eval()<cr>", { noremap = true, silent = true })

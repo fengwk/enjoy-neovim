@@ -4,6 +4,14 @@ local function on_attach(client, bufnr)
   -- lsp-status
   -- require("lsp-status").on_attach(client)
 
+  -- nvim-navic
+  -- if client.server_capabilities.documentSymbolProvider then
+  --   require("nvim-navic").attach(client, bufnr)
+  -- end
+
+  -- aerial
+  -- require("aerial").on_attach(client, bufnr)
+
   -- 使用cmp-nvim-lsp代替omnifunc
   -- Enable completion triggered by <c-x><c-o>
   -- vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
@@ -19,7 +27,7 @@ local function on_attach(client, bufnr)
   end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp List Workspace Folder" })
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Rename" })
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Code Action" })
-  vim.keymap.set("n", "<leader>fm", vim.lsp.buf.formatting, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
+  vim.keymap.set("n", "<leader>fm",  "<Cmd>lua vim.lsp.buf.format({async=true})<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
 
   -- 区间处理必须先<Esc>推出可视模式，只有这样下面两个方法才能获取到可视模式的区间
   -- print(vim.inspect(vim.api.nvim_buf_get_mark(0, '<')))
@@ -30,7 +38,7 @@ local function on_attach(client, bufnr)
   -- local start_pos = vim.fn.getpos("v")
   -- local end_pos = vim.fn.getcurpos()
   vim.keymap.set("v", "<leader>ca", "<Esc><Cmd>lua vim.lsp.buf.range_code_action()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Code Action" })
-  vim.keymap.set("v", "<leader>fm", "<Esc><Cmd>lua vim.lsp.buf.range_formatting()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
+  vim.keymap.set("v", "<leader>fm", "<Cmd>lua vim.lsp.buf.format({async=true})<CR><Esc>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
 
   -- local function telescope_builtin_lsp_references()
   --   require("telescope.builtin").lsp_references({
@@ -67,7 +75,8 @@ local function on_attach(client, bufnr)
 
   -- lsp native
   vim.keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
-  vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  -- vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  vim.keymap.set("n", "gs", "<Cmd>Telescope aerial theme=dropdown<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
   vim.keymap.set("n", "gj", vim.lsp.buf.implementation, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Declaration" })

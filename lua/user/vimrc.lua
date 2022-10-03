@@ -18,8 +18,8 @@ vim.o.smartcase = true
 -- vim.o.bg = 'light'
 
 -- 允许鼠标控制光标，nv代表normal和visual
-vim.o.mouse = 'nv'
--- vim.o.mouse = ''
+-- vim.o.mouse = 'nv'
+vim.o.mouse = ''
 
 -- 显示行号
 vim.o.number = true

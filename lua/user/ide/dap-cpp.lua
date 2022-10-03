@@ -18,7 +18,11 @@ local conf = {
     type = "cppdbg",
     request = "launch",
     program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+      local p = nil
+      vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)
+        p = input
+      end)
+      return p
     end,
     cwd = '${workspaceFolder}',
     stopAtEntry = true,
@@ -32,7 +36,11 @@ local conf = {
     miDebuggerPath = '/usr/bin/gdb',
     cwd = '${workspaceFolder}',
     program = function()
-      return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+      local p = nil
+      vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)
+        p = input
+      end)
+      return p
     end,
   },
 }

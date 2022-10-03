@@ -569,6 +569,7 @@ theme.set_highlights = function()
   hl(0, "jsonKeyword", { fg = c.blue, bg = 'NONE' })
   hl(0, "yamlBlockMappingKey", { fg = c.blue, bg = 'NONE' })
   hl(0, "tomlTSProperty", { fg = c.blue, bg = 'NONE' })
+
 end
 
 return theme

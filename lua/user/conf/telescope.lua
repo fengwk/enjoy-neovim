@@ -152,13 +152,22 @@ telescope.setup {
       case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
                                        -- the default case_mode is "smart_case"
     },
+
+    aerial = {
+      -- Display symbols as <root>.<parent>.<symbol>
+      show_nesting = {
+        ['_'] = false, -- This key will be the default
+        json = true,   -- You can set the option for specific filetypes
+        yaml = true,
+      },
+    },
   },
 }
 
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
 -- telescope.load_extension("live_grep_args")
-telescope.load_extension('lsp_handlers')
+telescope.load_extension("lsp_handlers")
 -- Token      Match type                    Description
 -- sbtrkt     fuzzy-match                   Items that match sbtrkt
 -- 'wild      exact-match (quoted)          Items that include wild
@@ -167,7 +176,8 @@ telescope.load_extension('lsp_handlers')
 -- !fire      inverse-exact-match           Items that do not include fire
 -- !^music    inverse-prefix-exact-match    Items that do not start with music
 -- !.mp3$     inverse-suffix-exact-match    Items that do not end with .mp3
-telescope.load_extension('fzf')
+telescope.load_extension("fzf")
+telescope.load_extension("aerial")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)

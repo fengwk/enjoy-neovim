@@ -86,10 +86,9 @@ M.setup = function()
     vim.cmd([[
       command! JdtTestClass lua require'jdtls'.test_class()
       command! JdtTestMethod lua require'jdtls'.test_nearest_method()
-      command! JdtRemoteDebug lua require'dap'.run({type='java',request='attach', name='Debug (Attach) - Remote', hostName=vim.fn.input("Host: "), port=vim.fn.input("Port: ")})
+      command! JdtRemoteDebug lua require'user.ide.jdtls.command'.remote_debug_by_input()
     ]])
 
-      -- command! JdtAttach lua require('dap').run({type='java',request='attach', name='Attach', hostName=vim.fn.input("Host: "), port=vim.fn.input("Port: ")})<CR>
   end
 
   config.capabilities = lsp_utils.make_capabilities()

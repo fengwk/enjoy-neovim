@@ -50,7 +50,10 @@ return packer.startup(function(use)
   use "wbthomason/packer.nvim"
 
   -- 中文版vimdoc
-  use "syscall0x80/vimdoccn"
+  -- use "syscall0x80/vimdoccn"
+
+  -- devdoc
+  -- use "rhysd/devdocs.vim"
 
   -- doom-one.nvim
   -- use "NTBBloodbath/doom-one.nvim"
@@ -62,6 +65,7 @@ return packer.startup(function(use)
   -- use "themercorp/themer.lua"
   -- darkplus
   use "LunarVim/darkplus.nvim"
+  use "ellisonleao/gruvbox.nvim"
 
   -- nvim-colorizer
   use {
@@ -79,8 +83,17 @@ return packer.startup(function(use)
     end,
   }
 
-  -- statusline
-  -- use "nvim-lua/lsp-status.nvim"
+  -- aerial | outline
+  use {
+    "stevearc/aerial.nvim",
+    config = function()
+      require "user.conf.aerial"
+    end,
+  }
+  -- locking a buffer to a window
+  -- https://github.com/stevearc/aerial.nvim#faq
+  use "stevearc/stickybuf.nvim"
+
   -- statusline，已集成了lsp-status
   -- use {
   --   "beauwilliams/statusline.lua",
@@ -212,9 +225,31 @@ return packer.startup(function(use)
     end,
   }
 
+  -- wildfire | textobjects选择器
+  -- use {
+  --   "gcmt/wildfire.vim",
+  --   config = function()
+  --     require "user.conf.wildfire"
+  --   end,
+  -- }
+  use {
+    "fengwk/wildfire.vim",
+    branch = "feat/skip-same-size-textobj",
+    config = function()
+      require "user.conf.wildfire"
+    end,
+  }
+
+  -- vim-textobj-user | 支持用户自定义textobj
+  -- use {
+  --   "kana/vim-textobj-user",
+  --   config = function()
+  --     require "user.conf.vim-textobj-user"
+  --   end,
+  -- }
+
   -- vim-visual-multi | 多光标
   use "mg979/vim-visual-multi"
-
 
   -- tabular | 自定义对齐格式化
   use {
@@ -225,6 +260,7 @@ return packer.startup(function(use)
   -- veen.nvim | 绘制ASCII图
   use {
     "jbyuki/venn.nvim",
+    cmd = "VeenToggle",
     config = function()
       require "user.conf.venn"
     end,
@@ -331,6 +367,13 @@ return packer.startup(function(use)
       require "user.conf.treesitter"
     end,
   }
+  -- nvim-treesitter-textobjects | 使用treesitter增强textobjets
+  use {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    config = function()
+      require "user.conf.nvim-treesitter-textobjects"
+    end,
+  }
 
   -- null-ls | 支持在没有语言服务器情况下的CodeAction、Diagnostics、Formatting、Hover、Completion功能
   -- use "jose-elias-alvarez/null-ls.nvim"
@@ -346,6 +389,16 @@ return packer.startup(function(use)
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
   use "rcarriga/nvim-dap-ui"
+  -- use "Weissle/persistent-breakpoints.nvim"
+  -- nvim-navic | 上下文导航
+  -- use {
+  --   "SmiteshP/nvim-navic",
+  --   config = function()
+  --     require "user.conf.nvim-navic"
+  --   end,
+  -- }
+  -- statusline
+  -- use "nvim-lua/lsp-status.nvim"
 
   -- vim-illuminate | 代码符号高亮，并支持在符号之间跳跃
   use {

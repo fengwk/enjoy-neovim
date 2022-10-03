@@ -1,6 +1,7 @@
 -- https://github.com/nvim-lualine/lualine.nvim
 
 local lualine = require "lualine"
+-- local navic = require "nvim-navic"
 
 local function format_messages(messages)
   local result = {}
@@ -26,6 +27,21 @@ function _G._lualine_lsp_progress()
   return " " .. format_messages(messages)
 end
 
+-- function _G._lualine_navic()
+--   if navic.is_available() then
+--     return navic.get_location()
+--   end
+--   return ""
+-- end
+
+-- function _G._lualine_lsp()
+--   local info = _G._lualine_lsp_progress()
+--   if info ~= "" then
+--     return info
+--   end
+--   return _G._lualine_navic()
+-- end
+
 -- function _G._lualine_lsp_status()
 --   if vim.lsp.buf_get_clients() > 0 then
 --     return require("lsp-status").status()
@@ -44,12 +60,21 @@ local diagnostics = {
   always_visible = false,
 }
 
+-- https://github.com/stevearc/aerial.nvim#lualine
+local aerial = {
+  "aerial",
+  dense = true,
+  dense_sep = " > ",
+  colored = false,
+}
+
 lualine.setup {
   options = {
     icons_enabled = true,
     -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
     -- theme = "auto",
-    theme = "onedark",
+    -- theme = "onedark",
+    theme = "gruvbox",
     -- theme = "palenight",
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
@@ -70,7 +95,10 @@ lualine.setup {
   sections = {
     lualine_a = { "mode" },
     lualine_b = { "filename", "branch", diagnostics },
-    lualine_c = { "_G._lualine_lsp_progress()" },
+    -- lualine_c = { "_G._lualine_lsp_progress()" },
+    -- lualine_c = { "_G._lualine_navic()", "_G._lualine_lsp_progress()" },
+    -- lualine_c = { "_G._lualine_lsp()" },
+    lualine_c = { aerial, "_G._lualine_lsp_progress()" },
     lualine_x = { "encoding" },
     lualine_y = { "progress" },
     lualine_z = { "location" }

@@ -1,7 +1,7 @@
 -- https://github.com/jbyuki/venn.nvim
 
 -- venn.nvim: enable or disable keymappings
-local function toggle_venn()
+function _G._veen_toggle()
     local venn_enabled = vim.inspect(vim.b.venn_enabled)
     if venn_enabled == "nil" then
         vim.b.venn_enabled = true
@@ -23,12 +23,8 @@ local function toggle_venn()
 end
 
 -- toggle keymappings for venn using <leader>v
-vim.keymap.set("n", "<leader>v", toggle_venn, { noremap = true, silent = true, desc = "Toggle Veen" })
+-- vim.keymap.set("n", "<leader>v", toggle_venn, { noremap = true, silent = true, desc = "Toggle Veen" })
 
 vim.cmd([[
-  command! VeenToggle :lua require "user.conf.venn".toggle_venn()
+  command! VeenToggle :lua _G._veen_toggle()
 ]])
-
-return {
-  toggle_venn = toggle_venn
-}

@@ -15,9 +15,13 @@ local themes = {
   ["my-darkplus"] = {
     colorscheme = "my-darkplus",
   },
+  ["gruvbox"] = {
+    colorscheme = "gruvbox",
+  },
 }
 
-local theme = themes["my-darkplus"]
+-- local theme = themes["my-darkplus"]
+local theme = themes["gruvbox"]
 if theme.config ~= nil then
   require(theme.config)
 end
