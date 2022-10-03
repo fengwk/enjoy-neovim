@@ -9,7 +9,12 @@ local conf = require('telescope.config').values
 
 local lsp_util = vim.lsp.util
 local lsp_buf = vim.lsp.buf
-local jump_to_location = lsp_util.jump_to_location
+local jump_to_location = function(...)
+  lsp_util.jump_to_location(...)
+  -- 跳转后增加jumplist标记
+  -- :h m'
+  vim.cmd "normal! m'"
+end
 
 local mapping_actions = {
   ['<C-x>'] = actions.file_split,
