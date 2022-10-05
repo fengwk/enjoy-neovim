@@ -143,14 +143,17 @@ local M = {}
 M.setup = function()
 
   -- 获取工作目录
-  local workspace_dir = utils.find_root_dir({
+  local root_dir = utils.find_root_dir({
     'build.xml', -- Ant
     "mvnw", -- Maven
     'pom.xml', -- Maven
     'settings.gradle', -- Gradle
     'settings.gradle.kts', -- Gradle
     "gradlew", -- Gradle
-  }) or vim.fn.getcwd()
+  })
+  local is_single_file = root_dir == nil
+  local workspace_dir = root_dir or vim.fn.expand("%:p")
+
   -- 转义工作目录作为名称
   local workspace_name = string.gsub(workspace_dir, utils.fs_separator, "__")
   if utils.os_name == "win" then
@@ -191,7 +194,9 @@ M.setup = function()
 
     -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
     -- 注册用于调试的主类，如果是新增的main方法需要使用:JdtRefreshDebugConfigs命令刷新
-    require("jdtls.dap").setup_dap_main_class_configs()
+    if not is_single_file then
+      require("jdtls.dap").setup_dap_main_class_configs()
+    end
     -- 运行当前类的main方法
     -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 
@@ -210,6 +215,7 @@ M.setup = function()
       command! JdtTestClass lua require'jdtls'.test_class()
       command! JdtTestMethod lua require'jdtls'.test_nearest_method()
       command! JdtRemoteDebug lua require'user.ide.jdtls.command'.remote_debug_by_input()
+      command! JdtDebug lua require'user.ide.jdtls.command'.debug()
     ]])
 
   end

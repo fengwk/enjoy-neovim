@@ -87,7 +87,9 @@ local function on_attach(client, bufnr)
   -- 在attatch成功后改变vim的cwd
   local rootdir = vim.lsp.buf.list_workspace_folders()
   if rootdir ~= nil and #rootdir > 0 then
-    vim.api.nvim_command("cd " .. rootdir[1])
+    if vim.fn.isdirectory(rootdir[1]) == 1 then
+      vim.api.nvim_command("cd " .. rootdir[1])
+    end
   end
 
   -- 代码高亮，CursorHold依赖于:h updatetime，通过设置及时的updatetime可以提升高亮的相应速度

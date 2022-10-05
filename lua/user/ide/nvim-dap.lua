@@ -42,6 +42,7 @@ vim.keymap.set("n", "<leader>dB", function()
   end)
 end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
 vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('dap').clear_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })
+vim.keymap.set("n", "<leader>dl", "<Cmd>lua require('dap').run_last()<CR>", { noremap = true, silent = true, desc = "Dap Run Last" })
 
 vim.keymap.set("n", "<leader>du", "<Cmd>lua require('dapui').toggle({reset=true})<CR>", { noremap = true, silent = true, desc = "Dap UI Toggle" })
 -- vim.keymap.set("n", "<leader>dr", "<Cmd>lua require('dap').repl.open()<CR>", { noremap = true, silent = true })

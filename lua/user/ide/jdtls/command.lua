@@ -1,5 +1,16 @@
 local M = {}
 
+M.debug = function()
+  vim.ui.input({ prompt = "MainClass: " }, function(main_class)
+    require 'dap'.run({
+      type = 'java',
+      request = 'launch',
+      name = 'Launch Main Class',
+      mainClass = main_class,
+    })
+  end)
+end
+
 local function remote_debug(host, port)
   require 'dap'.run({
     type = 'java',
