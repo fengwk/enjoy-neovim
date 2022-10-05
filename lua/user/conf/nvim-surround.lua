@@ -11,6 +11,33 @@
     delete(functi*on calls)     dsf             function calls
 ]]
 
-local nvim_surround = require("nvim-surround")
+local nvim_surround = require "nvim-surround"
+local utils = require "user.utils"
 
-nvim_surround.setup()
+nvim_surround.setup({
+  surrounds = {
+    -- 自定义两侧环绕
+    ["i"] = {
+      add = function()
+        local delimiter = utils.input({ prompt = "Enter the delimiter: " })
+        if delimiter then
+          return { { delimiter }, { delimiter } }
+        end
+      end,
+      find = function() end,
+      delete = function() end,
+    },
+    -- 自定义两侧环绕，且两侧都可自定义
+    ["I"] = {
+      add = function()
+        local left_delimiter = utils.input({ prompt = "Enter the left delimiter: " })
+        local right_delimiter = left_delimiter and utils.input({ prompt = "Enter the right delimiter: " })
+        if right_delimiter then
+          return { { left_delimiter }, { right_delimiter } }
+        end
+      end,
+      find = function() end,
+      delete = function() end,
+    },
+  }
+})

@@ -199,6 +199,15 @@ local function read_file(filename)
   return nil
 end
 
+-- 获取输入
+local function input(opt)
+  local ret = nil
+  vim.ui.input(opt, function(v)
+    ret = v
+  end)
+  return ret
+end
+
 M.os_name = os_name
 M.fs_separator = fs_separator
 M.exec_cmd = exec_cmd
@@ -215,4 +224,5 @@ M.list_merge = list_merge
 M.exists_file = exists_file
 M.ensure_mkdir = ensure_mkdir
 M.read_file = read_file
+M.input = input
 return M

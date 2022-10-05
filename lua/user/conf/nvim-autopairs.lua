@@ -25,3 +25,30 @@ nvim_autopairs.setup({
     highlight_grey = "LineNr",
   },
 })
+
+-- 对于一些无法自动补充括号的LSP，下面的方法将增加这一功能
+local ok, cmp = pcall(require, "cmp")
+if ok and cmp ~= nil then
+  -- If you want insert `(` after select function or method item
+  local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+  local handlers = require('nvim-autopairs.completion.handlers')
+  cmp.event:on(
+    "confirm_done",
+    cmp_autopairs.on_confirm_done({
+      filetypes = {
+        -- "*" is a alias to all filetypes
+        ["*"] = {
+          ["("] = {
+            kind = {
+              cmp.lsp.CompletionItemKind.Function,
+              cmp.lsp.CompletionItemKind.Method,
+            },
+            handler = handlers["*"],
+          },
+        },
+        -- 禁用指定类型的LSP
+        tex = false,
+      }
+    })
+  )
+end

@@ -27,13 +27,13 @@ local lsp_tab = utils.table_filter({
   "gopls",                                                -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                             -- { "groovy" }
   "html",                                                 -- { "html" }
-  -- "jsonls",                                               -- { "json", "jsonc" }
-  [ "sumneko_lua" ] = require "user.ide.lsp-sumneko_lua", -- { "lua" }
+  -- "jsonls",                                            -- { "json", "jsonc" }
+  ["sumneko_lua"] = require "user.ide.lsp-sumneko_lua",       -- { "lua" }
   utils.os_name == "win" and "powershell_es" or nil,      -- { "ps1" }
   "pyright",                                              -- { "python" }
   -- "pylsp",
-  -- "sqls",                                                 -- { "sql", "mysql" }
-  "tsserver",                                             -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  -- "sqls",                                              -- { "sql", "mysql" }
+  ["tsserver"] = require "user.ide.lsp-tsserver",             -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "vimls",                                                -- { "vim" }
   "yamlls",                                               -- { "yaml", "yaml.docker-compose" }
   "lemminx",                                              -- { "xml", "xsd", "xsl", "xslt", "svg" }
