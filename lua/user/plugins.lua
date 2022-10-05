@@ -50,7 +50,7 @@ return packer.startup(function(use)
   use "wbthomason/packer.nvim"
 
   -- 中文版vimdoc
-  -- use "syscall0x80/vimdoccn"
+  use "syscall0x80/vimdoccn"
 
   -- devdoc
   -- use "rhysd/devdocs.vim"
@@ -58,7 +58,7 @@ return packer.startup(function(use)
   -- doom-one.nvim
   -- use "NTBBloodbath/doom-one.nvim"
   -- github-nvim-theme
-  -- use "projekt0n/github-nvim-theme"
+  use "projekt0n/github-nvim-theme"
   -- catppuccin
   -- use { "catppuccin/nvim", as = "catppuccin" }
   -- themer
@@ -66,10 +66,11 @@ return packer.startup(function(use)
   -- darkplus
   use "LunarVim/darkplus.nvim"
   use "ellisonleao/gruvbox.nvim"
+  use "rebelot/kanagawa.nvim"
 
   -- nvim-colorizer
   use {
-    "norcalli/nvim-colorizer.lua",
+    "NvChad/nvim-colorizer.lua",
     config = function() require
       "user.conf.nvim-colorizer"
     end,
@@ -106,7 +107,8 @@ return packer.startup(function(use)
     "nvim-lualine/lualine.nvim",
     requires = { "kyazdani42/nvim-web-devicons", opt = true },
     config = function()
-      require "user.conf.lualine"
+      -- call in themes
+      -- require "user.conf.lualine"
     end
   }
 
@@ -224,6 +226,15 @@ return packer.startup(function(use)
       require "user.conf.nvim-surround"
     end,
   }
+
+  -- vim-system-copy | https://github.com/christoomey/vim-system-copy
+  -- use {
+  --   "fengwk/vim-system-copy",
+  --   branch = "dev",
+  --   config = function()
+  --     require "user.conf.vim-system-copy"
+  --   end,
+  -- }
 
   -- wildfire | textobjects选择器
   -- use {

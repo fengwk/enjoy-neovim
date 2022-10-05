@@ -1,30 +1,24 @@
-local themes = {
-  ["doom-one"] = {
-    config = "user.themes.doom-one",
-    colorscheme = "doom-one",
-  },
-  ["github-nvim-theme"] = {
-    config = "user.themes.github-nvim-theme",
-  },
-  ["catppuccin"] = {
-    config = "user.themes.catppuccin",
-  },
-  ["themer"] = {
-    config = "user.themes.themer",
-  },
-  ["my-darkplus"] = {
-    colorscheme = "my-darkplus",
-  },
-  ["gruvbox"] = {
-    colorscheme = "gruvbox",
-  },
-}
+function _G._theme_changed(cs)
+  if cs == "gruvbox" then
+    require "user.conf.lualine".setup({ options = { theme = "gruvbox" } })
+  elseif cs == "my-darkplus" or cs == "darkplus" then
+    require "user.conf.lualine".setup({ options = { theme = "onedark" } })
+  else
+    require "user.conf.lualine".setup({ options = { theme = "auto" } })
+  end
+end
 
--- local theme = themes["my-darkplus"]
-local theme = themes["gruvbox"]
-if theme.config ~= nil then
-  require(theme.config)
-end
-if theme.colorscheme ~= nil then
-  vim.cmd("colorscheme " .. theme.colorscheme)
-end
+vim.cmd[[
+augroup user_theme
+  autocmd!
+  " autocmd ColorSchemePre * colorscheme default
+  autocmd ColorScheme * lua _G._theme_changed(vim.fn.expand("<amatch>"))
+augroup end
+]]
+
+-- vim.o.bg = 'dark'
+-- vim.cmd "colorscheme my-darkplus"
+-- vim.cmd "colorscheme darkplus"
+vim.cmd "colorscheme gruvbox"
+-- vim.cmd "colorscheme kanagawa"
+-- vim.cmd "colorscheme github_light"

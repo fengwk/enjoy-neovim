@@ -37,6 +37,7 @@ local lsp_tab = utils.table_filter({
   "vimls",                                                -- { "vim" }
   "yamlls",                                               -- { "yaml", "yaml.docker-compose" }
   "lemminx",                                              -- { "xml", "xsd", "xsl", "xslt", "svg" }
+  "dockerls",                                             -- { "dockerfile" }
 }, utils.non_nil)
 
 -- 安装LSP

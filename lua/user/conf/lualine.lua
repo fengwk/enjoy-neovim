@@ -68,51 +68,61 @@ local aerial = {
   colored = false,
 }
 
-lualine.setup {
-  options = {
-    icons_enabled = true,
-    -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
-    -- theme = "auto",
-    -- theme = "onedark",
-    theme = "gruvbox",
-    -- theme = "palenight",
-    component_separators = { left = "", right = "" },
-    section_separators = { left = "", right = "" },
-    disabled_filetypes = {
-      "NvimTree", "toggleterm", "packer",
-      statusline = {},
-      winbar = {},
+local M = {}
+
+M.setup = function(opts)
+  opts = opts or {}
+
+  opts = vim.tbl_deep_extend("force", {
+    options = {
+      icons_enabled = true,
+      -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
+      -- theme = "auto",
+      -- theme = "onedark",
+      theme = "gruvbox",
+      -- theme = "palenight",
+      component_separators = { left = "", right = "" },
+      section_separators = { left = "", right = "" },
+      disabled_filetypes = {
+        "NvimTree", "toggleterm", "packer",
+        statusline = {},
+        winbar = {},
+      },
+      ignore_focus = {},
+      always_divide_middle = true,
+      globalstatus = false,
+      refresh = {
+        statusline = 1000,
+        tabline = 1000,
+        winbar = 1000,
+      }
     },
-    ignore_focus = {},
-    always_divide_middle = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-    }
-  },
-  sections = {
-    lualine_a = { "mode" },
-    lualine_b = { "filename", "branch", diagnostics },
-    -- lualine_c = { "_G._lualine_lsp_progress()" },
-    -- lualine_c = { "_G._lualine_navic()", "_G._lualine_lsp_progress()" },
-    -- lualine_c = { "_G._lualine_lsp()" },
-    lualine_c = { aerial, "_G._lualine_lsp_progress()" },
-    lualine_x = { "encoding" },
-    lualine_y = { "progress" },
-    lualine_z = { "location" }
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { "filename" },
-    lualine_x = { "location" },
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
-}
+    sections = {
+      lualine_a = { "mode" },
+      lualine_b = { "filename", "branch", diagnostics },
+      -- lualine_c = { "_G._lualine_lsp_progress()" },
+      -- lualine_c = { "_G._lualine_navic()", "_G._lualine_lsp_progress()" },
+      -- lualine_c = { "_G._lualine_lsp()" },
+      lualine_c = { aerial, "_G._lualine_lsp_progress()" },
+      lualine_x = { "encoding" },
+      lualine_y = { "progress" },
+      lualine_z = { "location" }
+    },
+    inactive_sections = {
+      lualine_a = {},
+      lualine_b = {},
+      lualine_c = { "filename" },
+      lualine_x = { "location" },
+      lualine_y = {},
+      lualine_z = {}
+    },
+    tabline = {},
+    winbar = {},
+    inactive_winbar = {},
+    extensions = {}
+  }, opts)
+
+  lualine.setup(opts)
+end
+
+return M
