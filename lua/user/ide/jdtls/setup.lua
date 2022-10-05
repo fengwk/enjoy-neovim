@@ -181,7 +181,6 @@ M.setup = function()
     "--add-opens java.base/java.lang=ALL-UNNAMED",
   }
 
-  print(vim.inspect(config.cmd))
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
   config.on_attach = function(client, bufnr)

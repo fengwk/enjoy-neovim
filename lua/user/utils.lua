@@ -35,7 +35,7 @@ end
 
 -- 检查s与pats是否匹配
 local function is_match(s, parts)
-  local file_list = vim.split(vim.fn.glob("s" .. fs_separator .. "*"), "\n")
+  local file_list = vim.split(vim.fn.glob(s .. fs_separator .. "*"), "\n")
   for _, file in pairs(file_list) do
     file = vim.fn.fnamemodify(file, ":t")
     -- 过滤"."和".."目录
