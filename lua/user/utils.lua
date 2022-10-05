@@ -19,25 +19,33 @@ local function fs_concat(parts)
   if parts == nil or #parts == 0 then
     return ""
   end
-  local p = parts[1]
-  for i = 2, #parts do
-    p = p .. fs_separator .. parts[i]
+  local res = ""
+  local add_sp = false
+  for _, p in pairs(parts) do
+    if p ~= nil then
+      if add_sp then
+        res = res .. fs_separator
+      end
+      res = res .. p
+      add_sp = true
+    end
   end
-  return p
+  return res
 end
 
 -- 检查s与pats是否匹配
 local function is_match(s, parts)
-  local lfs = require("lfs")
-  for file in lfs.dir(s) do
-       -- 过滤"."和".."目录
-       if file ~= "." and file ~= ".." then
-         for _, p in ipairs(parts) do
-           if string.match(file, p) then
-             return true
-           end
-         end
-       end
+  local file_list = vim.split(vim.fn.glob("s" .. fs_separator .. "*"), "\n")
+  for _, file in pairs(file_list) do
+    file = vim.fn.fnamemodify(file, ":t")
+    -- 过滤"."和".."目录
+    if file ~= "." and file ~= ".." then
+      for _, p in ipairs(parts) do
+        if string.match(file, p) then
+          return true
+        end
+      end
+    end
    end
    return false
 end
@@ -45,7 +53,7 @@ end
 -- 从当前文件目录向上查找与pats中任一项匹配的文件夹
 -- @param pats list 必须，模式数组
 -- @param stop number 可选，匹配到几次模式停止，如果是-1那么一直向上查找直到最后一个模式匹配的路径，默认为-1
-local function find_root_dir (pats, stop)
+local function find_root_dir(pats, stop)
   if stop == nil then stop = -1 end
   -- 找到模式匹配的文件夹路径
   local found_dir_name = nil
@@ -60,7 +68,9 @@ local function find_root_dir (pats, stop)
       m = m + 1
       found_dir_name = cur_dir_name
     end
-    cur_dir_name = string.gsub(cur_dir_name, "/[^/]+$", "", 1)
+    local next_dir_name = vim.fn.fnamemodify(cur_dir_name, ":h")
+    -- 在windows上根目录为：next_dir_name == cur_dir_name
+    cur_dir_name = (next_dir_name == cur_dir_name) and "" or next_dir_name
   end
   return found_dir_name
 end
@@ -86,7 +96,7 @@ end
 
 -- 根据环境require不同的配置
 -- @param conf_name string 必须，配置名称
-local function require_conf (conf_name)
+local function require_conf(conf_name)
   if is_tty() then
     local ok, m = pcall(require, "user.conf-tty." .. conf_name)
     if ok then
@@ -160,6 +170,35 @@ local function list_merge(l1, l2)
   return new_list
 end
 
+-- 检查文件是否存在
+function exists_file(filename)
+  local file = io.open(filename, "rb")
+  if file then
+    file:close()
+  end
+  return file ~= nil
+end
+
+-- 确保目录存在
+local function ensure_mkdir(dir)
+  if exists_file(dir) then
+    return
+  end
+  -- 暂时仅支持安装linux utils的windows
+  exec_cmd("mkdir -p " .. dir)
+end
+
+-- 读取文件信息
+local function read_file(filename)
+  local file, _ = io.open(filename, "r")
+  if file ~= nil then -- err == nil 说明文件存在
+    local res = file:read() -- 读取状态值
+    file:close()
+    return res
+  end
+  return nil
+end
+
 M.os_name = os_name
 M.fs_separator = fs_separator
 M.exec_cmd = exec_cmd
@@ -173,4 +212,7 @@ M.table_filter = table_filter
 M.non_nil = non_nil
 M.list_contains = list_contains
 M.list_merge = list_merge
+M.exists_file = exists_file
+M.ensure_mkdir = ensure_mkdir
+M.read_file = read_file
 return M

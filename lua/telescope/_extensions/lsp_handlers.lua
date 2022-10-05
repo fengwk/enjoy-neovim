@@ -131,7 +131,7 @@ local function location_handler(prompt_title, opts)
     local result = get_correct_result(result1, result2)
 
     if not result or vim.tbl_isempty(result) then
-      print(opts.no_results_message)
+      vim.notify(opts.no_results_message)
       return
     end
 
@@ -156,7 +156,7 @@ local function symbol_handler(prompt_name, opts)
   return function(_, result1, result2, _)
     local result = get_correct_result(result1, result2)
     if not result or vim.tbl_isempty(result) then
-      print(opts.no_results_message)
+      vim.notify(opts.no_results_message)
       return
     end
 
@@ -170,7 +170,7 @@ local function call_hierarchy_handler(prompt_name, direction, opts)
     local result = get_correct_result(result1, result2)
 
     if not result or vim.tbl_isempty(result) then
-      print(opts.no_results_message)
+      vim.notify(opts.no_results_message)
       return
     end
 
@@ -196,7 +196,7 @@ local function code_action_handler(prompt_title, opts)
     local result = get_correct_result(result1, result2)
 
     if not result or vim.tbl_isempty(result) then
-      print(opts.no_results_message)
+      vim.notify(opts.no_results_message)
       return
     end
 
