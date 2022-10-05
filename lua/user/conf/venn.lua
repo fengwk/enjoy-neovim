@@ -23,7 +23,7 @@ function _G._veen_toggle()
 end
 
 -- toggle keymappings for venn using <leader>v
--- vim.keymap.set("n", "<leader>v", toggle_venn, { noremap = true, silent = true, desc = "Toggle Veen" })
+vim.keymap.set("n", "<leader>v", "<Cmd>VeenToggle<CR>", { noremap = true, silent = true, desc = "Toggle Veen" })
 
 vim.cmd([[
   command! VeenToggle :lua _G._veen_toggle()

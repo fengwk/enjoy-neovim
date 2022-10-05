@@ -272,6 +272,7 @@ return packer.startup(function(use)
   use {
     "jbyuki/venn.nvim",
     cmd = "VeenToggle",
+    keys = "<leader>v",
     config = function()
       require "user.conf.venn"
     end,
