@@ -421,6 +421,6 @@ return packer.startup(function(use)
   }
 
   -- lib
-  use_rocks "luafilesystem"
+  -- use_rocks "luafilesystem"
 
 end)
