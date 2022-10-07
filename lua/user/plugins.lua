@@ -387,6 +387,23 @@ return packer.startup(function(use)
     end,
   }
 
+  -- trouble
+  -- use {
+  --   "folke/trouble.nvim",
+  --   requires = "kyazdani42/nvim-web-devicons",
+  --   config = function()
+  --     require "user.conf.trouble"
+  --   end,
+  -- }
+
+  -- lsp_lines
+  use({
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    config = function()
+      require "user.conf.lsp_lines"
+    end,
+  })
+
   -- null-ls | 支持在没有语言服务器情况下的CodeAction、Diagnostics、Formatting、Hover、Completion功能
   -- use "jose-elias-alvarez/null-ls.nvim"
   -- mason | LSP包管理软件

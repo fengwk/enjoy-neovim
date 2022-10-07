@@ -23,6 +23,7 @@ vim.g.wildfire_objects = {
     "aa",
     -- "af",
     -- "ac",
+    "iC",
   },
   ["html,xml"] = { "at", "it" }
 }

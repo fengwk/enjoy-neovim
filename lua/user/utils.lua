@@ -33,15 +33,25 @@ local function fs_concat(parts)
   return res
 end
 
+-- 检查dir是否与parts匹配
+local function is_match_dir(dir, parts)
+  for _, p in ipairs(parts) do
+    if p ~= nil and dir == p then
+      return true
+    end
+  end
+  return false
+end
+
 -- 检查s与pats是否匹配
-local function is_match(s, parts)
-  local file_list = vim.split(vim.fn.glob(s .. fs_separator .. "*"), "\n")
+local function is_match_file(dir, parts)
+  local file_list = vim.split(vim.fn.glob(dir .. fs_separator .. "*"), "\n")
   for _, file in pairs(file_list) do
-    file = vim.fn.fnamemodify(file, ":t")
+    local file_tail = vim.fn.fnamemodify(file, ":t")
     -- 过滤"."和".."目录
-    if file ~= "." and file ~= ".." then
+    if file_tail ~= "." and file_tail ~= ".." then
       for _, p in ipairs(parts) do
-        if string.match(file, p) then
+        if p ~= nil and string.match(file_tail, p) then
           return true
         end
       end
@@ -51,9 +61,9 @@ local function is_match(s, parts)
 end
 
 -- 从当前文件目录向上查找与pats中任一项匹配的文件夹
--- @param pats list 必须，模式数组
+-- @param parts list 必须，模式数组
 -- @param stop number 可选，匹配到几次模式停止，如果是-1那么一直向上查找直到最后一个模式匹配的路径，默认为-1
-local function find_root_dir(pats, stop)
+local function find_root_dir(parts, stop)
   if stop == nil then stop = -1 end
   -- 找到模式匹配的文件夹路径
   local found_dir_name = nil
@@ -64,7 +74,7 @@ local function find_root_dir(pats, stop)
   -- 主要的逻辑是在当前目录非空前，并且找到的次数不满足stop前一直查找
   -- 另外的逻辑是排除一些特殊情况的干扰，比如jdt路径
   while cur_dir_name ~= "" and (stop <= 0 or m < stop) and string.match(cur_dir_name, "^jdt://") == nil do
-    if is_match(cur_dir_name, pats) then
+    if is_match_dir(cur_dir_name, parts) or is_match_file(cur_dir_name, parts) then
       m = m + 1
       found_dir_name = cur_dir_name
     end

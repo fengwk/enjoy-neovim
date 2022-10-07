@@ -48,6 +48,8 @@ if ok and cmp ~= nil then
         },
         -- 禁用指定类型的LSP
         tex = false,
+        sh = false,
+        bash = false,
       }
     })
   )

@@ -1,3 +1,5 @@
+local utils = require "user.utils"
+
 -- leader键
 vim.g.mapleader = ' '
 -- vim.g.mapleader = '\\'
@@ -97,6 +99,14 @@ vim.cmd([[
     au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"zz" | endif
   endif
 ]])
+
+-- 错误提示
+if not utils.is_tty() then
+  vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
+  vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
+  vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
+  vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+end
 
 -- 保存
 -- vim.keymap.set("n", "<C-s>", "<Cmd>w<CR>", { noremap = true, silent = true, desc = "Save Current Buffer" })

@@ -24,7 +24,7 @@ local lsp_tab = utils.table_filter({
   "bashls",                                               -- { "sh" }
   "clangd",                                               -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
   "cssls",                                                -- { "css", "scss", "less" }
-  "gopls",                                                -- { "go", "gomod", "gowork", "gotmpl" }
+  ["gopls"] = require "user.ide.lsp-gopls",                                                -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                             -- { "groovy" }
   "html",                                                 -- { "html" }
   -- "jsonls",                                            -- { "json", "jsonc" }

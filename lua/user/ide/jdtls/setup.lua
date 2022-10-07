@@ -1,6 +1,5 @@
 -- 每个java缓冲区需要执行setup函数，首次执行将启动lsp并attach，后续仅attach
 
-
 local jdtls = require "jdtls"
 local utils = require "user.utils"
 local lsp_utils = require "user.ide.lsp-utils"

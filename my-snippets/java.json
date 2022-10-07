@@ -5,8 +5,8 @@
       "/**",
       " * @author ${VIM:\\$USER}",
       " */",
-      "public class ${TM_FILENAME_BASE} {",
-      "$0",
+      "public class ${2:$TM_FILENAME_BASE} {",
+      "    $0",
       "}"
     ]
   },
@@ -16,8 +16,8 @@
       "/**",
       " * @author ${VIM:\\$USER}",
       " */",
-      "public interface ${TM_FILENAME_BASE} {",
-      "$0",
+      "public interface ${2:$TM_FILENAME_BASE} {",
+      "    $0",
       "}"
     ]
   },
@@ -27,8 +27,8 @@
       "/**",
       " * @author ${VIM:\\$USER}",
       " */",
-      "public enum ${TM_FILENAME_BASE} {",
-      "$0",
+      "public enum ${2:$TM_FILENAME_BASE} {",
+      "    $0",
       "}"
     ]
   },
@@ -38,8 +38,8 @@
       "/**",
       " * @author ${VIM:\\$USER}",
       " */",
-      "public record ${TM_FILENAME_BASE} {",
-      "$0",
+      "public record ${2:$TM_FILENAME_BASE} {",
+      "    $0",
       "}"
     ]
   },
@@ -49,13 +49,13 @@
       "/**",
       " * @author ${VIM:\\$USER}",
       " */",
-      "public @interface ${TM_FILENAME_BASE} {",
-      "$0",
+      "public @interface ${2:$TM_FILENAME_BASE} {",
+      "    $0",
       "}"
     ]
   },
   "log": {
     "prefix": ["log"],
-    "body": ["private final Logger log = LoggerFactory.getLogger(getClass());"]
+    "body": ["private final Logger log = LoggerFactory.getLogger(getClass());$0"]
   }
 }
