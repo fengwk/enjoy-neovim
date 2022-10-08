@@ -173,7 +173,7 @@ M.setup = function()
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
     "-Dlog.protocol=true",
     "-Dlog.level=ALL",
-    "-Xmx2G",
+    "-Xmx4G",
     "-javaagent:" .. lombok_jar,
     "-jar", launcher_jar,
     "-configuration", config_dir,

@@ -29,4 +29,31 @@ M.remote_debug_by_input = function()
   end)
 end
 
+-- M.generate_set = function()
+--
+--   vim.lsp.buf_request(0, "textDocument/typeDefinition", vim.lsp.util.make_position_params(), function(err, result, ctx, config)
+--       print(vim.inspect(err))
+--       print(vim.inspect(result))
+--       print(vim.inspect(ctx))
+--       print(vim.inspect(config))
+--   end)
+--
+--   vim.lsp.buf_request(
+--     0,
+--     "textDocument/documentSymbol",
+--     {
+--       textDocument = {
+--         uri = vim.uri_from_bufnr(0)
+--       },
+--     },
+--     function(err, result, ctx, config)
+--       vim.notify(vim.inspect(result))
+--       -- print(vim.inspect(err))
+--       -- print(vim.inspect(result))
+--       -- print(vim.inspect(ctx))
+--       -- print(vim.inspect(config))
+--     end
+--   )
+-- end
+
 return M

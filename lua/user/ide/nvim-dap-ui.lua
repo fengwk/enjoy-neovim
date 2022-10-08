@@ -1,6 +1,11 @@
 -- https://github.com/rcarriga/nvim-dap-ui
 
-require("dapui").setup({
+local ok, dapui = pcall(require, "dapui")
+if not ok or dapui == nil then
+  return
+end
+
+dapui.setup {
   icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
   mappings = {
     -- Use a table to apply multiple mappings
@@ -79,4 +84,6 @@ require("dapui").setup({
     max_type_length = nil, -- Can be integer or nil.
     max_value_lines = 100, -- Can be integer or nil.
   }
-})
+}
+
+vim.keymap.set("n", "<leader>du", "<Cmd>lua require('dapui').toggle({reset=true})<CR>", { noremap = true, silent = true, desc = "Dap UI Toggle" })

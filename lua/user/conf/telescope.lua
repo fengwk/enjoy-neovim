@@ -24,9 +24,25 @@
 local telescope = require "telescope"
 local telescope_themes = require "telescope.themes"
 local telescope_builtin = require "telescope.builtin"
+local Path = require "plenary.path"
 
 telescope.setup {
   defaults = {
+    -- Determines how file paths are displayed
+    -- path_display = {
+    --   -- truncate = 3,
+    --   -- smart = true,
+    --   shorten = 1,
+    -- },
+    path_display = function(_, path)
+      -- 超过80个字符使用短路径
+      if #path < 80 then
+        return path
+      else
+        return Path:new(path):shorten(1, { 1, 2, 3, -1 })
+      end
+    end,
+
     -- Default configuration for telescope goes here:
     -- config_key = value,
     mappings = {

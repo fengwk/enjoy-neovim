@@ -417,7 +417,7 @@ return packer.startup(function(use)
   -- nvim-dap | Debug Adapter Protocol
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
-  use "rcarriga/nvim-dap-ui"
+  -- use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
   -- use "Weissle/persistent-breakpoints.nvim"
   -- nvim-navic | 上下文导航
   -- use {

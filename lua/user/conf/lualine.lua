@@ -27,6 +27,15 @@ function _G._lualine_lsp_progress()
   return " " .. format_messages(messages)
 end
 
+function _G._lualine_dap()
+  require("dap").status()
+  local messages = vim.lsp.util.get_progress_messages()
+  if #messages == 0 then
+    return ""
+  end
+  return " " .. format_messages(messages)
+end
+
 -- function _G._lualine_navic()
 --   if navic.is_available() then
 --     return navic.get_location()
@@ -103,7 +112,7 @@ M.setup = function(opts)
       -- lualine_c = { "_G._lualine_lsp_progress()" },
       -- lualine_c = { "_G._lualine_navic()", "_G._lualine_lsp_progress()" },
       -- lualine_c = { "_G._lualine_lsp()" },
-      lualine_c = { aerial, "_G._lualine_lsp_progress()" },
+      lualine_c = { aerial, "require('dap').status()", "_G._lualine_lsp_progress()" },
       lualine_x = { "encoding" },
       lualine_y = { "progress" },
       lualine_z = { "location" }
