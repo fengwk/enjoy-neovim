@@ -51,3 +51,18 @@ vim.keymap.set("n", "<F7>", "<Cmd>lua require('dap').step_out()<CR>", { noremap 
 -- 这个命令同时可以启动debug
 vim.keymap.set("n", "<F8>", "<Cmd>lua require('dap').continue()<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 vim.keymap.set("n", "<leader>dt", "<Cmd>lua require('dap').terminate()<CR>", { noremap = true, silent = true, desc = "Dap Terminate" })
+
+function _G._nvim_dap_toggle_ui(ui)
+  local widgets = require("dap.ui.widgets")
+  local sidebar = widgets.sidebar(widgets[ui])
+  sidebar.toggle()
+end
+
+vim.cmd([[
+command! DapUiScopes lua _G._nvim_dap_toggle_ui('scopes')
+command! DapUiFrames lua _G._nvim_dap_toggle_ui('frames')
+command! DapUiExpression lua _G._nvim_dap_toggle_ui('expression')
+command! DapUiThreads lua _G._nvim_dap_toggle_ui('threads')
+]])
+
+-- require('dap').set_log_level('TRACE')

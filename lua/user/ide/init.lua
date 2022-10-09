@@ -5,6 +5,7 @@ require "user.ide.dap-cpp"
 require "user.ide.dap-go"
 require "user.ide.dap-nodejs"
 require "user.ide.dap-python"
+require "user.ide.dap-neovim"
 -- https://github.com/neovim/nvim-lspconfig
 local lspconfig = require "lspconfig"
 -- https://github.com/williamboman/mason.nvim

@@ -113,10 +113,10 @@ end
 -- vim.keymap.set("n", "<C-S>", "<Cmd>wa<CR>", { noremap = true, silent = true, desc = "Save All Buffer" })
 
 -- 快速移动光标
--- vim.keymap.set({ "n", "v" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
--- vim.keymap.set({ "n", "v" }, "<C-k>", "5k", { noremap = true, desc = "Quick Up" })
--- vim.keymap.set({ "n", "v" }, "<C-h>", "5h", { noremap = true, desc = "Quick Left" })
--- vim.keymap.set({ "n", "v" }, "<C-l>", "5l", { noremap = true, desc = "Quick Right" })
+vim.keymap.set({ "n", "v" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
+vim.keymap.set({ "n", "v" }, "<C-k>", "5k", { noremap = true, desc = "Quick Up" })
+vim.keymap.set({ "n", "v" }, "<C-h>", "5h", { noremap = true, desc = "Quick Left" })
+vim.keymap.set({ "n", "v" }, "<C-l>", "5l", { noremap = true, desc = "Quick Right" })
 
 -- 清理高亮
 vim.keymap.set("n", "<Esc>", "<Cmd>noh<CR>", { noremap = true, silent = true, desc = "Clear Highlight" })

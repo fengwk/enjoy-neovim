@@ -194,6 +194,7 @@ telescope.load_extension("lsp_handlers")
 -- !.mp3$     inverse-suffix-exact-match    Items that do not end with .mp3
 telescope.load_extension("fzf")
 telescope.load_extension("aerial")
+telescope.load_extension("dap")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
@@ -306,3 +307,9 @@ vim.keymap.set("n", "<leader>fF", function() telescope_builtin_find_files(true) 
 vim.keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { noremap = true, silent = true, desc = "Telescope Live Grep" })
 vim.keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, silent = true, desc = "Telescope Oldfiles" })
 vim.keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })
+
+vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
+vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })
+vim.keymap.set("n", "<leader>fdf", "<Cmd>Telescope dap frames theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Frames" })
+vim.keymap.set("n", "<leader>fdc", "<Cmd>Telescope dap commands theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Commands" })
+vim.keymap.set("n", "<leader>fdC", "<Cmd>Telescope dap configurations theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Configuration" })

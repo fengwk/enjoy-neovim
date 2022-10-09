@@ -38,8 +38,10 @@ require('illuminate').configure({
     under_cursor = true,
 })
 
-vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
-vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
+-- vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
+-- vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
+vim.keymap.set("n", "<Tab>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
+vim.keymap.set("n", "<S-Tab>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
 
 -- h: highlight-args
 -- vim.cmd([[

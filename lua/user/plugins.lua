@@ -260,6 +260,8 @@ return packer.startup(function(use)
   -- }
 
   -- vim-visual-multi | 多光标
+  -- :h vm-mappings-toggle
+  -- :h vm-*
   use "mg979/vim-visual-multi"
 
   -- tabular | 自定义对齐格式化
@@ -321,6 +323,7 @@ return packer.startup(function(use)
     "nvim-telescope/telescope-fzf-native.nvim",
     run = "make",
   }
+  use "nvim-telescope/telescope-dap.nvim"
 
   -- gitsigns | Git签名状态
   use {
@@ -418,6 +421,7 @@ return packer.startup(function(use)
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
   -- use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
+  -- use "jbyuki/one-small-step-for-vimkind" -- debug neovim lua
   -- use "Weissle/persistent-breakpoints.nvim"
   -- nvim-navic | 上下文导航
   -- use {
