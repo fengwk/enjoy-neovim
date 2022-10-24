@@ -13,6 +13,34 @@ local feedkey = function(key, mode)
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
+local kind_icons = {
+  Text = "",
+  Method = "",
+  Function = "",
+  Constructor = "",
+  Field = "",
+  Variable = "",
+  Class = "ﴯ",
+  Interface = "",
+  Module = "",
+  Property = "ﰠ",
+  Unit = "",
+  Value = "",
+  Enum = "",
+  Keyword = "",
+  Snippet = "",
+  Color = "",
+  File = "",
+  Reference = "",
+  Folder = "",
+  EnumMember = "",
+  Constant = "",
+  Struct = "",
+  Event = "",
+  Operator = "",
+  TypeParameter = ""
+}
+
 -- 安装cmp
 cmp.setup({
   -- snippets
@@ -56,10 +84,29 @@ cmp.setup({
   }),
   -- 窗口样式
   window = {
-    completion = cmp.config.window.bordered(), -- 补全窗口边框
-    documentation = cmp.config.window.bordered(), -- 文档窗口边框
+    -- completion = cmp.config.window.bordered(), -- 补全窗口边框
+    --
+    -- documentation = vim.tbl_deep_extend("force", cmp.config.window.bordered(), { -- 文档窗口边框
+    --   -- max_height = 10,
+    -- }),
+
   },
   -- 补全项格式
+  -- formatting = utils.is_tty() and {} or {
+  --   format = function(entry, vim_item)
+  --     -- Kind icons
+  --     vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind) -- This concatonates the icons with the name of the item kind
+  --     -- Source
+  --     vim_item.menu = ({
+  --       nvim_lsp = "[Lsp]",
+  --       vsnip = "[Vsnip]",
+  --       buffer = "[Buffer]",
+  --       path = "[Path]",
+  --       cmdline = "[Cmd]",
+  --     })[entry.source.name]
+  --     return vim_item
+  --   end
+  -- },
   formatting = utils.is_tty() and {} or {
     format = lspkind.cmp_format({
       mode = "symbol_text",
@@ -79,7 +126,12 @@ cmp.setup({
   -- 补全来源
   sources = {
     { name = "vsnip" },    -- snippets
-    { name = "nvim_lsp" }, -- lsp
+    {
+      name = "nvim_lsp",
+      entry_filter = function(entry, _)
+        return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
+      end,
+    }, -- lsp
     { name = "path" },     -- 文件系统路
     {
       name = "buffer",     -- 缓冲区

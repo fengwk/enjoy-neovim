@@ -43,6 +43,27 @@ local function is_match_dir(dir, parts)
   return false
 end
 
+-- 检查是否为uri
+local function is_uri(s)
+  return string.match(s, "^[^:]+://") ~= nil
+end
+
+-- 迭代路径直到根
+-- @param path 起始路径
+-- @param iter_func 迭代函数，如果返回false则提前退出迭代
+local function iter_path_until_root(path, iter_func)
+  local cur_path = vim.fn.expand(path)
+  while cur_path ~= "" do
+    if not iter_func(cur_path) then
+      return
+    end
+
+    local next_path = vim.fn.fnamemodify(cur_path, ":h")
+    -- 在windows上根目录为：next_path == cur_path
+    cur_path = (next_path == cur_path) and "" or next_path
+  end
+end
+
 -- 检查s与pats是否匹配
 local function is_match_file(dir, parts)
   local file_list = vim.split(vim.fn.glob(dir .. fs_separator .. "*"), "\n")
@@ -73,15 +94,16 @@ local function find_root_dir(parts, stop)
   local m = 0
   -- 主要的逻辑是在当前目录非空前，并且找到的次数不满足stop前一直查找
   -- 另外的逻辑是排除一些特殊情况的干扰，比如jdt路径
-  while cur_dir_name ~= "" and (stop <= 0 or m < stop) and string.match(cur_dir_name, "^jdt://") == nil do
-    if is_match_dir(cur_dir_name, parts) or is_match_file(cur_dir_name, parts) then
-      m = m + 1
-      found_dir_name = cur_dir_name
+  iter_path_until_root(cur_dir_name, function(cur_path)
+    if (stop > 0 and m >= stop) or is_uri(cur_path) then
+      return false
     end
-    local next_dir_name = vim.fn.fnamemodify(cur_dir_name, ":h")
-    -- 在windows上根目录为：next_dir_name == cur_dir_name
-    cur_dir_name = (next_dir_name == cur_dir_name) and "" or next_dir_name
-  end
+    if is_match_dir(cur_path, parts) or is_match_file(cur_path, parts) then
+      m = m + 1
+      found_dir_name = cur_path
+    end
+    return true
+  end)
   return found_dir_name
 end
 
@@ -198,7 +220,7 @@ local function ensure_mkdir(dir)
   exec_cmd("mkdir -p " .. dir)
 end
 
--- 读取文件信息
+-- 读文件
 local function read_file(filename)
   local file, _ = io.open(filename, "r")
   if file ~= nil then -- err == nil 说明文件存在
@@ -207,6 +229,15 @@ local function read_file(filename)
     return res
   end
   return nil
+end
+
+-- 写文件
+local function write_file(filename, content)
+  local file, _ = io.open(filename, "w")
+  if file ~= nil then -- err == nil 说明文件存在
+    file:write(content)
+    file:close()
+  end
 end
 
 -- 获取输入
@@ -218,10 +249,44 @@ local function input(opt)
   return ret
 end
 
+-- 检查是否支持lsp方法
+local function any_lsp_client_support(method)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local supported = false
+  vim.lsp.for_each_buffer_client(bufnr, function(client)
+    if client.supports_method(method) then
+      supported = true
+    end
+  end)
+  return supported
+end
+
+-- 将路径转义为可用的名称
+local function path_to_name(path)
+  local name = string.gsub(path, fs_separator, "__")
+  if os_name == "win" then
+    name = string.gsub(name, ":", "++")
+  end
+  return name
+end
+
+-- 非文件类型
+local not_file_ft = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes", "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "diff" }
+
+--  检查是否为文件类型
+local function is_not_file_ft(ft)
+  if ft == nil then
+    ft = vim.bo.filetype
+  end
+  return vim.tbl_contains(not_file_ft, ft)
+end
+
 M.os_name = os_name
 M.fs_separator = fs_separator
 M.exec_cmd = exec_cmd
 M.fs_concat = fs_concat
+M.is_uri = is_uri
+M.iter_path_until_root = iter_path_until_root
 M.find_root_dir = find_root_dir
 M.is_tty = is_tty
 M.require_conf = require_conf
@@ -234,5 +299,9 @@ M.list_merge = list_merge
 M.exists_file = exists_file
 M.ensure_mkdir = ensure_mkdir
 M.read_file = read_file
+M.write_file = write_file
 M.input = input
+M.any_lsp_client_support = any_lsp_client_support
+M.path_to_name = path_to_name
+M.is_not_file_ft = is_not_file_ft
 return M

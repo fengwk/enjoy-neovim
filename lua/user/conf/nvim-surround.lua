@@ -16,19 +16,8 @@ local utils = require "user.utils"
 
 nvim_surround.setup({
   surrounds = {
-    -- 自定义两侧环绕
-    ["i"] = {
-      add = function()
-        local delimiter = utils.input({ prompt = "Enter the delimiter: " })
-        if delimiter then
-          return { { delimiter }, { delimiter } }
-        end
-      end,
-      find = function() end,
-      delete = function() end,
-    },
     -- 自定义两侧环绕，且两侧都可自定义
-    ["I"] = {
+    ["i"] = {
       add = function()
         local left_delimiter = utils.input({ prompt = "Enter the left delimiter: " })
         local right_delimiter = left_delimiter and utils.input({ prompt = "Enter the right delimiter: " })
@@ -39,5 +28,16 @@ nvim_surround.setup({
       find = function() end,
       delete = function() end,
     },
+    -- 自定义两侧环绕
+    -- ["I"] = {
+    --   add = function()
+    --     local delimiter = utils.input({ prompt = "Enter the delimiter: " })
+    --     if delimiter then
+    --       return { { delimiter }, { delimiter } }
+    --     end
+    --   end,
+    --   find = function() end,
+    --   delete = function() end,
+    -- },
   }
 })

@@ -1,7 +1,7 @@
 function _G._theme_changed(cs)
   if cs == "gruvbox" then
     require "user.conf.lualine".setup({ options = { theme = "gruvbox" } })
-  elseif cs == "my-darkplus" or cs == "darkplus" then
+  elseif cs == "my-darkplus" or cs == "darkplus" or cs == "vscode" then
     require "user.conf.lualine".setup({ options = { theme = "onedark" } })
   else
     require "user.conf.lualine".setup({ options = { theme = "auto" } })
@@ -16,9 +16,11 @@ augroup user_theme
 augroup end
 ]]
 
--- vim.o.bg = 'dark'
+-- vim.o.bg = 'light'
 -- vim.cmd "colorscheme my-darkplus"
-vim.cmd "colorscheme darkplus"
+-- vim.cmd "colorscheme darkplus"
 -- vim.cmd "colorscheme gruvbox"
--- vim.cmd "colorscheme kanagawa"
+vim.cmd "colorscheme kanagawa"
 -- vim.cmd "colorscheme github_light"
+-- vim.cmd "colorscheme vscode"
+-- vim.cmd "colorscheme darcula-solid"

@@ -21,15 +21,20 @@ persisted.setup({
   on_autoload_no_session = function() -- function to run when `autoload = true` but there is no session to load
     vim.notify("No existing session to load.")
   end,
-  allowed_dirs = nil, -- table of dirs that the plugin will auto-save and auto-load from
-  -- 开启allowed_dirs会导致自动保存失效
-  -- allowed_dirs = { -- table of dirs that the plugin will auto-save and auto-load from
-  --   "~/.config/dotfiles",
-  --   "~/prog",
-  --   "~/proj",
-  --   "~/go",
-  --   "~/Documents/work",
-  -- },
+  -- allowed_dirs = nil, -- table of dirs that the plugin will auto-save and auto-load from
+  -- 必须使用绝对路径
+  allowed_dirs = { -- table of dirs that the plugin will auto-save and auto-load from
+    -- vim.fn.expand("~/.config/dotfiles"),
+    -- vim.fn.expand("~/prog"),
+    -- vim.fn.expand("~/proj"),
+    -- vim.fn.expand("~/go"),
+    -- vim.fn.expand("~/Documents/work"),
+    "/home/fengwk/.config/dotfiles",
+    "/home/fengwk/prog",
+    "/home/fengwk/proj",
+    "/home/fengwk/go",
+    "/home/fengwk/windows/e/Documents/work",
+  },
   ignored_dirs = nil, -- table of dirs that are ignored when auto-saving and auto-loading
   before_save = nil, -- function to run before the session is saved to disk
   after_save = nil, -- function to run after the session is saved to disk

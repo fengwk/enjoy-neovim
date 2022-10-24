@@ -40,8 +40,10 @@ if ok and cmp ~= nil then
         ["*"] = {
           ["("] = {
             kind = {
+              -- https://docs.rs/lsp/0.2.0/lsp/types/enum.CompletionItemKind.html
               cmp.lsp.CompletionItemKind.Function,
               cmp.lsp.CompletionItemKind.Method,
+              cmp.lsp.CompletionItemKind.Constructor,
             },
             handler = handlers["*"],
           },

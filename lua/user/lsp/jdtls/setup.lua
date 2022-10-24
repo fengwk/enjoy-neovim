@@ -1,8 +1,8 @@
 -- 每个java缓冲区需要执行setup函数，首次执行将启动lsp并attach，后续仅attach
 
-local jdtls = require "jdtls"
-local utils = require "user.utils"
-local lsp_utils = require "user.ide.lsp-utils"
+local jdtls = require("jdtls")
+local utils = require("user.utils")
+local lsp_utils = require("user.ide.lsp-utils")
 
 local java_home_preset = {
   java_home_5 = os.getenv("JAVA_HOME_5"),
@@ -194,9 +194,9 @@ M.setup = function()
       require("jdtls.dap").setup_dap_main_class_configs()
     end
     -- 运行当前类的main方法
-    -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
+    -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require("dap").run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 
-    -- local dap = require('dap')
+    -- local dap = require("dap")
     -- dap.configurations.java = {
     --   {
     --     type = 'java';
@@ -208,15 +208,15 @@ M.setup = function()
     -- }
     -- 注册调试命令
     vim.cmd([[
-      command! JdtTestClass lua require'jdtls'.test_class()
-      command! JdtTestMethod lua require'jdtls'.test_nearest_method()
-      command! JdtRemoteDebug lua require'user.ide.jdtls.command'.remote_debug_by_input()
-      command! JdtDebug lua require'user.ide.jdtls.command'.debug()
-      " command! JdtA lua require'user.ide.jdtls.command'.test()
+      command! JdtTestClass lua require("jdtls").test_class()
+      command! JdtTestMethod lua require("jdtls").test_nearest_method()
+      command! JdtRemoteDebug lua require("user.ide.jdtls.command").remote_debug_by_input()
+      command! JdtDebug lua require("user.ide.jdtls.command").debug()
+      " command! JdtA lua require("user.ide.jdtls.command").test()
     ]])
 
     -- 设置jdt的扩展快捷键
-    vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
+    vim.keymap.set("n", "gp", "<Cmd>lua require("jdtls").super_implementation()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
 
   end
 

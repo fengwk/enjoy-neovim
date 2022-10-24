@@ -24,6 +24,7 @@
 local telescope = require "telescope"
 local telescope_themes = require "telescope.themes"
 local telescope_builtin = require "telescope.builtin"
+local actions = require "telescope.actions"
 local Path = require "plenary.path"
 
 telescope.setup {
@@ -35,11 +36,18 @@ telescope.setup {
     --   shorten = 1,
     -- },
     path_display = function(_, path)
+      -- 处理path为相对路径
+      local cwd = vim.fn.getcwd()
+      if Path:new(cwd):is_dir() then
+        path = Path:new(path):make_relative(cwd)
+      end
+
       -- 超过80个字符使用短路径
       if #path < 80 then
         return path
       else
-        return Path:new(path):shorten(1, { 1, 2, 3, -1 })
+        -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
+        return Path:new(path):shorten(1, { 1, 2, -1 })
       end
     end,
 
@@ -59,6 +67,10 @@ telescope.setup {
         ["<C-k>"] = "move_selection_previous",
         -- esc直接关闭
         -- ["<Esc>"] = "close",
+        -- 转到搜索模式
+        ["<C-f>"] = actions.to_fuzzy_refine,
+        -- 上下移动preview
+        -- <C-u>/<C-d>
       },
       n = {
         ["<C-c>"] = "close",
@@ -134,17 +146,17 @@ telescope.setup {
       },
     },
 
-    -- ["live_grep_args"] = {
-    --   auto_quoting = true, -- enable/disable auto-quoting
-    --   -- override default mappings
-    --   -- default_mappings = {},
-    --   mappings = { -- extend mappings
-    --     i = {
-    --       -- ["<C-k>"] = lga_actions.quote_prompt(),
-    --       ["<C-k>"] = "move_selection_previous", -- 修改默认加引号行为
-    --     }
-    --   },
-    -- },
+    ["live_grep_args"] = {
+      auto_quoting = true, -- enable/disable auto-quoting
+      -- override default mappings
+      -- default_mappings = {},
+      mappings = { -- extend mappings
+        i = {
+          -- ["<C-k>"] = lga_actions.quote_prompt(),
+          ["<C-k>"] = "move_selection_previous", -- 修改默认加引号行为
+        }
+      },
+    },
 
     ["lsp_handlers"] = {
       location = {
@@ -177,12 +189,18 @@ telescope.setup {
         yaml = true,
       },
     },
+
+    workspaces = {
+      -- keep insert mode after selection in the picker, default is false
+      -- keep_insert = true,
+    },
+
   },
 }
 
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
--- telescope.load_extension("live_grep_args")
+telescope.load_extension("live_grep_args")
 telescope.load_extension("lsp_handlers")
 -- Token      Match type                    Description
 -- sbtrkt     fuzzy-match                   Items that match sbtrkt
@@ -195,6 +213,7 @@ telescope.load_extension("lsp_handlers")
 telescope.load_extension("fzf")
 telescope.load_extension("aerial")
 telescope.load_extension("dap")
+telescope.load_extension("workspaces")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
@@ -261,30 +280,30 @@ local function telescope_builtin_live_grep_args()
   -- -g 通配符文件或文件夹，可以用!来取反
   -- -F fixed-string 原意字符串，类似python的 r'xxx'
   -- 例如使用`-g **/lsp/* require`查找lsp目录下所有require字符
-  -- telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_dropdown())
-  telescope_builtin.live_grep({
-    -- {cwd}                 (string)        root dir to search from
-    --                                       (default: cwd, use
-    --                                       utils.buffer_dir() to search
-    --                                       relative to open buffer)
-    -- {grep_open_files}     (boolean)       if true, restrict search to open
-    --                                       files only, mutually exclusive
-    --                                       with `search_dirs`
-    -- {search_dirs}         (table)         directory/directories/files to
-    --                                       search, mutually exclusive with
-    --                                       `grep_open_files`
-    -- {glob_pattern}        (string|table)  argument to be used with
-    --                                       `--glob`, e.g. "*.toml", can use
-    --                                       the opposite "!*.toml"
-    -- {type_filter}         (string)        argument to be used with
-    --                                       `--type`, e.g. "rust", see `rg
-    --                                       --type-list`
-    -- {additional_args}     (function)      function(opts) which returns a
-    --                                       table of additional arguments to
-    --                                       be passed on
-    -- {max_results}         (number)        define a upper result value
-    -- {disable_coordinates} (boolean)       don't show the line & row
-  })
+  telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_dropdown())
+  -- telescope_builtin.live_grep({
+  --   -- {cwd}                 (string)        root dir to search from
+  --   --                                       (default: cwd, use
+  --   --                                       utils.buffer_dir() to search
+  --   --                                       relative to open buffer)
+  --   -- {grep_open_files}     (boolean)       if true, restrict search to open
+  --   --                                       files only, mutually exclusive
+  --   --                                       with `search_dirs`
+  --   -- {search_dirs}         (table)         directory/directories/files to
+  --   --                                       search, mutually exclusive with
+  --   --                                       `grep_open_files`
+  --   -- {glob_pattern}        (string|table)  argument to be used with
+  --   --                                       `--glob`, e.g. "*.toml", can use
+  --   --                                       the opposite "!*.toml"
+  --   -- {type_filter}         (string)        argument to be used with
+  --   --                                       `--type`, e.g. "rust", see `rg
+  --   --                                       --type-list`
+  --   -- {additional_args}     (function)      function(opts) which returns a
+  --   --                                       table of additional arguments to
+  --   --                                       be passed on
+  --   -- {max_results}         (number)        define a upper result value
+  --   -- {disable_coordinates} (boolean)       don't show the line & row
+  -- })
 end
 
 -- :h telescope.builtin.oldfiles()
@@ -300,6 +319,10 @@ local function telescope_builtin_help_tags()
   telescope_builtin.help_tags()
 end
 
+local function telescope_builtin_filetypes()
+  telescope_builtin.filetypes()
+end
+
 vim.keymap.set("n", "<leader>fb", function() telescope_builtin_buffers(false) end, { noremap = true, silent = true, desc = "Telescope Buffers" })
 vim.keymap.set("n", "<leader>fB", function() telescope_builtin_buffers(true) end, { noremap = true, silent = true, desc = "Telescope Buffers (Show All)" })
 vim.keymap.set("n", "<leader>ff", function() telescope_builtin_find_files(false) end, { noremap = true, silent = true, desc = "Telescope Find Files" })
@@ -307,6 +330,7 @@ vim.keymap.set("n", "<leader>fF", function() telescope_builtin_find_files(true) 
 vim.keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { noremap = true, silent = true, desc = "Telescope Live Grep" })
 vim.keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, silent = true, desc = "Telescope Oldfiles" })
 vim.keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })
+vim.keymap.set("n", "<leader>ft", function() telescope_builtin_filetypes() end, { noremap = true, silent = true, desc = "Telescope Filetypes" })
 
 vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
 vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })

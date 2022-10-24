@@ -1,10 +1,6 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 
--- local utils = require "user.utils"
--- local lsp_config = require "user.ide.lsp-config"
--- local treesitter_config = require "nvim-treesitter.configs"
-
-local config = {
+require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {},
 
@@ -28,9 +24,17 @@ local config = {
     -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
     -- the name of the parser)
     -- list of language that will be disabled
-    disable = {
-      "json", -- 无法处理大json
-    },
+    disable = function(lang, buf)
+      -- if lang == "java" then
+      --   return false
+      -- end
+      local max_filesize = 100 * 1024 -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+      return false
+    end,
 
     -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
     -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
@@ -38,11 +42,4 @@ local config = {
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
-}
-
--- for _, ts in ipairs(utils.adapt_array(lsp_config)) do
---   table.insert(config.ensure_installed, ts)
--- end
-
-
-require("nvim-treesitter.configs").setup(config)
+})

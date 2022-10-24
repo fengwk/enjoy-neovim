@@ -1,6 +1,7 @@
 -- https://github.com/nvim-lualine/lualine.nvim
 
-local lualine = require "lualine"
+local lualine = require("lualine")
+local utils = require("user.utils")
 -- local navic = require "nvim-navic"
 
 local function format_messages(messages)
@@ -93,7 +94,7 @@ M.setup = function(opts)
       component_separators = { left = "", right = "" },
       section_separators = { left = "", right = "" },
       disabled_filetypes = {
-        "NvimTree", "toggleterm", "packer",
+        "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial",
         statusline = {},
         winbar = {},
       },

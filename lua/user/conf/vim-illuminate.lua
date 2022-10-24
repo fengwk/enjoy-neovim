@@ -14,12 +14,7 @@ require('illuminate').configure({
     -- supports the same keys passed to .configure except for filetypes_denylist and filetypes_allowlist
     filetype_overrides = {},
     -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
-    filetypes_denylist = {
-        -- 'dirvish',
-        -- 'fugitive',
-        "NvimTree",
-        "toggleterm",
-    },
+    filetypes_denylist = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial" },
     -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
     filetypes_allowlist = {},
     -- modes_denylist: modes to not illuminate, this overrides modes_allowlist
@@ -38,10 +33,10 @@ require('illuminate').configure({
     under_cursor = true,
 })
 
--- vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
--- vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
-vim.keymap.set("n", "<Tab>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
-vim.keymap.set("n", "<S-Tab>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
+vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
+vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
+-- vim.keymap.set("n", "<Tab>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
+-- vim.keymap.set("n", "<S-Tab>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
 
 -- h: highlight-args
 -- vim.cmd([[

@@ -3,7 +3,7 @@
 require("github-theme").setup({
   theme_style = "light", -- dark/dimmed/dark_default/dark_colorblind/light/light_default/light_colorblind
   function_style = "italic",
-  sidebars = {"qf", "vista_kind", "terminal", "packer", "toggleterm"},
+  sidebars = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial" },
   dark_sidebar = true, -- Sidebar like windows like NvimTree get a darker background
   hide_inactive_statusline = true, -- Enabling this option, will hide inactive statuslines and replace them with a thin border instead. Should work with the standard StatusLine.
 
@@ -20,5 +20,4 @@ require("github-theme").setup({
     }
   end,
   transparent = false, -- Enable this to disable setting the background color
-
 })

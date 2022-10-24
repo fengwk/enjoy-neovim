@@ -1,3 +1,40 @@
+local Path = require("plenary.path")
+-- local utils = require("user.utils")
+-- 将cwd设置为lsp根目录
+local function cd_lsp_root()
+  local root = vim.lsp.buf.list_workspace_folders()
+  if root ~= nil and #root > 0 then
+    local root_path = Path:new(root[1])
+    if root_path:is_dir() then
+      root = root[1]
+    else
+      root = root_path:parent():expand()
+    end
+    vim.api.nvim_command("cd " .. root)
+
+    local t_ok, nvim_tree = pcall(require, "nvim-tree")
+    if t_ok then
+      nvim_tree.change_dir(root) -- 主动修改nvim-tree root，否则切换会出现问题
+    end
+
+    -- 自动添加workspace
+    local w_ok, ws = pcall(require, "workspaces")
+    local ws_name = vim.fn.fnamemodify(root, ":t")
+    local exists_ws_name = false
+    local ws_list = ws.get()
+    if ws_list ~= nil then
+      for _, item in pairs(ws_list) do
+        if ws_name == item.name then
+          exists_ws_name = true
+        end
+      end
+    end
+    if w_ok and not exists_ws_name then
+      ws.add(root)
+    end
+  end
+end
+
 -- 默认的lsp on_attach
 local function on_attach(client, bufnr)
 
@@ -78,19 +115,18 @@ local function on_attach(client, bufnr)
   -- vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   vim.keymap.set("n", "gs", "<Cmd>Telescope aerial theme=dropdown<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  -- vim.keymap.set("n", "gS",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  vim.keymap.set("n", "gj", vim.lsp.buf.implementation, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  vim.keymap.set("n", "gw",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  vim.keymap.set("n", "g ", vim.lsp.buf.implementation, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
   vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Declaration" })
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
   vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
 
-  -- 在attatch成功后改变vim的cwd
-  local rootdir = vim.lsp.buf.list_workspace_folders()
-  if rootdir ~= nil and #rootdir > 0 then
-    if vim.fn.isdirectory(rootdir[1]) == 1 then
-      vim.api.nvim_command("cd " .. rootdir[1])
-    end
-  end
+  vim.keymap.set("n", "<leader>ci", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+  vim.keymap.set("n", "<leader>co", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+
+  -- 在attatch成功后改变vim的cwd，并且注册跳转
+  cd_lsp_root()
+  vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
 
   -- 代码高亮，CursorHold依赖于:h updatetime，通过设置及时的updatetime可以提升高亮的相应速度
   -- 使用RRethy/vim-illuminate替代
@@ -101,14 +137,26 @@ local function on_attach(client, bufnr)
   --     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
   --   augroup end
   -- ]], false)
+
+  -- 支持codelens
+  -- if utils.any_lsp_client_support("textDocument/codeLens") then
+  --   vim.lsp.codelens.refresh()
+  --   vim.cmd([[
+  --   augroup lsp-codelens
+  --   au!
+  --   au! BufEnter,InsertLeave <buffer> lua vim.lsp.codelens.refresh()
+  --   augroup END
+  --   ]])
+  -- end
 end
 
 -- 为lsp补全提供支持
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+-- cmp_nvim_lsp.update_capabilities is deprecated, use cmp_nvim_lsp.default_capabilities instead. See :h deprecated
 local function make_capabilities ()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+  capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
   return capabilities
 end
 

@@ -57,5 +57,25 @@
   "log": {
     "prefix": ["log"],
     "body": ["private final Logger log = LoggerFactory.getLogger(getClass());$0"]
+  },
+  "emptyList": {
+    "prefix": ["emptyList"],
+    "body": ["Collections.emptyList()$0"]
+  },
+  "emptySet": {
+    "prefix": ["emptySet"],
+    "body": ["Collections.emptySet()$0"]
+  },
+  "emptyMap": {
+    "prefix": ["emptyMap"],
+    "body": ["Collections.emptyMap()$0"]
+  },
+  "isEmpty": {
+    "prefix": ["isEmpty"],
+    "body": ["CollectionUtils.isEmpty($1)$0"]
+  },
+  "isNotEmpty": {
+    "prefix": ["isNotEmpty"],
+    "body": ["CollectionUtils.isNotEmpty($1)$0"]
   }
 }

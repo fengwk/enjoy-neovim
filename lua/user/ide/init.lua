@@ -121,10 +121,10 @@ local function extract_lsp_list(tab)
 end
 
 local dap_list = {
-  "debugpy",
-  "delve",
-  "cpptools",
-  "node-debug2-adapter",
+  -- "debugpy",
+  -- "delve",
+  -- "cpptools",
+  -- "node-debug2-adapter",
 }
 
 -- 组装必要安装的包
