@@ -410,12 +410,12 @@ return packer.startup(function(use)
   -- }
 
   -- lsp_lines
-  use({
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    config = function()
-      require("user.conf.lsp_lines")
-    end,
-  })
+  -- use({
+  --   "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+  --   config = function()
+  --     require("user.conf.lsp_lines")
+  --   end,
+  -- })
 
   -- use {
   --   "mhartington/formatter.nvim",
