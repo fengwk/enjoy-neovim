@@ -1,3 +1,4 @@
+require "user.ide.jdtls.enhancer"
 require "user.ide.nvim-dap-ui"
 require "user.ide.nvim-dap-virtual-text"
 require "user.ide.nvim-dap"

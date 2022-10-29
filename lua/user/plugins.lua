@@ -327,7 +327,7 @@ return packer.startup(function(use)
     requires = {
       "nvim-lua/plenary.nvim",
     },
-    tag = "0.1.0",
+    -- tag = "0.1.0",
     config = function()
       require("user.conf.telescope")
     end,
