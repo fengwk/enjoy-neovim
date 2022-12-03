@@ -12,11 +12,10 @@ local lsp_buf = vim.lsp.buf
 local original_jump_to_location = lsp_util.jump_to_location
 -- hack inject
 vim.lsp.util.jump_to_location = function(...)
-  -- print(vim.inspect({...}))
-  original_jump_to_location(...)
-  -- 跳转后增加jumplist标记
+  -- 跳转前增加jumplist标记
   -- :h m'
   vim.cmd "normal! m'"
+  original_jump_to_location(...)
 end
 
 local jump_to_location = lsp_util.jump_to_location
@@ -150,7 +149,7 @@ local function location_handler(prompt_title, opts)
       return
     end
 
-    local items = lsp_util.locations_to_items(result)
+    local items = lsp_util.locations_to_items(result, "utf-8")
     find(prompt_title, items, { opts = opts.telescope })
   end
 end

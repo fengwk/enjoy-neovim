@@ -1,0 +1,45 @@
+-- 使用空格作为leader键
+vim.g.mapleader = " "
+
+local keymap = vim.keymap
+
+-- 保存
+-- keymap.set("n", "<C-s>", "<Cmd>w<CR>", { noremap = true, silent = true, desc = "Save Current Buffer" })
+-- keymap.set("n", "<C-S>", "<Cmd>wa<CR>", { noremap = true, silent = true, desc = "Save All Buffer" })
+
+-- 快速移动光标
+-- keymap.set({ "n", "v" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
+-- keymap.set({ "n", "v" }, "<C-k>", "5k", { noremap = true, desc = "Quick Up" })
+-- keymap.set({ "n", "v" }, "<C-h>", "5h", { noremap = true, desc = "Quick Left" })
+-- keymap.set({ "n", "v" }, "<C-l>", "5l", { noremap = true, desc = "Quick Right" })
+
+-- 清理高亮
+keymap.set("n", "<Esc>", "<Cmd>noh<CR>", { silent = true, desc = "Clear Highlight" })
+
+-- 使用very magic模式进行匹配，更接近于Perl
+-- keymap.set("n", "/", "/\\v", { noremap = true, desc = "Search Perl" })
+
+-- 退出terminal模式
+keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit Terminal Mode" })
+
+-- 调整window大小
+keymap.set("n", "<A-=>", "<Cmd>res +2<CR>", { silent = true, desc = "Increase Window Height" })
+keymap.set("n", "<A-->", "<Cmd>res -2<CR>", { silent = true, desc = "Decrease Window Height" })
+keymap.set("n", "<A-+>", "<Cmd>vertical res +2<CR>", { silent = true, desc = "Increase Window Height" })
+keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "Decrease Window Height" })
+
+-- 复制整个缓冲区内容
+keymap.set("n", "<leader>y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+
+-- 删除单个字符不复制到寄存器中
+keymap.set("n", "x", "\"_x", { noremap = true })
+
+-- 这个脚本允许在选中的每行执行宏
+vim.cmd([[
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+]])
