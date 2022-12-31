@@ -32,7 +32,7 @@ keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "De
 keymap.set("n", "<leader>y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
 
 -- 删除单个字符不复制到寄存器中
-keymap.set("n", "x", "\"_x", { noremap = true })
+-- keymap.set("n", "x", "\"_x", { noremap = true })
 
 -- 这个脚本允许在选中的每行执行宏
 vim.cmd([[

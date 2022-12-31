@@ -1,6 +1,10 @@
 -- https://github.com/kyazdani42/nvim-tree.lua
 
-local nvim_tree = require "nvim-tree"
+local ok, nvim_tree = pcall(require, "nvim-tree")
+if not ok then
+  return
+end
+
 local utils = require "fengwk.utils"
 
 -- :h nvim-tree-setup

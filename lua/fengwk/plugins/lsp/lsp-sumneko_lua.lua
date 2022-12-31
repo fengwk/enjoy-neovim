@@ -34,7 +34,7 @@ return {
 			"stylua.toml",
 			"selene.toml",
 			"selene.yml",
-			".git",
+			-- ".git",
 		}, -1) or vim.fn.getcwd()
 	end,
 }

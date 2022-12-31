@@ -17,13 +17,13 @@ vim.g.wildfire_objects = {
     -- "ap",
     "at",
     -- treesitter-object
-    "ia",
-    "if",
-    "ic",
-    "aa",
+    -- "ia",
+    -- "if",
+    -- "ic",
+    -- "aa",
     -- "af",
     -- "ac",
-    "iC",
+    -- "iC",
   },
   ["html,xml"] = { "at", "it" }
 }

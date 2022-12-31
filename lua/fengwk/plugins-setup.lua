@@ -28,7 +28,7 @@ end
 
 -- 自定义初始化
 packer.init({
-	clone_timeout = 60 * 5, -- git clone超时，秒
+	clone_timeout = 60 * 10, -- git clone超时，秒
 })
 
 return packer.startup(function(use)
@@ -110,7 +110,7 @@ return packer.startup(function(use)
 	use("hrsh7th/cmp-nvim-lsp") -- lsp补全源
 	use("onsails/lspkind.nvim") -- lsp补全源美化
 	use("glepnir/lspsaga.nvim") -- lsp ui增强
-  use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力
+  -- use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力
 	use("stevearc/aerial.nvim") -- outline
   use("RRethy/vim-illuminate") -- 代码符号高亮，并支持在符号之间跳跃
 	-- use("jose-elias-alvarez/typescript.nvim") -- ts lsp增强
@@ -129,15 +129,15 @@ return packer.startup(function(use)
   use("rcarriga/cmp-dap") -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
-  use({
-    "nvim-treesitter/nvim-treesitter",
-    run = function()
-      local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
-      ts_update()
-    end,
-  })
+  -- use({
+  --   "nvim-treesitter/nvim-treesitter",
+  --   run = function()
+  --     local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+  --     ts_update()
+  --   end,
+  -- })
   -- nvim-treesitter-textobjects | 使用treesitter增强textobjets
-  use("nvim-treesitter/nvim-treesitter-textobjects")
+  -- use("nvim-treesitter/nvim-treesitter-textobjects")
 
 	-- 这个命令需要在最后执行，它会在首次安装packer时自动进行配置安装
 	if packer_bootstrap then

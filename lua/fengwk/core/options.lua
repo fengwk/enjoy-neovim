@@ -53,12 +53,12 @@ vim.o.smartindent = true
 -- zr zm的反向操作
 -- zR 打开所有折叠
 -- 使用[z和]z可以跳到折叠区间的前后
--- vim.o.foldmethod = "indent"
+vim.o.foldmethod = "indent"
 -- 使用treesitter能力进行折叠
 -- 如果无法折叠可以使用zx更新折叠解决
 -- https://github.com/nvim-treesitter/nvim-treesitter/issues/1337
-vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+-- vim.o.foldmethod = "expr"
+-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = false
 vim.o.foldlevel = 99
 
