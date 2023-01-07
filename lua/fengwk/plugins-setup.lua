@@ -129,15 +129,15 @@ return packer.startup(function(use)
   use("rcarriga/cmp-dap") -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
-  -- use({
-  --   "nvim-treesitter/nvim-treesitter",
-  --   run = function()
-  --     local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
-  --     ts_update()
-  --   end,
-  -- })
+  use({
+    "nvim-treesitter/nvim-treesitter",
+    run = function()
+      local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
+      ts_update()
+    end,
+  })
   -- nvim-treesitter-textobjects | 使用treesitter增强textobjets
-  -- use("nvim-treesitter/nvim-treesitter-textobjects")
+  use("nvim-treesitter/nvim-treesitter-textobjects")
 
 	-- 这个命令需要在最后执行，它会在首次安装packer时自动进行配置安装
 	if packer_bootstrap then

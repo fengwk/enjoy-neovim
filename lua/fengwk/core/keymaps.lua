@@ -29,7 +29,14 @@ keymap.set("n", "<A-+>", "<Cmd>vertical res +2<CR>", { silent = true, desc = "In
 keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "Decrease Window Height" })
 
 -- 复制整个缓冲区内容
-keymap.set("n", "<leader>y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set("n", "<leader>Y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- 使用系统剪切板复制
+keymap.set({ "n", "v" }, "<leader>y", "\"+y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+keymap.set({ "n" }, "<leader>Y", "\"+Y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set("v", "<C-C>", "\"+y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- 使用系统剪切板黏贴
+keymap.set({ "n", "v" }, "<leader>p", "\"+p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+keymap.set("n" , "<leader>P", "\"+P", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
 
 -- 删除单个字符不复制到寄存器中
 -- keymap.set("n", "x", "\"_x", { noremap = true })

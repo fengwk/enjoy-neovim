@@ -76,7 +76,7 @@ vim.o.listchars= "tab:>-,trail:·,precedes:«,extends:»,"
 -- 使用系统剪切板作为无名寄存器
 -- vim.o.clipboard = 'unnamed'
 -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
-vim.cmd("set clipboard^=unnamed,unnamedplus")
+-- vim.cmd("set clipboard^=unnamed,unnamedplus")
 
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true
@@ -86,8 +86,8 @@ vim.o.encoding = "utf-8" -- vim内部字符表示编码
 vim.o.fileencoding = "utf-8" -- 文件编码
 
 -- 窗口拆分
-vim.o.splitright = true -- 拆分后定位到右边
-vim.o.splitbelow = true -- 拆分后定位到下方
+-- vim.o.splitright = true -- 拆分后定位到右边
+-- vim.o.splitbelow = true -- 拆分后定位到下方
 
 -- 将"-"作为word的一部分
 vim.opt.iskeyword:append("-")

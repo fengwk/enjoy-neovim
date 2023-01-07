@@ -1,6 +1,11 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
 
-require("nvim-treesitter.configs").setup {
+local ok, nvim_treesitter_configs = pcall(require, "nvim-treesitter.configs")
+if not ok then
+  return
+end
+
+nvim_treesitter_configs.setup({
   textobjects = {
     select = {
       enable = true,
@@ -73,4 +78,4 @@ require("nvim-treesitter.configs").setup {
       },
     },
   },
-}
+})

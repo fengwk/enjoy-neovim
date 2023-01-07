@@ -1,5 +1,8 @@
 -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#Javascript
-local dap = require "dap"
+local ok, dap = pcall(require, "dap")
+if not ok then
+  return
+end
 
 local stdpath_data = vim.fn.stdpath("data")
 local node_debug = stdpath_data .. "/mason/packages/node-debug2-adapter/out/src/nodeDebug.js"

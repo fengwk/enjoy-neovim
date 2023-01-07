@@ -190,14 +190,14 @@ M.setup = function()
     lspconfig.on_attach(client, bufnr)
 
     -- jdtls特性
-    -- jdtls.setup_dap({ hotcodereplace = "auto" })
+    jdtls.setup_dap({ hotcodereplace = "auto" })
     jdtls.setup.add_commands()
 
     -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
     -- 注册用于调试的主类，如果是新增的main方法需要使用:JdtRefreshDebugConfigs命令刷新
-    -- if not is_single_file then
-    --   require("jdtls.dap").setup_dap_main_class_configs()
-    -- end
+    if not is_single_file then
+      require("jdtls.dap").setup_dap_main_class_configs()
+    end
     -- 运行当前类的main方法
     -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 
@@ -220,7 +220,7 @@ M.setup = function()
       " command! JdtA lua require'fengwk.plugins.lsp.lsp-jdtls.jdtls-command'.test()
     ]])
 
-    -- 设置jdt的扩展快捷键
+    -- 设置jdt的扩展快捷键，跳转到父类或接口
     vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
 
   end
@@ -264,10 +264,10 @@ M.setup = function()
   -- See https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
   -- debug插件
   local bundles = {
-      vim.fn.glob(utils.fs_concat({ stdpath_config, "lua", "user", "ide", "jdtls", "plugins", "java-debug", "com.microsoft.java.debug.plugin-*.jar"})),
+      vim.fn.glob(utils.fs_concat({ stdpath_data, "mason", "packages", "java-debug-adapter", "extension", "server", "com.microsoft.java.debug.plugin-*.jar"})),
   }
   -- 单元测试插件
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ stdpath_config, "lua", "user", "ide", "jdtls", "plugins", "vscode-java-test", "*.jar" })), "\n"))
+  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ stdpath_data, "mason", "packages", "java-test", "extension", "server", "*.jar" })), "\n"))
 
   local extendedClientCapabilities = jdtls.extendedClientCapabilities
   extendedClientCapabilities.resolveAdditionalTextEditsSupport = true

@@ -35,10 +35,38 @@
 -- end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
 -- vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('persistent-breakpoints.api').clear_all_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })
 
+local ok_dap, dap = pcall(require, "dap")
+if not ok_dap then
+  return
+end
+
+require("fengwk.plugins.lsp.nvim-dap-ui")
+require("fengwk.plugins.lsp.nvim-dap-virtual-text")
+require("fengwk.plugins.lsp.dap-cpp")
+require("fengwk.plugins.lsp.dap-go")
+require("fengwk.plugins.lsp.dap-neovim")
+require("fengwk.plugins.lsp.dap-nodejs")
+require("fengwk.plugins.lsp.dap-python")
+
+local ok_mason_nvim_dap, mason_nvim_dap = pcall(require, "mason-nvim-dap")
+if ok_mason_nvim_dap then
+  mason_nvim_dap.setup({
+    -- https://github.com/jay-babu/mason-nvim-dap.nvim/blob/main/lua/mason-nvim-dap/mappings/source.lua
+    ensure_installed = {
+      "cppdbg",
+      "delve",
+      "node2",
+      "python",
+      "javadbg",
+      "javatest",
+    }
+  })
+end
+
 vim.keymap.set("n", "<leader>db", "<Cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
 vim.keymap.set("n", "<leader>dB", function()
   vim.ui.input({ prompt = "Condition: " }, function(cond)
-    require("dap").set_breakpoint(cond)
+    dap.set_breakpoint(cond)
   end)
 end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
 vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('dap').clear_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })

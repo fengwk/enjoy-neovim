@@ -43,8 +43,8 @@ augroup end
 ]]
 
 vim.o.bg = "dark"
-vim.cmd "colorscheme nightfly"
+-- vim.cmd "colorscheme nightfly"
 -- vim.cmd "colorscheme my-darkplus"
 -- vim.cmd "colorscheme gruvbox"
 -- vim.cmd "colorscheme kanagawa"
--- vim.cmd "colorscheme vscode"
+vim.cmd "colorscheme vscode"

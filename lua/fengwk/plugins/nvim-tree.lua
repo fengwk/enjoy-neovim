@@ -5,7 +5,7 @@ if not ok then
   return
 end
 
-local utils = require "fengwk.utils"
+local utils = require("fengwk.utils")
 
 -- :h nvim-tree-setup
 local config = {

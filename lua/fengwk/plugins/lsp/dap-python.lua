@@ -1,6 +1,8 @@
 -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#Python
-
-local dap = require "dap"
+local ok, dap = pcall(require, "dap")
+if not ok then
+  return
+end
 
 local stdpath_data = vim.fn.stdpath("data")
 -- 使用Mason安装

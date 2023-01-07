@@ -1,5 +1,8 @@
 -- https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#go-using-delve-directly
-local dap = require "dap"
+local ok, dap = pcall(require, "dap")
+if not ok then
+  return
+end
 
 dap.adapters.delve = {
   type = 'server',
