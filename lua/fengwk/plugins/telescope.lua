@@ -280,7 +280,7 @@ local function telescope_builtin_live_grep_args()
   -- -g 通配符文件或文件夹，可以用!来取反
   -- -F fixed-string 原意字符串，类似python的 r'xxx'
   -- 例如使用`-g **/lsp/* require`查找lsp目录下所有require字符
-  telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_dropdown())
+  telescope.extensions.live_grep_args.live_grep_args(telescope_themes.get_ivy())
   -- telescope_builtin.live_grep({
   --   -- {cwd}                 (string)        root dir to search from
   --   --                                       (default: cwd, use

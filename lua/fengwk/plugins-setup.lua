@@ -46,6 +46,7 @@ return packer.startup(function(use)
   use("Mofiqul/vscode.nvim")
   use("bluz71/vim-nightfly-colors")
   use("fengwk/my-darkplus.nvim")
+  use("sainnhe/everforest")
 
 	-- file explorer
   use({ "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons" })
@@ -65,7 +66,7 @@ return packer.startup(function(use)
 
 	-- editor enhancer
 	use("kylechui/nvim-surround") -- surround
-	use("vim-scripts/ReplaceWithRegister") -- 使用gr进行替换
+	-- use("vim-scripts/ReplaceWithRegister") -- 使用gr进行替换，与LSP快捷键冲突，有替代方式先注释
 	use("numToStr/Comment.nvim") -- 注释
 	use("mg979/vim-visual-multi") -- 多光标，:h vm-*
   use({ "kevinhwang91/nvim-bqf", ft = "qf" }) -- quickfix增强
@@ -109,7 +110,7 @@ return packer.startup(function(use)
 	use("neovim/nvim-lspconfig") -- lsp配置
 	use("hrsh7th/cmp-nvim-lsp") -- lsp补全源
 	use("onsails/lspkind.nvim") -- lsp补全源美化
-	use("glepnir/lspsaga.nvim") -- lsp ui增强
+	-- use("glepnir/lspsaga.nvim") -- lsp ui增强
   -- use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力
 	use("stevearc/aerial.nvim") -- outline
   use("RRethy/vim-illuminate") -- 代码符号高亮，并支持在符号之间跳跃

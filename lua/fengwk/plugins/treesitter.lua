@@ -1,36 +1,21 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 
 require("nvim-treesitter.configs").setup({
-  -- A list of parser names, or "all"
-  ensure_installed = {},
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  -- Automatically install missing parsers when entering buffer
-  auto_install = true,
-
-  -- List of parsers to ignore installing (for "all")
-  ignore_install = {},
-
-  ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-  -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+  ensure_installed = {}, -- 自动安装清单，可以使用"all"安装所有解析器
+  sync_install = false, -- 是否同步安装
+  auto_install = true, -- 进入缓冲区时自动安装
 
   highlight = {
-    -- `false` will disable the whole extension
-    -- enable = true,
-    enable = false,
+    enable = true, -- 是否开启高亮
 
-    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-    -- the name of the parser)
-    -- list of language that will be disabled
+    -- 这个函数可以定义什么情况下关闭高亮，返回true时将关闭高亮
     disable = function(lang, buf)
-      -- return false
-      if lang == "json" then -- 大json经常卡顿，先过滤掉
-        return false
+      -- 大json文件会使得渲染时卡顿，因此关闭高亮
+      if lang == "json" then
+        return true
       end
-      local max_filesize = 100 * 1024 -- 100 KB
+      -- 超过100kb的文件不启动高亮
+      local max_filesize = 100 * 1024
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
       if ok and stats and stats.size > max_filesize then
         return true

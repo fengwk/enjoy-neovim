@@ -10,9 +10,9 @@ end
 toggleterm.setup({
   size = function(term)
     if term.direction == "horizontal" then
-      return vim.o.lines * 0.25
+      return vim.o.lines * 0.25 -- 如果是水平方向打开，占25%
     elseif term.direction == "vertical" then
-      return vim.o.columns * 0.3
+      return vim.o.columns * 0.3 -- 如果是垂直方向打开，占30%
     end
   end,
   -- open_mapping = [[<A-`>]],
@@ -27,10 +27,13 @@ toggleterm.setup({
   auto_scroll = true, -- automatically scroll to the bottom on terminal outpu
 })
 
--- mappings
+-- 在cwd路径打开
 local opts = { noremap = true, silent = true }
-vim.api.nvim_set_keymap("n", "``", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
-vim.api.nvim_set_keymap("t", "``", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
+vim.keymap.set({ "n", "t" }, "``", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
+-- 在当前缓冲区所在路径打开
+vim.keymap.set({ "n", "t" }, "`<Enter>", function()
+  vim.api.nvim_command("ToggleTerm direction=horizontal dir=" .. vim.fn.expand("%:p:h"))
+end, opts)
 -- vim.api.nvim_set_keymap("n", "~", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
 -- vim.api.nvim_set_keymap("t", "~", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
 -- vim.api.nvim_set_keymap("n", "<A-`>", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)

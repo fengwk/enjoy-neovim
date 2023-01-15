@@ -8,10 +8,10 @@ local keymap = vim.keymap
 -- keymap.set("n", "<C-S>", "<Cmd>wa<CR>", { noremap = true, silent = true, desc = "Save All Buffer" })
 
 -- 快速移动光标
--- keymap.set({ "n", "v" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
--- keymap.set({ "n", "v" }, "<C-k>", "5k", { noremap = true, desc = "Quick Up" })
--- keymap.set({ "n", "v" }, "<C-h>", "5h", { noremap = true, desc = "Quick Left" })
--- keymap.set({ "n", "v" }, "<C-l>", "5l", { noremap = true, desc = "Quick Right" })
+-- keymap.set({ "n", "x" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
+-- keymap.set({ "n", "x" }, "<C-k>", "5k", { noremap = true, desc = "Quick Up" })
+-- keymap.set({ "n", "x" }, "<C-h>", "5h", { noremap = true, desc = "Quick Left" })
+-- keymap.set({ "n", "x" }, "<C-l>", "5l", { noremap = true, desc = "Quick Right" })
 
 -- 清理高亮
 keymap.set("n", "<Esc>", "<Cmd>noh<CR>", { silent = true, desc = "Clear Highlight" })
@@ -29,14 +29,15 @@ keymap.set("n", "<A-+>", "<Cmd>vertical res +2<CR>", { silent = true, desc = "In
 keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "Decrease Window Height" })
 
 -- 复制整个缓冲区内容
--- keymap.set("n", "<leader>Y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+keymap.set("n", "<leader>y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- 放置visual mode下p覆盖"寄存器
+keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override register" })
 -- 使用系统剪切板复制
-keymap.set({ "n", "v" }, "<leader>y", "\"+y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
-keymap.set({ "n" }, "<leader>Y", "\"+Y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
--- keymap.set("v", "<C-C>", "\"+y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set({ "n", "x" }, "<leader>y", "\"+y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set({ "n" }, "<leader>Y", "\"+Y", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
 -- 使用系统剪切板黏贴
-keymap.set({ "n", "v" }, "<leader>p", "\"+p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
-keymap.set("n" , "<leader>P", "\"+P", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set({ "n", "x" }, "<leader>p", "\"+p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
+-- keymap.set("n" , "<leader>P", "\"+P", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
 
 -- 删除单个字符不复制到寄存器中
 -- keymap.set("n", "x", "\"_x", { noremap = true })

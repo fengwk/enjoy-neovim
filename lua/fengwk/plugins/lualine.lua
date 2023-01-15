@@ -5,32 +5,25 @@ if not ok_lualine then
   return
 end
 
-local function format_messages(msgs)
+-- 格式化信息样式
+local function format_messages(messages)
   local result = {}
   local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
   local ms = vim.loop.hrtime() / 1000000
   local frame = math.floor(ms / 120) % #spinners
   local i = 1
-  for _, msg in pairs(msgs) do
+  for _, message in pairs(messages) do
     -- Only display at most 2 progress messages at a time to avoid clutter
     if i < 3 then
-      table.insert(result, (msg.percentage or 0) .. "%% " .. (msg.title or ""))
+      table.insert(result, (message.percentage or 0) .. "%% " .. (message.title or ""))
       i = i + 1
     end
   end
   return table.concat(result, " ") .. " " .. spinners[frame + 1]
 end
 
+-- lsp信息
 function _G._lualine_lsp_progress()
-  local messages = vim.lsp.util.get_progress_messages()
-  if #messages == 0 then
-    return ""
-  end
-  return " " .. format_messages(messages)
-end
-
-function _G._lualine_dap()
-  require("dap").status()
   local messages = vim.lsp.util.get_progress_messages()
   if #messages == 0 then
     return ""
@@ -47,6 +40,15 @@ local diagnostics = {
   colored = false,
   update_in_insert = false,
   always_visible = false,
+}
+
+-- 模式
+local mode = {
+  "mode",
+  fmt = function(m)
+    -- print(m, "")
+    return m
+  end
 }
 
 -- https://github.com/stevearc/aerial.nvim#lualine
@@ -86,7 +88,7 @@ M.setup = function(opts)
       }
     },
     sections = {
-      lualine_a = { "mode" },
+      lualine_a = { mode },
       lualine_b = { "filename", "branch", diagnostics },
       lualine_c = { aerial, "require('dap').status()", "_G._lualine_lsp_progress()" },
       lualine_x = { "encoding" },

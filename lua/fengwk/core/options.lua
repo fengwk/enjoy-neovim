@@ -43,8 +43,8 @@ vim.o.tabstop = 4 -- 指定vim中显示的制表符宽度
 vim.o.softtabstop = 4 -- 指定tab键宽度
 vim.o.shiftwidth = 4 -- 设置 >> << == 时的缩进宽度
 vim.o.expandtab = true -- 使用空格进行缩进
-vim.o.autoindent = true -- 辅助缩进
-vim.o.smartindent = true
+vim.o.autoindent = true -- 在这种缩进形式中，新增加的行和前一行使用相同的缩进形式
+vim.o.smartindent = true -- 在这种缩进模式中，每一行都和前一行有相同的缩进量，同时这种缩进模式能正确地识别出花括号，当前一行为开花括号“{”时，下一新行将自动增加缩进；当前一行为闭花括号“}”时，则下一新行将取消缩进
 
 -- 使用treesitter进行折叠
 -- zc 折叠当前代码闭合片段，再次zc折叠上一层级的代码闭合片段
@@ -76,7 +76,7 @@ vim.o.listchars= "tab:>-,trail:·,precedes:«,extends:»,"
 -- 使用系统剪切板作为无名寄存器
 -- vim.o.clipboard = 'unnamed'
 -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
--- vim.cmd("set clipboard^=unnamed,unnamedplus")
+vim.cmd("set clipboard^=unnamed,unnamedplus")
 
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true
@@ -90,7 +90,7 @@ vim.o.fileencoding = "utf-8" -- 文件编码
 -- vim.o.splitbelow = true -- 拆分后定位到下方
 
 -- 将"-"作为word的一部分
-vim.opt.iskeyword:append("-")
+-- vim.opt.iskeyword:append("-")
 
 -- 更快的代码高亮
 -- vim.o.updatetime = 1000
