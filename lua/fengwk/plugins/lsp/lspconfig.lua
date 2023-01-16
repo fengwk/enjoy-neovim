@@ -91,7 +91,8 @@ local function on_attach(_, bufnr)
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
   cd_lsp_root()
-  vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
+  -- 在workspace增强逻辑中完成cwd自动切换
+  -- vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
 end
 
 -- 添加补全能力支持

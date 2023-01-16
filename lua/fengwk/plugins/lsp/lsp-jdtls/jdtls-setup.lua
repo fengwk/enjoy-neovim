@@ -25,7 +25,6 @@ local java_home_preset = {
   java_home_18 = os.getenv("JAVA_HOME_18"),
 }
 
-local stdpath_config = vim.fn.stdpath("config")
 local stdpath_data = vim.fn.stdpath("data")
 local stdpath_cache = vim.fn.stdpath("cache")
 

@@ -7,6 +7,7 @@ end
 
 local utils = require("fengwk.utils")
 
+-- 获取真实路径到工作空间名称的映射
 local function get_path_to_ws_name_map()
   local ws_list = ws.get()
   if ws_list == nil or #ws_list == 0 then
@@ -19,7 +20,7 @@ local function get_path_to_ws_name_map()
   return path_to_ws_name
 end
 
--- 获取path路径的可加载工作空间
+-- 获取指定path路径的可加载工作空间，如果存在多个只获取里path最近的一个
 local function get_can_loaded_ws(path)
   -- 获取路径到工作空间名称的映射
   local path_to_ws_name = get_path_to_ws_name_map()
@@ -52,6 +53,23 @@ local function get_record_file(ws_dir, path)
   return record_file
 end
 
+-- 打开当前工作空间记录的缓冲区
+M.reload_ws_buf = function(ws_dir)
+  local record_file = get_record_file(ws_dir, vim.fn.getcwd())
+  if record_file == nil or record_file == "" then
+    return
+  end
+  local buf_path = utils.read_file(record_file)
+  if buf_path ~= nil then
+    vim.schedule(function()
+      pcall(function()
+        -- 如果缓冲区冲突此处会出现异常，使用pcall忽略
+        vim.api.nvim_command("edit " .. buf_path)
+      end)
+    end)
+  end
+end
+
 M.auto_load_ws = function(ws_dir)
   local buf_path = vim.fn.expand("%:p")
   if buf_path == nil or buf_path == "" then -- 只在无名缓冲区自动加载
@@ -71,26 +89,18 @@ M.record_ws_buf = function(ws_dir)
   end
 
   local record_file = get_record_file(ws_dir, buf_path)
-  if record_file == nil then
-    return
+  if record_file ~= nil then
+    utils.write_file(record_file, buf_path)
   end
-  utils.write_file(record_file, buf_path)
-end
 
--- 打开当前工作空间记录的缓冲区
-M.reload_ws_buf = function(ws_dir)
-  local record_file = get_record_file(ws_dir, vim.fn.getcwd())
-  if record_file == nil or record_file == "" then
-    return
-  end
-  local buf_path = utils.read_file(record_file)
-  if buf_path ~= nil then
-    vim.schedule(function()
-      pcall(function()
-        -- 如果缓冲区冲突此处会出现异常，使用pcall忽略
-        vim.api.nvim_command("edit " .. buf_path)
-      end)
-    end)
+  -- 如果当前缓冲区并非工作空间cwd则进行切换
+  local ws_name, ws_path = get_can_loaded_ws(buf_path)
+  if ws_name ~= nil and ws_path ~= nil then
+    vim.api.nvim_command("cd " .. ws_path) -- 切换根目录
+    local t_ok, nvim_tree = pcall(require, "nvim-tree")
+    if t_ok then
+      nvim_tree.change_dir(ws_path) -- 主动修改nvim-tree root，否则切换会出现问题
+    end
   end
 end
 
