@@ -21,19 +21,16 @@ end
 --   }
 -- end
 
-local config = {}
-
--- blame格式
-config.current_line_blame = false
-config.current_line_blame_opts = {
-  virt_text = true,
-  virt_text_pos = "right_align", -- "eol" | "overlay" | "right_align"
-  delay = 0,
-  ignore_whitespace = false,
-}
-config.current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>"
-
-gitsigns.setup(config)
+gitsigns.setup({
+  current_line_blame = false, -- 默认情况下是否展示blame
+  current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = "right_align", -- "eol" | "overlay" | "right_align"
+    delay = 0,
+    ignore_whitespace = false,
+  },
+})
 
 -- blame开关
-vim.keymap.set("n", "<leader>gb", ":Gitsigns toggle_current_line_blame<CR>", { silent = true, desc = "Toggle Git Blame" })
+vim.keymap.set("n", "<leader>gb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { silent = true, desc = "Toggle Git Blame" })

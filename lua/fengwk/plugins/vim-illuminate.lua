@@ -5,47 +5,25 @@ if not ok then
   return
 end
 
+local utils = require("fengwk.utils")
+
 illuminate.configure({
-    -- providers: provider used to get references in the buffer, ordered by priority
-    providers = {
-        'lsp',
-        -- 'treesitter',
-        -- 'regex',
-    },
-    -- delay: delay in milliseconds
-    delay = 0,
-    -- filetype_overrides: filetype specific overrides.
-    -- The keys are strings to represent the filetype while the values are tables that
-    -- supports the same keys passed to .configure except for filetypes_denylist and filetypes_allowlist
-    filetype_overrides = {},
-    -- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
-    filetypes_denylist = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial" },
-    -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
-    filetypes_allowlist = {},
-    -- modes_denylist: modes to not illuminate, this overrides modes_allowlist
-    modes_denylist = {},
-    -- modes_allowlist: modes to illuminate, this is overriden by modes_denylist
-    modes_allowlist = {},
-    -- providers_regex_syntax_denylist: syntax to not illuminate, this overrides providers_regex_syntax_allowlist
-    -- Only applies to the 'regex' provider
-    -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
-    providers_regex_syntax_denylist = {},
-    -- providers_regex_syntax_allowlist: syntax to illuminate, this is overriden by providers_regex_syntax_denylist
-    -- Only applies to the 'regex' provider
-    -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
-    providers_regex_syntax_allowlist = {},
-    -- under_cursor: whether or not to illuminate under the cursor
-    under_cursor = true,
+  -- 指定提供符号引用的程序，可以指定的程序有：lsp、treesitter、regex
+  -- 同时指定了多个时会按照排序的优先级获取
+  providers = {
+    'lsp',
+    -- 'treesitter',
+    -- 'regex',
+  },
+  -- 延迟的毫秒数
+  delay = 0,
+  -- 文件类型黑名单
+  filetypes_denylist = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial" },
+  -- 允许的模式列表
+  modes_allowlist = { 'n' },
+  -- 当文件行数大于阈值时关闭该功能
+  large_file_cutoff = utils.large_file_lines_threshold,
 })
 
-vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
-vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
--- vim.keymap.set("n", "<Tab>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { noremap = true, silent = true, desc = "Next Symbol" })
--- vim.keymap.set("n", "<S-Tab>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { noremap = true, silent = true, desc = "Prev Symbol" })
-
--- h: highlight-args
--- vim.cmd([[
---   hi def IlluminatedWordText cterm=bold ctermbg=red guibg=LightYellow
---   hi def IlluminatedWordRead cterm=bold ctermbg=red guibg=LightYellow
---   hi def IlluminatedWordWrite cterm=bold ctermbg=red guibg=LightYellow
--- ]])
+vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { silent = true, desc = "Next Symbol" })
+vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { silent = true, desc = "Prev Symbol" })

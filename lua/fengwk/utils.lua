@@ -1,5 +1,3 @@
-local M = {}
-
 -- os_name当前操作系统的名称：win、wsl、linux
 local os_name, fs_separator
 if vim.fn.has("win32") == 1 then
@@ -191,7 +189,7 @@ local function list_merge(l1, l2)
 end
 
 -- 检查文件是否存在
-function exists_file(filename)
+local function exists_file(filename)
   local file = io.open(filename, "rb")
   if file then
     file:close()
@@ -269,26 +267,34 @@ local function is_not_file_ft(ft)
   return vim.tbl_contains(not_file_ft, ft)
 end
 
-M.os_name = os_name
-M.fs_separator = fs_separator
-M.exec_cmd = exec_cmd
-M.fs_concat = fs_concat
-M.is_uri = is_uri
-M.iter_path_until_root = iter_path_until_root
-M.find_root_dir = find_root_dir
-M.is_tty = is_tty
-M.adapt_array = adapt_array
-M.get_current_filetype = get_current_filetype
-M.table_filter = table_filter
-M.non_nil = non_nil
-M.list_contains = list_contains
-M.list_merge = list_merge
-M.exists_file = exists_file
-M.ensure_mkdir = ensure_mkdir
-M.read_file = read_file
-M.write_file = write_file
-M.input = input
-M.any_lsp_client_support = any_lsp_client_support
-M.path_to_name = path_to_name
-M.is_not_file_ft = is_not_file_ft
-return M
+-- 大文件行数阈值，3W行
+local large_file_lines_threshold = 30000
+-- 大文件占用内存阈值，1M
+local large_file_size_threshold = 1024 * 1024
+
+return {
+  os_name = os_name,
+  fs_separator = fs_separator,
+  exec_cmd = exec_cmd,
+  fs_concat = fs_concat,
+  is_uri = is_uri,
+  iter_path_until_root = iter_path_until_root,
+  find_root_dir = find_root_dir,
+  is_tty = is_tty,
+  adapt_array = adapt_array,
+  get_current_filetype = get_current_filetype,
+  table_filter = table_filter,
+  non_nil = non_nil,
+  list_contains = list_contains,
+  list_merge = list_merge,
+  exists_file = exists_file,
+  ensure_mkdir = ensure_mkdir,
+  read_file = read_file,
+  write_file = write_file,
+  input = input,
+  any_lsp_client_support = any_lsp_client_support,
+  path_to_name = path_to_name,
+  is_not_file_ft = is_not_file_ft,
+  large_file_lines_threshold = large_file_lines_threshold,
+  large_file_size_threshold = large_file_size_threshold,
+}

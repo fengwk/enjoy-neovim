@@ -1,6 +1,13 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 
-require("nvim-treesitter.configs").setup({
+local ok, nvim_treesitter_config = pcall(require, "nvim-treesitter.configs")
+if not ok then
+  return
+end
+
+local utils = require("fengwk.utils")
+
+nvim_treesitter_config.setup({
   ensure_installed = {}, -- 自动安装清单，可以使用"all"安装所有解析器
   sync_install = false, -- 是否同步安装
   auto_install = true, -- 进入缓冲区时自动安装
@@ -14,12 +21,17 @@ require("nvim-treesitter.configs").setup({
       if lang == "json" then
         return true
       end
-      -- 超过100kb的文件不启动高亮
-      local max_filesize = 100 * 1024
+      -- 如果文件大小超过阈值则不高亮
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > max_filesize then
+      if ok and stats and stats.size > utils.large_file_size_threshold then
         return true
       end
+      -- 如果文件行数超过阈值则不高亮
+      local line_count = vim.api.nvim_buf_line_count(0)
+      if line_count and line_count > utils.large_file_lines_threshold then
+        return true
+      end
+      -- 其它情况返回false表示启用高亮
       return false
     end,
 

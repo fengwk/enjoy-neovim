@@ -143,4 +143,4 @@ end
 nvim_tree.setup(config)
 
 -- 展开或关闭NvimTree，如果是展开将定位到文件对应的NvimTree位置
-vim.api.nvim_set_keymap("n", "<leader>e", "<Cmd>NvimTreeFindFileToggle<CR>", { noremap = true, silent = true, desc = "NvimTree Find File Toggle" })
+vim.api.nvim_set_keymap("n", "<leader>e", "<Cmd>NvimTreeFindFileToggle<CR>", { silent = true, desc = "NvimTree Find File Toggle" })

@@ -111,7 +111,7 @@ return packer.startup(function(use)
 	use("hrsh7th/cmp-nvim-lsp") -- lsp补全源
 	use("onsails/lspkind.nvim") -- lsp补全源美化
 	-- use("glepnir/lspsaga.nvim") -- lsp ui增强
-  -- use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力
+  -- use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力，目前看这个插件会导致性能下降
 	use("stevearc/aerial.nvim") -- outline
   use("RRethy/vim-illuminate") -- 代码符号高亮，并支持在符号之间跳跃
 	-- use("jose-elias-alvarez/typescript.nvim") -- ts lsp增强

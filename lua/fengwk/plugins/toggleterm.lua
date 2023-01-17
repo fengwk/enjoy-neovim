@@ -1,8 +1,10 @@
 -- https://github.com/akinsho/toggleterm.nvim
 
-local toggleterm = require "toggleterm"
-local utils = require "fengwk.utils"
+local toggleterm = require("toggleterm")
+local utils = require("fengwk.utils")
 
+-- 在当前缓冲区所在文件夹的路径，使用指定方向打开终端
+-- @param direction horizontal|vertical|float
 function _G._toggleterm_toggle_curdir(direction)
   vim.api.nvim_command("ToggleTerm direction=" .. direction .. " dir=" .. vim.fn.expand("%:p:h"))
 end
@@ -15,31 +17,11 @@ toggleterm.setup({
       return vim.o.columns * 0.3 -- 如果是垂直方向打开，占30%
     end
   end,
-  -- open_mapping = [[<A-`>]],
-  start_in_insert = true,
-  insert_mappings = true, -- whether or not the open mapping applies in insert mode
-  terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
-  persist_size = true,
-  persist_mode = true, -- if set to true (default) the previous terminal mode will be remembered
-  direction = "horizontal", -- vertical | horizontal | tab | float
-  close_on_exit = true, -- close the terminal window when the process exits
-  shell = utils.os_name == "win" and "powershell.exe" or vim.o.shell, -- change the default shell
-  auto_scroll = true, -- automatically scroll to the bottom on terminal outpu
+  shell = utils.os_name == "win" and "powershell.exe" or vim.o.shell, -- 在window下指定powershell，否则使用vim默认的shell
 })
 
--- 在cwd路径打开
-local opts = { noremap = true, silent = true }
-vim.keymap.set({ "n", "t" }, "``", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
--- 在当前缓冲区所在路径打开
+-- 设置键位映射
+vim.keymap.set({ "n", "t" }, "``", "<Cmd>ToggleTerm direction=horizontal<CR>", { silent = true, desc = "Toggle Term In CWD" })
 vim.keymap.set({ "n", "t" }, "`<Enter>", function()
   vim.api.nvim_command("ToggleTerm direction=horizontal dir=" .. vim.fn.expand("%:p:h"))
-end, opts)
--- vim.api.nvim_set_keymap("n", "~", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
--- vim.api.nvim_set_keymap("t", "~", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
--- vim.api.nvim_set_keymap("n", "<A-`>", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
--- vim.api.nvim_set_keymap("t", "<A-`>", "<Cmd>ToggleTerm direction=horizontal<CR>", opts)
--- vim.api.nvim_set_keymap("n", "<A-~>", "<Cmd>call v:lua._toggleterm_toggle_curdir('float')<CR>", opts)
--- vim.api.nvim_set_keymap("n", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
--- vim.api.nvim_set_keymap("t", "~", "<Cmd>ToggleTerm direction=float<CR>", opts)
--- vim.api.nvim_set_keymap("n", "tv", ":ToggleTerm direction=vertical dir=" .. termdir .."<CR>", opts)
--- vim.api.nvim_set_keymap("n", "tf", ":ToggleTerm direction=float dir=" .. termdir .."<CR>", opts)
+end, { desc = "Toggle Term In Current Buffer Dir" })

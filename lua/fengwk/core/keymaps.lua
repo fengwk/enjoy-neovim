@@ -3,6 +3,9 @@ vim.g.mapleader = " "
 
 local keymap = vim.keymap
 
+-- <C-z>将强制推出vim，删除这个快捷键放置误触
+keymap.set("n", "<C-z>", "<nop>")
+
 -- 保存
 -- keymap.set("n", "<C-s>", "<Cmd>w<CR>", { noremap = true, silent = true, desc = "Save Current Buffer" })
 -- keymap.set("n", "<C-S>", "<Cmd>wa<CR>", { noremap = true, silent = true, desc = "Save All Buffer" })
@@ -20,13 +23,17 @@ keymap.set("n", "<Esc>", "<Cmd>noh<CR>", { silent = true, desc = "Clear Highligh
 -- keymap.set("n", "/", "/\\v", { noremap = true, desc = "Search Perl" })
 
 -- 退出terminal模式
-keymap.set("t", "<Esc>", "<C-\\><C-n>", { noremap = true, silent = true, desc = "Exit Terminal Mode" })
+keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true, desc = "Exit Terminal Mode" })
 
 -- 调整window大小
 keymap.set("n", "<A-=>", "<Cmd>res +2<CR>", { silent = true, desc = "Increase Window Height" })
 keymap.set("n", "<A-->", "<Cmd>res -2<CR>", { silent = true, desc = "Decrease Window Height" })
 keymap.set("n", "<A-+>", "<Cmd>vertical res +2<CR>", { silent = true, desc = "Increase Window Height" })
 keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "Decrease Window Height" })
+
+-- quickfix
+keymap.set("n", "[q", "<Cmd>cp<CR>", { silent = true, desc = "Quickfix Prev" })
+keymap.set("n", "]q", "<Cmd>cn<CR>", { silent = true, desc = "Quickfix Next" })
 
 -- 复制整个缓冲区内容
 keymap.set("n", "<leader>y", "mmggVGy`m", { noremap = true, silent = true, desc = "Yank Entire Buffer" })

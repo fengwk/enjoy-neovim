@@ -1,14 +1,13 @@
 -- https://github.com/gbrlsnchs/telescope-lsp-handlers.nvim
-local telescope = require('telescope')
-local pickers = require('telescope.pickers')
-local finders = require('telescope.finders')
-local actions = require('telescope.actions')
-local action_state = require('telescope.actions.state')
-local make_entry = require('telescope.make_entry')
-local conf = require('telescope.config').values
-
-local lsp_util = vim.lsp.util
+local telescope = require("telescope")
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local actions = require("telescope.actions")
+local action_state = require("telescope.actions.state")
+local make_entry = require("telescope.make_entry")
+local conf = require("telescope.config").values
 local lsp_buf = vim.lsp.buf
+local lsp_util = vim.lsp.util
 local original_jump_to_location = lsp_util.jump_to_location
 -- hack inject
 vim.lsp.util.jump_to_location = function(...)
@@ -21,9 +20,9 @@ end
 local jump_to_location = lsp_util.jump_to_location
 
 local mapping_actions = {
-  ['<C-x>'] = actions.file_split,
-  ['<C-v>'] = actions.file_vsplit,
-  ['<C-t>'] = actions.file_tab,
+  ["<C-x>"] = actions.file_split,
+  ["<C-v>"] = actions.file_vsplit,
+  ["<C-t>"] = actions.file_tab,
 }
 
 local function jump_fn(prompt_bufnr, action)
@@ -54,15 +53,15 @@ local function jump_fn(prompt_bufnr, action)
       uri = uri,
       range = {
         start = pos,
-        ['end'] = pos,
+        ["end"] = pos,
       }
     }, "utf-8")
   end
 end
 
 local function attach_location_mappings(prompt_bufnr, map)
-  local modes = { 'i', 'n' }
-  local keys = { '<CR>', '<C-x>', '<C-v>', '<C-t>' }
+  local modes = { "i", "n" }
+  local keys = { "<CR>", "<C-x>", "<C-v>", "<C-t>" }
 
   for _, mode in pairs(modes) do
     for _, key in pairs(keys) do
@@ -88,7 +87,7 @@ local function apply_edit_fn(prompt_bufnr)
       if action.edit then
         lsp_util.apply_workspace_edit(action.edit)
       end
-      if type(action.command) == 'table' then
+      if type(action.command) == "table" then
         lsp_buf.execute_command(action.command)
       end
     else
@@ -98,8 +97,8 @@ local function apply_edit_fn(prompt_bufnr)
 end
 
 local function attach_code_action_mappings(prompt_bufnr, map)
-  map('i', '<CR>', apply_edit_fn(prompt_bufnr))
-  map('n', '<CR>', apply_edit_fn(prompt_bufnr))
+  map("i", "<CR>", apply_edit_fn(prompt_bufnr))
+  map("n", "<CR>", apply_edit_fn(prompt_bufnr))
 
   return true
 end
@@ -127,7 +126,7 @@ local function find(prompt_title, items, find_opts)
 end
 
 local function get_correct_result(result1, result2)
-  return type(result1) == 'table' and result1 or result2
+  return type(result1) == "table" and result1 or result2
 end
 
 local function location_handler(prompt_title, opts)
@@ -215,7 +214,7 @@ local function code_action_handler(prompt_title, opts)
           valid = line ~= nil,
           value = line,
           ordinal = line.idx .. line.title,
-          display = string.format('%s%d: %s', opts.prefix, line.idx, line.title),
+          display = string.format("%s%d: %s", opts.prefix, line.idx, line.title),
         }
       end,
       attach_mappings = attach_code_action_mappings,
@@ -228,38 +227,38 @@ end
 return telescope.register_extension({
   setup = function(opts)
     -- Use default options if needed.
-    opts = vim.tbl_deep_extend('keep', opts, {
+    opts = vim.tbl_deep_extend("keep", opts, {
       disable = {},
       location = {
         telescope = {},
-        no_results_message = 'No references found',
+        no_results_message = "No references found",
       },
       symbol = {
         telescope = {},
-        no_results_message = 'No symbols found',
+        no_results_message = "No symbols found",
       },
       call_hierarchy = {
         telescope = {},
-        no_results_message = 'No calls found',
+        no_results_message = "No calls found",
       },
       code_action = {
         telescope = {},
-        no_results_message = 'No code actions available',
+        no_results_message = "No code actions available",
         prefix = '',
       },
     })
 
     local handlers = {
-      ['textDocument/declaration'] = location_handler('LSP Declarations', opts.location),
-      ['textDocument/definition'] = location_handler('LSP Definitions', opts.location),
-      ['textDocument/implementation'] = location_handler('LSP Implementations', opts.location),
-      ['textDocument/typeDefinition'] = location_handler('LSP Type Definitions', opts.location),
-      ['textDocument/references'] = location_handler('LSP References', opts.location),
-      ['textDocument/documentSymbol'] = symbol_handler('LSP Document Symbols', opts.symbol),
-      ['workspace/symbol'] = symbol_handler('LSP Workspace Symbols', opts.symbol),
-      ['callHierarchy/incomingCalls'] = call_hierarchy_handler('LSP Incoming Calls', 'from', opts.call_hierarchy),
-      ['callHierarchy/outgoingCalls'] = call_hierarchy_handler('LSP Outgoing Calls', 'to', opts.call_hierarchy),
-      ['textDocument/codeAction'] = code_action_handler('LSP Code Actions', opts.code_action),
+      ["textDocument/declaration"] = location_handler("LSP Declarations", opts.location),
+      ["textDocument/definition"] = location_handler("LSP Definitions", opts.location),
+      ["textDocument/implementation"] = location_handler("LSP Implementations", opts.location),
+      ["textDocument/typeDefinition"] = location_handler("LSP Type Definitions", opts.location),
+      ["textDocument/references"] = location_handler("LSP References", opts.location),
+      ["textDocument/documentSymbol"] = symbol_handler("LSP Document Symbols", opts.symbol),
+      ["workspace/symbol"] = symbol_handler("LSP Workspace Symbols", opts.symbol),
+      ["callHierarchy/incomingCalls"] = call_hierarchy_handler("LSP Incoming Calls", "from", opts.call_hierarchy),
+      ["callHierarchy/outgoingCalls"] = call_hierarchy_handler("LSP Outgoing Calls", "to", opts.call_hierarchy),
+      ["textDocument/codeAction"] = code_action_handler("LSP Code Actions", opts.code_action),
     }
 
     for req, handler in pairs(handlers) do

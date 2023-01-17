@@ -79,15 +79,15 @@ local function on_attach(_, bufnr)
   end
 
   -- telescope
-  keymap.set("n", "gr", telescope_builtin_lsp_references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp References" })
-  keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-  keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbols" })
-  keymap.set("n", "g ", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Implementation" })
-  keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Definition" })
-  keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
-  keymap.set("n", "gw",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  keymap.set("n", "<leader>ci", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
-  keymap.set("n", "<leader>co", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+  keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
+  keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
+  keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
+  keymap.set("n", "g ", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
+  keymap.set("n", "gw",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  keymap.set("n", "<leader>ci", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+  keymap.set("n", "<leader>co", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
   cd_lsp_root()
@@ -174,7 +174,8 @@ end
 vim.keymap.set("n", "[e", vim.diagnostic.goto_prev, { silent = true, desc = "Diagnostic Prev" })
 vim.keymap.set("n", "]e", vim.diagnostic.goto_next, { silent = true, desc = "Diagnostic Next" })
 -- 使用telescope搜索诊断信息
-vim.keymap.set("n", "ge", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { silent = true, desc = "Telescope Diagnostics" })
+vim.keymap.set("n", "[E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { silent = true, desc = "Telescope Diagnostics" })
+vim.keymap.set("n", "]E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { silent = true, desc = "Telescope Diagnostics" })
 -- 打开带有所有诊断信息的quickfix
 -- vim.keymap.set("n", "ge", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostic Quickfix" })
 
