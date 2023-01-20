@@ -1,27 +1,28 @@
-local M = {}
-
-M.debug = function()
+-- 这个函数提供调试功能
+local function debug()
   vim.ui.input({ prompt = "MainClass: " }, function(main_class)
-    require 'dap'.run({
-      type = 'java',
-      request = 'launch',
-      name = 'Launch Main Class',
+    require("dap").run({
+      type = "java",
+      request = "launch",
+      name = "Launch Main Class",
       mainClass = main_class,
     })
   end)
 end
 
+-- 这个函数提供远程调试功能
 local function remote_debug(host, port)
-  require 'dap'.run({
-    type = 'java',
-    request = 'attach',
-    name = 'Debug (Attach) - Remote',
+  require("dap").run({
+    type = "java",
+    request = "attach",
+    name = "Debug (Attach) - Remote",
     hostName = host,
     port = port,
   })
 end
 
-M.remote_debug_by_input = function()
+-- 通过输入参数提供远程调试能力
+local function remote_debug_by_input()
   vim.ui.input({ prompt = "Host: " }, function(host)
     vim.ui.input({ prompt = "Port: " }, function(port)
       remote_debug(host, port)
@@ -29,57 +30,7 @@ M.remote_debug_by_input = function()
   end)
 end
 
-M.test = function()
-  vim.lsp.buf_request(0, "textDocument/codeLens", vim.lsp.util.make_position_params(), function(err, result, ctx, config)
-      print(vim.inspect(err))
-      print(vim.inspect(result))
-      print(vim.inspect(ctx))
-      print(vim.inspect(config))
-  end)
-
-  -- vim.lsp.buf_request(
-  --   0,
-  --   "textDocument/documentSymbol",
-  --   {
-  --     textDocument = {
-  --       uri = vim.uri_from_bufnr(0)
-  --     },
-  --   },
-  --   function(err, result, ctx, config)
-  --     vim.notify(vim.inspect(result))
-  --     -- print(vim.inspect(err))
-  --     -- print(vim.inspect(result))
-  --     -- print(vim.inspect(ctx))
-  --     -- print(vim.inspect(config))
-  --   end
-  -- )
-end
-
--- M.generate_set = function()
---
---   vim.lsp.buf_request(0, "textDocument/typeDefinition", vim.lsp.util.make_position_params(), function(err, result, ctx, config)
---       print(vim.inspect(err))
---       print(vim.inspect(result))
---       print(vim.inspect(ctx))
---       print(vim.inspect(config))
---   end)
---
---   vim.lsp.buf_request(
---     0,
---     "textDocument/documentSymbol",
---     {
---       textDocument = {
---         uri = vim.uri_from_bufnr(0)
---       },
---     },
---     function(err, result, ctx, config)
---       vim.notify(vim.inspect(result))
---       -- print(vim.inspect(err))
---       -- print(vim.inspect(result))
---       -- print(vim.inspect(ctx))
---       -- print(vim.inspect(config))
---     end
---   )
--- end
-
-return M
+return {
+  debug = debug,
+  remote_debug_by_input = remote_debug_by_input,
+}

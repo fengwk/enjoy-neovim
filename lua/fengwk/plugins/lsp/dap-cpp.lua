@@ -9,12 +9,12 @@ local stdpath_data = vim.fn.stdpath("data")
 local open_debug_ad7 = stdpath_data .. "/mason/bin/OpenDebugAD7"
 
 dap.adapters.cppdbg = {
-  id = 'cppdbg',
-  type = 'executable',
+  id = "cppdbg",
+  type = "executable",
   command = open_debug_ad7,
 }
 
--- 调试文件需要使用gcc -g生成
+-- 调试文件需要先使用gcc -g生成
 local conf = {
   {
     name = "Launch file",
@@ -27,17 +27,17 @@ local conf = {
       end)
       return p
     end,
-    cwd = '${workspaceFolder}',
+    cwd = "${workspaceFolder}",
     stopAtEntry = true,
   },
   {
-    name = 'Attach to gdbserver :1234',
-    type = 'cppdbg',
-    request = 'launch',
-    MIMode = 'gdb',
-    miDebuggerServerAddress = 'localhost:1234',
-    miDebuggerPath = '/usr/bin/gdb',
-    cwd = '${workspaceFolder}',
+    name = "Attach to gdbserver :12345",
+    type = "cppdbg",
+    request = "launch",
+    MIMode = "gdb",
+    miDebuggerServerAddress = "localhost:12345",
+    miDebuggerPath = "/usr/bin/gdb",
+    cwd = "${workspaceFolder}",
     program = function()
       local p = nil
       vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)

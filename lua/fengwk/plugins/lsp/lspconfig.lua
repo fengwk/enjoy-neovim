@@ -10,12 +10,14 @@ local utils = require("fengwk.utils")
 -- 将cwd设置为lsp根目录
 local function cd_lsp_root()
   local root = vim.lsp.buf.list_workspace_folders()
+  local is_single_file = false
   if root ~= nil and #root > 0 then
     local root_path = Path:new(root[1])
     if root_path:is_dir() then
       root = root[1]
     else
       root = root_path:parent():expand()
+      is_single_file = true
     end
     vim.api.nvim_command("cd " .. root) -- 切换根目录
 
@@ -24,21 +26,23 @@ local function cd_lsp_root()
       nvim_tree.change_dir(root) -- 主动修改nvim-tree root，否则切换会出现问题
     end
 
-    -- 自动添加workspace
-    local ws_ok, ws = pcall(require, "workspaces")
-    if ws_ok then
-      local ws_name = vim.fn.fnamemodify(root, ":t")
-      local exists_ws_name = false
-      local ws_list = ws.get()
-      if ws_list ~= nil then
-        for _, item in pairs(ws_list) do
-          if ws_name == item.name then
-            exists_ws_name = true
+    -- 如非单文件服务则自动添加workspace
+    if not is_single_file then
+      local ws_ok, ws = pcall(require, "workspaces")
+      if ws_ok then
+        local ws_name = vim.fn.fnamemodify(root, ":t")
+        local exists_ws_name = false
+        local ws_list = ws.get()
+        if ws_list ~= nil then
+          for _, item in pairs(ws_list) do
+            if ws_name == item.name then
+              exists_ws_name = true
+            end
           end
         end
-      end
-      if not exists_ws_name then
-        ws.add(root)
+        if not exists_ws_name then
+          ws.add(root)
+        end
       end
     end
   end
@@ -49,15 +53,16 @@ local function on_attach(_, bufnr)
 
   local keymap = vim.keymap
 
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  -- keymap.set("n", "<C-K>", vim.lsp.buf.signature_help, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Signature Help" })
-  keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Hover" })
   keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Add Workspace Folder" })
   keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Remove Workspace Folder" })
   keymap.set("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp List Workspace Folder" })
+
+  -- Mappings.
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  -- keymap.set("n", "<C-K>", vim.lsp.buf.signature_help, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Signature Help" })
+  keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Hover" })
   keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Rename" })
   keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Code Action" })
   keymap.set("n", "<leader>fm", function() vim.lsp.buf.format({ async = true }) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
@@ -129,7 +134,7 @@ if ok_mason_lspconfig then
   local lsp_servers = { "jdtls" }
   for k, v in pairs(lsp_configs) do
     local lsp
-    if type(k) == 'string' then -- table entry
+    if type(k) == "string" then -- table entry
       lsp = k
     else
       lsp = v -- string
@@ -157,7 +162,7 @@ end
 -- 安装所有lsp配置
 for k, v in pairs(lsp_configs) do
   local lsp, conf
-  if type(k) == 'string' then -- table entry
+  if type(k) == "string" then -- table entry
     lsp = k
     conf = v
   else -- string

@@ -39,6 +39,7 @@ return packer.startup(function(use)
   use("fengwk/im-switch.nvim") -- 中英文切换
   use("voldikss/vim-translator") -- 翻译
   use("stevearc/stickybuf.nvim") -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口
+  use("fengwk/my-utils.nvim") -- 抽离所有通用工具方法
 
   -- themes
   use("ellisonleao/gruvbox.nvim")
@@ -63,6 +64,7 @@ return packer.startup(function(use)
 
   -- workspaces
   use("natecraddock/workspaces.nvim") -- 简单的工作空间管理
+  use("fengwk/workspaces-enhancer.nvim") -- workspaces.nvim功能增强
 
 	-- editor enhancer
 	use("kylechui/nvim-surround") -- surround

@@ -27,7 +27,7 @@ dap.configurations.python = {
     program = "${file}", -- This configuration will launch the current file if used.
     pythonPath = function()
       -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-      return '/usr/bin/python'
+      return "/usr/bin/python"
     end;
   },
 }

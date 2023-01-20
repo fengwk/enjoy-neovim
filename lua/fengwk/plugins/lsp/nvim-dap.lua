@@ -86,6 +86,7 @@ function _G._nvim_dap_toggle_ui(ui)
   sidebar.toggle()
 end
 
+-- 绑定ui快捷键
 vim.cmd([[
 command! DapUiScopes lua _G._nvim_dap_toggle_ui('scopes')
 command! DapUiFrames lua _G._nvim_dap_toggle_ui('frames')

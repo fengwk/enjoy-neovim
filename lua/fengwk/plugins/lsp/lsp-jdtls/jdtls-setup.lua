@@ -146,11 +146,11 @@ M.setup = function()
 
   -- 获取工作目录
   local root_dir = utils.find_root_dir({
-    'build.xml', -- Ant
+    "build.xml", -- Ant
     "mvnw", -- Maven
-    'pom.xml', -- Maven
-    'settings.gradle', -- Gradle
-    'settings.gradle.kts', -- Gradle
+    "pom.xml", -- Maven
+    "settings.gradle", -- Gradle
+    "settings.gradle.kts", -- Gradle
     "gradlew", -- Gradle
   })
   local is_single_file = root_dir == nil
@@ -212,11 +212,11 @@ M.setup = function()
     -- }
     -- 注册调试命令
     vim.cmd([[
-      command! JdtTestClass lua require'jdtls'.test_class()
-      command! JdtTestMethod lua require'jdtls'.test_nearest_method()
-      command! JdtRemoteDebug lua require'fengwk.plugins.lsp.lsp-jdtls.jdtls-command'.remote_debug_by_input()
-      command! JdtDebug lua require'fengwk.plugins.lsp.lsp-jdtls.jdtls-command'.debug()
-      " command! JdtA lua require'fengwk.plugins.lsp.lsp-jdtls.jdtls-command'.test()
+      command! JdtTestClass lua require"jdtls".test_class()
+      command! JdtTestMethod lua require"jdtls".test_nearest_method()
+      command! JdtRemoteDebug lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".remote_debug_by_input()
+      command! JdtDebug lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".debug()
+      " command! JdtA lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".test()
     ]])
 
     -- 设置jdt的扩展快捷键，跳转到父类或接口
@@ -245,7 +245,7 @@ M.setup = function()
         }
       },
       sources = {
-        -- 不在import中使用*
+        -- 低于指定阈值，不在import中使用*
         organizeImports = {
           starThreshold = 999,
           staticStarThreshold = 999,

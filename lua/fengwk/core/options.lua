@@ -1,4 +1,10 @@
 local utils = require("fengwk.utils")
+-- 设置非文件类型
+utils.set_not_file_ft({ "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes", "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "diff" })
+-- 设置大文件行数阈值，3W行
+utils.set_large_file_lines_threshold(30000)
+-- 设置大文件占用内存阈值，512K
+utils.set_large_file_size_threshold(1024 * 512)
 
 -- 历史命令记录条数
 vim.g.history = 200
