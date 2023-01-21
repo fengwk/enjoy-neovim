@@ -30,7 +30,7 @@ local stdpath_cache = vim.fn.stdpath("cache")
 
 local java_home_17 = java_home_preset.java_home_17
 local cp_sp = utils.os_name == "win" and ";" or ":"
-local cp = "." .. cp_sp .. utils.fs_concat({ java_home_17, "lib", "dt.jar" }) .. cp_sp .. utils.fs_concat({ java_home_17, "lib", "tools.jar" })
+local cp = "." .. cp_sp .. utils.fs_concat({ java_home_17, "lib", "*.jar" })
 
 local java = utils.fs_concat({ java_home_17, "bin", "java" })
 local jdtls_home = utils.fs_concat({ stdpath_data, "mason", "packages", "jdtls" })
@@ -166,21 +166,21 @@ M.setup = function()
 
   -- jdtls启动命令
   config.cmd = {
+    "env", "JAVA_HOME=$JAVA_HOME_17",
     java,
     "-cp", cp,
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
-    "-Dlog.protocol=true",
     "-Dlog.level=ALL",
     "-Xmx1G",
+    "--add-modules=ALL-SYSTEM",
+    "--add-opens", "java.base/java.util=ALL-UNNAMED",
+    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
     "-javaagent:" .. lombok_jar,
     "-jar", launcher_jar,
     "-configuration", config_dir,
     "-data", data_dir,
-    "--add-modules=ALL-SYSTEM",
-    "--add-opens java.base/java.util=ALL-UNNAMED",
-    "--add-opens java.base/java.lang=ALL-UNNAMED",
   }
 
   -- Use an on_attach function to only map the following keys

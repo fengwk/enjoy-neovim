@@ -23,12 +23,12 @@ nvim_treesitter_config.setup({
       end
       -- 如果文件大小超过阈值则不高亮
       local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-      if ok and stats and stats.size > utils.large_file_size_threshold then
+      if ok and stats and stats.size > utils.get_large_file_size_threshold() then
         return true
       end
       -- 如果文件行数超过阈值则不高亮
       local line_count = vim.api.nvim_buf_line_count(0)
-      if line_count and line_count > utils.large_file_lines_threshold then
+      if line_count and line_count > utils.get_large_file_lines_threshold() then
         return true
       end
       -- 其它情况返回false表示启用高亮
