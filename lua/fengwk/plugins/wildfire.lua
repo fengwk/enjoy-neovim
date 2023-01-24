@@ -7,27 +7,15 @@ vim.g.wildfire_objects = {
     "i]",
     "i}",
     "it",
-    -- "ip",
-    -- "a'",
-    -- 'a"',
-    -- "a)",
-    -- "a]",
-    -- "a}",
-    -- "at",
-    -- "ap",
-    -- "at",
     -- treesitter-object
     "ia",
     "if",
     "ic",
-    -- "aa",
-    -- "af",
-    -- "ac",
     "iC",
   },
   ["html,xml"] = {
-    "at",
     "it",
+    "at",
   }
 }
 

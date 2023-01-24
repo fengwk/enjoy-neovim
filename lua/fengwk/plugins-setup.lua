@@ -19,7 +19,7 @@ vim.cmd([[
   augroup end
 ]])
 
--- packer - https://github.com/wbthomason/packer.nvimplugins
+-- packer - https://github.com/wbthomason/packer.nvim
 -- awesome-neovim - https://github.com/rockerBOO/awesome-neovim
 local ok, packer = pcall(require, "packer")
 if not ok then
@@ -35,25 +35,25 @@ return packer.startup(function(use)
 
 	-- mixed
   use("wbthomason/packer.nvim") -- 管理packer自身
-  use("syscall0x80/vimdoccn") -- 中文版vimdoc
+  -- use({ "syscall0x80/vimdoccn", ft = "help" }) -- 中文版vimdoc
   use("fengwk/im-switch.nvim") -- 中英文切换
   use("voldikss/vim-translator") -- 翻译
   use("stevearc/stickybuf.nvim") -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口
   use("fengwk/my-utils.nvim") -- 抽离所有通用工具方法
 
   -- themes
-  use("ellisonleao/gruvbox.nvim")
-  use("rebelot/kanagawa.nvim")
-  use("Mofiqul/vscode.nvim")
-  use("bluz71/vim-nightfly-colors")
-  use("fengwk/my-darkplus.nvim")
+  -- use("ellisonleao/gruvbox.nvim")
+  -- use("rebelot/kanagawa.nvim")
+  -- use("Mofiqul/vscode.nvim")
+  -- use("bluz71/vim-nightfly-colors")
+  -- use("fengwk/my-darkplus.nvim")
   use("sainnhe/everforest")
 
 	-- file explorer
   use({ "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons" })
 
   -- terminal
-  use({ "akinsho/toggleterm.nvim", tag = "v2.*" })
+  use({ "akinsho/toggleterm.nvim", tag = "*" })
 
   -- git
   use("lewis6991/gitsigns.nvim")
@@ -76,7 +76,7 @@ return packer.startup(function(use)
   use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
   use("windwp/nvim-autopairs") -- 自动补充成对符号
   use("godlygeek/tabular") -- 自定义对齐格式化
-  use("jbyuki/venn.nvim") -- 绘制ASCII图
+  use({ "jbyuki/venn.nvim", cmd = "VennToggle" }) -- 绘制ASCII图
   -- use("kana/vim-textobj-user") -- 支持用户自定义textobj
 
 	-- ui enhancer
@@ -102,7 +102,7 @@ return packer.startup(function(use)
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- 模糊搜索增强
   use("nvim-telescope/telescope-dap.nvim")
 
-  use("folke/which-key.nvim") -- 快捷键管理与提示
+  -- use("folke/which-key.nvim") -- 快捷键管理与提示
 
 	-- managing & installing lsp servers, linters & formatters
 	use("williamboman/mason.nvim")
@@ -120,8 +120,8 @@ return packer.startup(function(use)
 	use("mfussenegger/nvim-jdtls") -- java lsp增强
 
 	-- formatting & linting
-	use("jayp0521/mason-null-ls.nvim") -- bridges gap b/w mason & null-ls
-	use("jose-elias-alvarez/null-ls.nvim") -- configure formatters & linters
+	-- use("jayp0521/mason-null-ls.nvim") -- bridges gap b/w mason & null-ls
+	-- use("jose-elias-alvarez/null-ls.nvim") -- configure formatters & linters
 	use("gpanders/editorconfig.nvim") -- editorconfig规范实现
 
 	-- dap | Debug Adapter Protocol
