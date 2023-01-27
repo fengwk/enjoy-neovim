@@ -42,15 +42,6 @@ local diagnostics = {
   always_visible = false,
 }
 
--- 模式
-local mode = {
-  "mode",
-  fmt = function(m)
-    -- print(m, "")
-    return m
-  end
-}
-
 -- https://github.com/stevearc/aerial.nvim#lualine
 local aerial = {
   "aerial",
@@ -88,7 +79,7 @@ M.setup = function(opts)
       }
     },
     sections = {
-      lualine_a = { mode },
+      lualine_a = { "mode" },
       lualine_b = { "filename", "branch", diagnostics },
       lualine_c = { aerial, "require('dap').status()", "_G._lualine_lsp_progress()" },
       lualine_x = { "encoding" },

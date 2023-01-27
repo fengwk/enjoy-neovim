@@ -73,8 +73,7 @@ return packer.startup(function(use)
 	use("mg979/vim-visual-multi") -- 多光标，:h vm-*
   use({ "kevinhwang91/nvim-bqf", ft = "qf" }) -- quickfix增强
   use({ "phaazon/hop.nvim", branch = "v2" }) -- like easymotion
-  use("gcmt/wildfire.vim")
-  -- use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
+  use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
   use({ "windwp/nvim-autopairs", commit = "03580d758231956d33c8dd91e2be195106a79fa4" }) -- 自动补充成对符号
   use("godlygeek/tabular") -- 自定义对齐格式化
   use({ "jbyuki/venn.nvim", cmd = "VennToggle" }) -- 绘制ASCII图
