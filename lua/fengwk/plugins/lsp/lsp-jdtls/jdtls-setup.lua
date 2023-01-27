@@ -284,10 +284,10 @@ end
 vim.api.nvim_create_augroup("user_jdtls_setup", { clear = true })
 vim.api.nvim_create_autocmd(
   { "FileType" },
-  { pattern = "java,ant", callback = setup })
+  { group = "user_jdtls_setup", pattern = "java,ant", callback = setup })
 vim.api.nvim_create_autocmd(
   { "FileType" },
-  { pattern = "xml", callback = function()
+  { group = "user_jdtls_setup", pattern = "xml", callback = function()
     local name = vim.fn.expand("%:t")
     if name == "pom.xml" then
       setup()

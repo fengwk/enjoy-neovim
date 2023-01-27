@@ -16,10 +16,11 @@ colorizer.setup {
   },
 }
 
-vim.cmd[[
-augroup user_coclorizer
-  autocmd!
-  " autocmd ColorSchemePre * colorscheme default
-  autocmd FileType * ColorizerAttachToBuffer
-augroup end
-]]
+-- 使用自动命令修复新插件缓冲区无法显示颜色的问题
+vim.api.nvim_create_augroup("user_coclorizer", { clear = true })
+vim.api.nvim_create_autocmd(
+  { "BufNew" }, -- 或者FileType？
+  { group = "user_coclorizer", pattern = "*", callback = function()
+    colorizer.attach_to_buffer(0)
+  end}
+)

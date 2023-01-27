@@ -14,7 +14,7 @@ end
 vim.api.nvim_create_augroup("user_init_paste_dir", { clear = true })
 vim.api.nvim_create_autocmd(
   { "BufCreate", "BufEnter" },
-  { pattern = "*.md", callback = init_paste_dir }
+  { group = "user_init_paste_dir", pattern = "*.md", callback = init_paste_dir }
 )
 
 -- 注册复制图片快捷键

@@ -212,7 +212,7 @@ telescope.load_extension("lsp_handlers")
 -- !.mp3$     inverse-suffix-exact-match    Items that do not end with .mp3
 telescope.load_extension("fzf")
 telescope.load_extension("aerial")
-telescope.load_extension("dap")
+-- telescope.load_extension("dap")
 telescope.load_extension("workspaces")
 
 -- :h telescope.builtin.buffers()
@@ -333,8 +333,8 @@ vim.keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, 
 vim.keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })
 vim.keymap.set("n", "<leader>ft", function() telescope_builtin_filetypes() end, { noremap = true, silent = true, desc = "Telescope Filetypes" })
 
-vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
-vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })
-vim.keymap.set("n", "<leader>fdf", "<Cmd>Telescope dap frames theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Frames" })
-vim.keymap.set("n", "<leader>fdc", "<Cmd>Telescope dap commands theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Commands" })
-vim.keymap.set("n", "<leader>fdC", "<Cmd>Telescope dap configurations theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Configuration" })
+-- vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
+-- vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })
+-- vim.keymap.set("n", "<leader>fdf", "<Cmd>Telescope dap frames theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Frames" })
+-- vim.keymap.set("n", "<leader>fdc", "<Cmd>Telescope dap commands theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Commands" })
+-- vim.keymap.set("n", "<leader>fdC", "<Cmd>Telescope dap configurations theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Configuration" })

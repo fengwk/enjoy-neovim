@@ -73,8 +73,9 @@ return packer.startup(function(use)
 	use("mg979/vim-visual-multi") -- 多光标，:h vm-*
   use({ "kevinhwang91/nvim-bqf", ft = "qf" }) -- quickfix增强
   use({ "phaazon/hop.nvim", branch = "v2" }) -- like easymotion
-  use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
-  use("windwp/nvim-autopairs") -- 自动补充成对符号
+  use("gcmt/wildfire.vim")
+  -- use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
+  use({ "windwp/nvim-autopairs", commit = "03580d758231956d33c8dd91e2be195106a79fa4" }) -- 自动补充成对符号
   use("godlygeek/tabular") -- 自定义对齐格式化
   use({ "jbyuki/venn.nvim", cmd = "VennToggle" }) -- 绘制ASCII图
   -- use("kana/vim-textobj-user") -- 支持用户自定义textobj
@@ -100,7 +101,7 @@ return packer.startup(function(use)
   use("nvim-telescope/telescope-ui-select.nvim") -- ui.select与telescope集成 
   use("nvim-telescope/telescope-live-grep-args.nvim") -- live grep增强
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- 模糊搜索增强
-  use("nvim-telescope/telescope-dap.nvim")
+  -- use("nvim-telescope/telescope-dap.nvim")
 
   -- use("folke/which-key.nvim") -- 快捷键管理与提示
 
