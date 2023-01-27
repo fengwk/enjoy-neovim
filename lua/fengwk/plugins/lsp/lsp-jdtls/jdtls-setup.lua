@@ -142,7 +142,7 @@ end
 
 local M = {}
 
-M.setup = function()
+local function setup()
 
   -- 获取工作目录
   local root_dir = utils.find_root_dir({
@@ -281,4 +281,15 @@ M.setup = function()
 
 end
 
-return M
+vim.api.nvim_create_augroup("user_jdtls_setup", { clear = true })
+vim.api.nvim_create_autocmd(
+  { "FileType" },
+  { pattern = "java,ant", callback = setup })
+vim.api.nvim_create_autocmd(
+  { "FileType" },
+  { pattern = "xml", callback = function()
+    local name = vim.fn.expand("%:t")
+    if name == "pom.xml" then
+      setup()
+    end
+  end})

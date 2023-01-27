@@ -4,7 +4,7 @@ utils.set_not_file_ft({ "packer", "NvimTree", "toggleterm", "TelescopePrompt", "
 -- 设置大文件行数阈值，1W行
 utils.set_large_file_lines_threshold(10000)
 -- 设置大文件占用内存阈值，256K
-utils.set_large_file_size_threshold(1024 * 256)
+utils.set_large_file_size_threshold(1024 * 128)
 
 -- 历史命令记录条数
 vim.g.history = 200

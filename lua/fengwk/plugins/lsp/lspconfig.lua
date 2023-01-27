@@ -8,7 +8,7 @@ local Path = require("plenary.path")
 local utils = require("fengwk.utils")
 
 -- 将cwd设置为lsp根目录
-local function cd_lsp_root()
+local function cd_lsp_root(auto_add_ws)
   local root = vim.lsp.buf.list_workspace_folders()
   local is_single_file = false
   if root ~= nil and #root > 0 then
@@ -27,7 +27,7 @@ local function cd_lsp_root()
     end
 
     -- 如非单文件服务则自动添加workspace
-    if not is_single_file then
+    if auto_add_ws and not is_single_file then
       local ws_ok, ws = pcall(require, "workspaces")
       if ws_ok then
         local ws_name = vim.fn.fnamemodify(root, ":t")
@@ -48,8 +48,12 @@ local function cd_lsp_root()
   end
 end
 
+local auto_add_ws_clients = {
+  "clangd", "gopls", "groovy", "sumneko_lua", "pyright", "tsserver", "jdtls"
+}
+
 -- 默认的lsp on_attach
-local function on_attach(_, bufnr)
+local function on_attach(client, bufnr)
 
   local keymap = vim.keymap
 
@@ -95,7 +99,7 @@ local function on_attach(_, bufnr)
   keymap.set("n", "<leader>co", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
-  cd_lsp_root()
+  cd_lsp_root(vim.tbl_contains(auto_add_ws_clients, client.name))
   -- 在workspace增强逻辑中完成cwd自动切换
   -- vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
 end
@@ -115,13 +119,13 @@ local lsp_configs = {
   "bashls",                                                       -- { "sh" }
   "clangd",                                                       -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
   "cssls",                                                        -- { "css", "scss", "less" }
-  ["gopls"] = require "fengwk.plugins.lsp.lsp-gopls",             -- { "go", "gomod", "gowork", "gotmpl" }
+  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),             -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                                     -- { "groovy" }
   "html",                                                         -- { "html" }
-  ["sumneko_lua"] = require "fengwk.plugins.lsp.lsp-sumneko_lua", -- { "lua" }
+  ["sumneko_lua"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
   utils.os_name == "win" and "powershell_es" or nil,              -- { "ps1" }
   "pyright",                                                      -- { "python" }
-  ["tsserver"] = require "fengwk.plugins.lsp.lsp-tsserver",       -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),       -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "vimls",                                                        -- { "vim" }
   "yamlls",                                                       -- { "yaml", "yaml.docker-compose" }
   "lemminx",                                                      -- { "xml", "xsd", "xsl", "xslt", "svg" }
