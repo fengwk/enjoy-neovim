@@ -20,72 +20,61 @@ end
 -- 内建的比较器
 local compare = cmp.config.compare
 
--- source比较器，使用kind比较器代替
--- local source_order = {
---   ["nvim_lsp"] = 1,
---   ["vsnip"] = 1,
---   ["path"] = 2,
---   ["buffer"] = 3,
--- }
--- local function source_sort(e1, e2)
---   local o1 = source_order[e1.source.name]
---   local o2 = source_order[e2.source.name]
---   o1 = o1 and o1 or 999
---   o2 = o2 and o2 or 999
---   if o1 < o2 then
---     return true
---   elseif o1 > o2 then
---     return false
---   end
--- end
-
--- kind比较器
+-- 对Snippet和nvim_lsp使用基于长度权重的比较
+-- k1_w * k1_len - k2_w * k2_len
 local CompletionItemKind = types.lsp.CompletionItemKind
 
-local kind_priority = {
+local kind_weight_tab = {
   [CompletionItemKind.Snippet] = 1,
   [CompletionItemKind.Field] = 1,
   [CompletionItemKind.Property] = 1,
   [CompletionItemKind.Variable] = 1,
-  [CompletionItemKind.Function] = 2,
-  [CompletionItemKind.Method] = 2,
-  [CompletionItemKind.Constructor] = 2,
-  [CompletionItemKind.Constant] = 2,
-  [CompletionItemKind.Enum] = 3,
-  [CompletionItemKind.EnumMember] = 3,
-  [CompletionItemKind.Event] = 3,
-  [CompletionItemKind.Operator] = 3,
-  [CompletionItemKind.Reference] = 3,
-  [CompletionItemKind.Struct] = 3,
-  [CompletionItemKind.Class] = 3,
-  [CompletionItemKind.Keyword] = 3,
-  [CompletionItemKind.TypeParameter] = 3,
-  [CompletionItemKind.Interface] = 3,
-  [CompletionItemKind.Module] = 3,
-  [CompletionItemKind.Unit] = 4,
-  [CompletionItemKind.File] = 4,
-  [CompletionItemKind.Folder] = 4,
-  [CompletionItemKind.Color] = 4,
-  [CompletionItemKind.Text] = 4,
-  [CompletionItemKind.Value] = 4,
+  [CompletionItemKind.Function] = 1.5,
+  [CompletionItemKind.Method] = 1.5,
+  [CompletionItemKind.Constructor] = 1.5,
+  [CompletionItemKind.Constant] = 1.5,
+  [CompletionItemKind.Enum] = 2,
+  [CompletionItemKind.EnumMember] = 2,
+  [CompletionItemKind.Event] = 2,
+  [CompletionItemKind.Operator] = 2,
+  [CompletionItemKind.Reference] = 2,
+  [CompletionItemKind.Struct] = 2,
+  [CompletionItemKind.Class] = 2,
+  [CompletionItemKind.Keyword] = 2,
+  [CompletionItemKind.TypeParameter] = 2,
+  [CompletionItemKind.Interface] = 2,
+  [CompletionItemKind.Module] = 2,
+  [CompletionItemKind.Unit] = 2.5,
+  [CompletionItemKind.File] = 2.5,
+  [CompletionItemKind.Folder] = 2.5,
+  [CompletionItemKind.Color] = 2.5,
+  [CompletionItemKind.Text] = 2.5,
+  [CompletionItemKind.Value] = 2.5,
 }
 
-local function get_kind_priority(e)
-  local p = nil
+local function get_weight(e)
   if e.source.name == "nvim_lsp" then
-    p = kind_priority[e:get_kind()]
+    return kind_weight_tab[e:get_kind()]
   elseif e.source.name == "vsnip" then
-    p = kind_priority[CompletionItemKind.Snippet]
+    return kind_weight_tab[CompletionItemKind.Snippet]
   end
-  return p and p or 999
 end
 
-local function kind_sort(e1, e2)
-  local p1 = get_kind_priority(e1)
-  local p2 = get_kind_priority(e2)
-  if p1 < p2 then
+local function weight_sort(e1, e2)
+  local w1 = get_weight(e1)
+  local w2 = get_weight(e2)
+  if w1 and w2 then
+    local diff = w1 * #e1.completion_item.label - w2 * #e2.completion_item.label
+    if diff < 0 then
+      return true
+    elseif diff > 0 then
+      return false
+    end
+  elseif not w1 and not w2 then
+    return nil
+  elseif w1 then
     return true
-  elseif p1 > p2 then
+  else -- w2
     return false
   end
 end
@@ -186,9 +175,9 @@ cmp.setup({
   -- 排序方式
   sorting = {
     comparators = {
-      kind_sort, -- 自定义的kind排序
-      compare.offset, -- lsp给出的顺序
-      compare.exact,
+      weight_sort, -- 基于权重排序
+      -- compare.offset, -- lsp给出的顺序
+      -- compare.exact,
       -- compare.score,
       -- compare.recently_used,
       compare.locality, -- 当前缓冲区判断优先
