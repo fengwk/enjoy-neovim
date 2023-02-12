@@ -122,7 +122,7 @@ local lsp_configs = {
   ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),             -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                                     -- { "groovy" }
   "html",                                                         -- { "html" }
-  ["sumneko_lua"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
+  ["lua_ls"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
   utils.os_name == "win" and "powershell_es" or nil,              -- { "ps1" }
   "pyright",                                                      -- { "python" }
   ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),       -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }

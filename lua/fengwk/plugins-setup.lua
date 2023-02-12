@@ -44,7 +44,7 @@ return packer.startup(function(use)
   -- themes
   -- use("ellisonleao/gruvbox.nvim")
   -- use("rebelot/kanagawa.nvim")
-  -- use("Mofiqul/vscode.nvim")
+  use("Mofiqul/vscode.nvim")
   -- use("bluz71/vim-nightfly-colors")
   -- use("fengwk/my-darkplus.nvim")
   use("sainnhe/everforest")
@@ -64,7 +64,7 @@ return packer.startup(function(use)
 
   -- workspaces
   use("natecraddock/workspaces.nvim") -- 简单的工作空间管理
-  use("fengwk/workspaces-enhancer.nvim") -- workspaces.nvim功能增强
+  use("fengwk/workspaces-enhancer.nvim") -- workspaces.nvim功能增强set
 
 	-- editor enhancer
 	use("kylechui/nvim-surround") -- surround
@@ -73,10 +73,10 @@ return packer.startup(function(use)
 	use("mg979/vim-visual-multi") -- 多光标，:h vm-*
   use({ "kevinhwang91/nvim-bqf", ft = "qf" }) -- quickfix增强
   use({ "phaazon/hop.nvim", branch = "v2" }) -- like easymotion
-  use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器
+  -- use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器，使用tree-sitter替代
   use({ "windwp/nvim-autopairs", commit = "03580d758231956d33c8dd91e2be195106a79fa4" }) -- 自动补充成对符号
   use("godlygeek/tabular") -- 自定义对齐格式化
-  use({ "jbyuki/venn.nvim", cmd = "VennToggle" }) -- 绘制ASCII图
+  use("jbyuki/venn.nvim") -- 绘制ASCII图
   -- use("kana/vim-textobj-user") -- 支持用户自定义textobj
 
 	-- ui enhancer
@@ -89,7 +89,8 @@ return packer.startup(function(use)
 	use("hrsh7th/cmp-buffer") -- 缓冲区补全源
 	use("hrsh7th/cmp-path") -- 文件系统路径补全源
   -- use("hrsh7th/cmp-cmdline") -- 命令行路径补全源
-
+	use("hrsh7th/cmp-nvim-lsp") -- lsp补全源
+  use("rcarriga/cmp-dap") -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 	-- snippets
 	use("hrsh7th/cmp-vsnip") -- 将vim-vsnip桥接到nvim-cmp上
 	use("hrsh7th/vim-vsnip") -- vscode规范的snippets补全
@@ -110,7 +111,6 @@ return packer.startup(function(use)
   -- lsp
 	use("williamboman/mason-lspconfig.nvim")
 	use("neovim/nvim-lspconfig") -- lsp配置
-	use("hrsh7th/cmp-nvim-lsp") -- lsp补全源
 	use("onsails/lspkind.nvim") -- lsp补全源美化
 	-- use("glepnir/lspsaga.nvim") -- lsp ui增强
   -- use("https://git.sr.ht/~whynothugo/lsp_lines.nvim") -- 提供多行lsp提示信息展示能力，目前看这个插件会导致性能下降
@@ -129,7 +129,6 @@ return packer.startup(function(use)
 	use("mfussenegger/nvim-dap")
 	use("theHamsta/nvim-dap-virtual-text")
 	use("rcarriga/nvim-dap-ui") -- 现有问题：让java应用debug变得很慢
-  use("rcarriga/cmp-dap") -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use({

@@ -29,27 +29,27 @@ local kind_weight_tab = {
   [CompletionItemKind.Field] = 1,
   [CompletionItemKind.Property] = 1,
   [CompletionItemKind.Variable] = 1,
-  [CompletionItemKind.Function] = 1.5,
-  [CompletionItemKind.Method] = 1.5,
-  [CompletionItemKind.Constructor] = 1.5,
-  [CompletionItemKind.Constant] = 1.5,
-  [CompletionItemKind.Enum] = 2,
-  [CompletionItemKind.EnumMember] = 2,
-  [CompletionItemKind.Event] = 2,
-  [CompletionItemKind.Operator] = 2,
-  [CompletionItemKind.Reference] = 2,
-  [CompletionItemKind.Struct] = 2,
-  [CompletionItemKind.Class] = 2,
-  [CompletionItemKind.Keyword] = 2,
-  [CompletionItemKind.TypeParameter] = 2,
-  [CompletionItemKind.Interface] = 2,
-  [CompletionItemKind.Module] = 2,
-  [CompletionItemKind.Unit] = 2.5,
-  [CompletionItemKind.File] = 2.5,
-  [CompletionItemKind.Folder] = 2.5,
-  [CompletionItemKind.Color] = 2.5,
-  [CompletionItemKind.Text] = 2.5,
-  [CompletionItemKind.Value] = 2.5,
+  [CompletionItemKind.Function] = 1,
+  [CompletionItemKind.Method] = 1,
+  [CompletionItemKind.Keyword] = 1,
+  [CompletionItemKind.Constructor] = 1.25,
+  [CompletionItemKind.Constant] = 1.25,
+  [CompletionItemKind.Enum] = 1.5,
+  [CompletionItemKind.EnumMember] = 1.5,
+  [CompletionItemKind.Event] = 1.5,
+  [CompletionItemKind.Operator] = 1.5,
+  [CompletionItemKind.Reference] = 1.5,
+  [CompletionItemKind.Struct] = 1.5,
+  [CompletionItemKind.Class] = 1.5,
+  [CompletionItemKind.TypeParameter] = 1.5,
+  [CompletionItemKind.Interface] = 1.5,
+  [CompletionItemKind.Module] = 1.5,
+  [CompletionItemKind.Unit] = 1.75,
+  [CompletionItemKind.File] = 1.75,
+  [CompletionItemKind.Folder] = 1.75,
+  [CompletionItemKind.Color] = 1.75,
+  [CompletionItemKind.Text] = 1.75,
+  [CompletionItemKind.Value] = 1.75,
 }
 
 local function get_weight(e)
@@ -64,6 +64,7 @@ local function weight_sort(e1, e2)
   local w1 = get_weight(e1)
   local w2 = get_weight(e2)
   if w1 and w2 then
+    -- 应用权重与长度
     local diff = w1 * #e1.completion_item.label - w2 * #e2.completion_item.label
     if diff < 0 then
       return true
@@ -155,11 +156,16 @@ cmp.setup({
       end,
     },
     { name = "vsnip" },    -- snippets
-    { name = "path" },     -- 文件系统路
+    -- { name = "path" },     -- 文件系统路
     {
       name = "buffer",     -- 缓冲区
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
+          -- 如果缓冲区过大，则禁用
+          if utils.is_large_buffer(0) then
+            return {}
+          end
+
           -- 将所有缓冲区作为候选
           return vim.api.nvim_list_bufs()
           -- 将所有可见的缓冲区作为候选
@@ -176,11 +182,10 @@ cmp.setup({
   sorting = {
     comparators = {
       weight_sort, -- 基于权重排序
-      -- compare.offset, -- lsp给出的顺序
-      -- compare.exact,
-      -- compare.score,
-      -- compare.recently_used,
-      compare.locality, -- 当前缓冲区判断优先
+      compare.offset, -- lsp给出的顺序
+      -- -- compare.exact,
+      -- compare.recently_used, -- 近期使用
+      -- compare.locality, -- 当前缓冲区优先
       compare.length, -- 长度
       compare.order, -- id序，兜底
     },

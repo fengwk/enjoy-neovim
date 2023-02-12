@@ -10,13 +10,14 @@ cal wildfire#triggers#Add("<leader><Enter>", {
     \ "a]",
     \ "a}",
     \ "at",
-    \ "aW",
     \ "aa",
     \ "af",
     \ "ac",
-    \ "aC"
+    \ "aC",
   \ ],
   \ "html,xml" : [
+    \ "a'",
+    \ 'a"',
     \ "at",
   \ ]
 \ })
@@ -31,7 +32,7 @@ vim.g.wildfire_objects = {
     "i]",
     "i}",
     "it",
-    "iW",
+    -- "iW",
     -- "ip",
     -- treesitter-object
     "ia",
