@@ -5,11 +5,8 @@ if not ok then
   return
 end
 
-vim.g.indent_blankline_use_treesitter = false
-vim.g.indent_blankline_use_treesitter_scope = false
-
 indent_blankline.setup({
-  -- 需要treesiter支持
+  -- 需要treesiter支持，开启将调用treesitter影响大文件的启动
   -- show_current_context = true, -- 如果为true突出当前区域缩进线
   -- show_current_context_start = false, -- 如果为true突出当前区域开始位置
 })
