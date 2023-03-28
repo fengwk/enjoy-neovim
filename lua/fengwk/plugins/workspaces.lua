@@ -1,6 +1,7 @@
 local ok, ws_enhancer = pcall(require, "workspaces-enhancer")
 if not ok then
-  vim.notify("Workspaces enhancer can not be required.")
+  vim.notify("workspaces-enhancer can not be required.")
+  return
 end
 
 ws_enhancer.setup({

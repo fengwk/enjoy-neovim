@@ -2,6 +2,7 @@
 
 local ok, aerial = pcall(require, "aerial")
 if not ok then
+  vim.notify("aerial can not be required.")
   return
 end
 

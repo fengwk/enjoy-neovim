@@ -21,9 +21,9 @@ local function cd_lsp_root(auto_add_ws)
     end
     vim.api.nvim_command("cd " .. root) -- 切换根目录
 
-    local t_ok, nvim_tree = pcall(require, "nvim-tree")
+    local t_ok, nvim_tree_api = pcall(require, "nvim-tree.api")
     if t_ok then
-      nvim_tree.change_dir(root) -- 主动修改nvim-tree root，否则切换会出现问题
+      nvim_tree_api.tree.change_root(root) -- 主动修改nvim-tree root，否则切换会出现问题
     end
 
     -- 如非单文件服务则自动添加workspace
@@ -49,7 +49,7 @@ local function cd_lsp_root(auto_add_ws)
 end
 
 local auto_add_ws_clients = {
-  "clangd", "gopls", "groovy", "sumneko_lua", "pyright", "tsserver", "jdtls"
+  "clangd", "gopls", "groovy", "lua_ls", "jedi_language_server", "tsserver", "jdtls"
 }
 
 -- 默认的lsp on_attach
@@ -116,20 +116,20 @@ end
 
 -- lsp配置表
 local lsp_configs = {
-  "bashls",                                                       -- { "sh" }
-  "clangd",                                                       -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
-  "cssls",                                                        -- { "css", "scss", "less" }
-  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),             -- { "go", "gomod", "gowork", "gotmpl" }
-  "groovyls",                                                     -- { "groovy" }
-  "html",                                                         -- { "html" }
+  "bashls",                                                   -- { "sh" }
+  "clangd",                                                   -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+  "cssls",                                                    -- { "css", "scss", "less" }
+  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),        -- { "go", "gomod", "gowork", "gotmpl" }
+  "groovyls",                                                 -- { "groovy" }
+  "html",                                                     -- { "html" }
   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
-  utils.os_name == "win" and "powershell_es" or nil,              -- { "ps1" }
-  "pyright",                                                      -- { "python" }
-  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),       -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
-  "vimls",                                                        -- { "vim" }
-  "yamlls",                                                       -- { "yaml", "yaml.docker-compose" }
-  "lemminx",                                                      -- { "xml", "xsd", "xsl", "xslt", "svg" }
-  "dockerls",                                                     -- { "dockerfile" }
+  utils.os_name == "win" and "powershell_es" or nil,          -- { "ps1" }
+  "jedi_language_server",                                     -- { "python" }
+  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),  -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  "vimls",                                                    -- { "vim" }
+  "yamlls",                                                   -- { "yaml", "yaml.docker-compose" }
+  -- "lemminx",                                                  -- { "xml", "xsd", "xsl", "xslt", "svg" }
+  "dockerls",                                                 -- { "dockerfile" }
 }
 
 -- 使用mason安装lsp服务

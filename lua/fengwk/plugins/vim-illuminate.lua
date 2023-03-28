@@ -2,6 +2,7 @@
 
 local ok, illuminate = pcall(require, "illuminate")
 if not ok then
+  vim.notify("illuminate can not be required.")
   return
 end
 

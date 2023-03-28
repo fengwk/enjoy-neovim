@@ -2,6 +2,7 @@
 
 local ok, cmp = pcall(require, "cmp")
 if not ok then
+  vim.notify("cmp can not be required.")
   return
 end
 local types = require("cmp.types")
@@ -156,7 +157,7 @@ cmp.setup({
       end,
     },
     { name = "vsnip" },    -- snippets
-    -- { name = "path" },     -- 文件系统路
+    { name = "path" },     -- 文件系统路
     {
       name = "buffer",     -- 缓冲区
       option = {

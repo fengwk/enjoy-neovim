@@ -2,6 +2,7 @@
 
 local ok, hop = pcall(require, "hop")
 if not ok then
+  vim.notify("hop can not be required.")
   return
 end
 

@@ -2,6 +2,7 @@
 
 local ok_lualine, lualine = pcall(require, "lualine")
 if not ok_lualine then
+  vim.notify("lualine can not be required.")
   return
 end
 

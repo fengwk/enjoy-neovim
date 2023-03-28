@@ -2,6 +2,7 @@
 
 local ok, colorizer = pcall(require, "colorizer")
 if not ok then
+  vim.notify("colorizer can not be required.")
   return
 end
 

@@ -1,7 +1,14 @@
 -- https://github.com/kyazdani42/nvim-tree.lua
 
-local ok, nvim_tree = pcall(require, "nvim-tree")
-if not ok then
+local ok_nvim_tree, nvim_tree = pcall(require, "nvim-tree")
+if not ok_nvim_tree then
+  vim.notify("nvim-tree can not be required.")
+  return
+end
+
+local ok_nvim_tree_api, nvim_tree_api = pcall(require, "nvim-tree.api")
+if not ok_nvim_tree_api then
+  vim.notify("nvim-tree.api can not be required.")
   return
 end
 
@@ -13,6 +20,9 @@ local config = {
   sync_root_with_cwd = true, -- 使root与cwd保持一致
   view = {
     adaptive_size = true, -- 根据文件名自适应宽度
+    width = {
+      max = 40, -- 设置最大宽度
+    },
     -- number = true, -- 等效于 set nu
     -- relativenumber = true, -- 等效于 set rnu
     mappings = {
@@ -147,7 +157,7 @@ nvim_tree.setup(config)
 
 -- 展开或关闭NvimTree，如果是展开将定位到文件对应的NvimTree位置
 vim.keymap.set("n", "<leader>e", function()
-  nvim_tree.toggle({
+  nvim_tree_api.tree.toggle({
     focus = true,
     find_file = true,
   })

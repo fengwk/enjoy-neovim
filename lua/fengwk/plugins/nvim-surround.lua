@@ -13,6 +13,7 @@
 
 local ok, nvim_surround = pcall(require, "nvim-surround")
 if not ok then
+  vim.notify("nvim-surround can not be required.")
   return
 end
 

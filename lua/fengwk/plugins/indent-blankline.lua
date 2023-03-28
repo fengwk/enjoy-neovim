@@ -2,6 +2,7 @@
 
 local ok, indent_blankline = pcall(require, "indent_blankline")
 if not ok then
+  vim.notify("indent_blankline can not be required.")
   return
 end
 

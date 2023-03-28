@@ -2,6 +2,7 @@
 
 local ok, nvim_autopairs = pcall(require, "nvim-autopairs")
 if not ok then
+  vim.notify("nvim-autopairs can not be required.")
   return
 end
 

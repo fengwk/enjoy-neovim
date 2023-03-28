@@ -43,7 +43,7 @@ return packer.startup(function(use)
 
   -- themes
   -- use("ellisonleao/gruvbox.nvim")
-  -- use("rebelot/kanagawa.nvim")
+  use("rebelot/kanagawa.nvim")
   use("Mofiqul/vscode.nvim")
   -- use("bluz71/vim-nightfly-colors")
   -- use("fengwk/my-darkplus.nvim")
@@ -74,7 +74,7 @@ return packer.startup(function(use)
   use({ "kevinhwang91/nvim-bqf", ft = "qf" }) -- quickfix增强
   use({ "phaazon/hop.nvim", branch = "v2" }) -- like easymotion
   -- use({ "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" }) -- textobjects选择器，使用tree-sitter替代
-  use({ "windwp/nvim-autopairs", commit = "03580d758231956d33c8dd91e2be195106a79fa4" }) -- 自动补充成对符号
+  use("windwp/nvim-autopairs") -- 自动补充成对符号
   use("godlygeek/tabular") -- 自定义对齐格式化
   use("jbyuki/venn.nvim") -- 绘制ASCII图
   -- use("kana/vim-textobj-user") -- 支持用户自定义textobj
@@ -97,7 +97,7 @@ return packer.startup(function(use)
 	use("rafamadriz/friendly-snippets") -- 现成的snippets
 
 	-- fuzzy finding
-  use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" }, tag = "0.1.1" }) -- 模糊搜索插件
+  use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" }, tag = "0.1.x" }) -- 模糊搜索插件
   use("nvim-telescope/telescope-ui-select.nvim") -- ui.select与telescope集成 
   use("nvim-telescope/telescope-live-grep-args.nvim") -- live grep增强
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- 模糊搜索增强

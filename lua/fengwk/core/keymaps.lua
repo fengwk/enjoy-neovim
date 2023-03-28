@@ -7,11 +7,11 @@ local keymap = vim.keymap
 keymap.set("n", "<C-z>", "<nop>")
 
 -- 保存
--- keymap.set("n", "<C-s>", "<Cmd>w<CR>", { silent = true, desc = "Save Current Buffer" })
+keymap.set("n", "<C-s>", "<Cmd>w<CR>", { silent = true, desc = "Save Current Buffer" })
 -- keymap.set("n", "<C-S>", "<Cmd>wa<CR>", { silent = true, desc = "Save All Buffer" })
 
 -- 退出
--- keymap.set("n", "<C-q>", "<Cmd>q<CR>", { silent = true, desc = "Quit Current Buffer" })
+keymap.set("n", "<C-q>", "<Cmd>q<CR>", { silent = true, desc = "Quit Current Buffer" })
 -- keymap.set("n", "<C-Q>", "<Cmd>qa<CR>", { silent = true, desc = "Quit All Buffer" })
 
 -- 快速移动光标
@@ -38,6 +38,8 @@ keymap.set("n", "<A-_>", "<Cmd>vertical res -2<CR>", { silent = true, desc = "De
 -- quickfix
 keymap.set("n", "[q", "<Cmd>cp<CR>", { silent = true, desc = "Quickfix Prev" })
 keymap.set("n", "]q", "<Cmd>cn<CR>", { silent = true, desc = "Quickfix Next" })
+keymap.set("n", "[Q", "<Cmd>colder<CR>", { silent = true, desc = "Quickfix Prev" })
+keymap.set("n", "]Q", "<Cmd>cnewer<CR>", { silent = true, desc = "Quickfix Next" })
 
 -- 复制整个缓冲区内容
 keymap.set("n", "<leader>y", "mpggVGy`p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
