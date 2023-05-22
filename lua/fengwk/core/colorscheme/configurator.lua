@@ -6,8 +6,8 @@ local function setup()
   -- vim.cmd("colorscheme my-darkplus")
   -- vim.cmd("colorscheme gruvbox")
   -- vim.cmd("colorscheme kanagawa")
-  -- vim.cmd("colorscheme vscode")
-  vim.cmd("colorscheme everforest")
+  vim.cmd("colorscheme vscode")
+  -- vim.cmd("colorscheme everforest")
 end
 
 local function on_change(colorscheme)

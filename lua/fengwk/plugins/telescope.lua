@@ -100,7 +100,16 @@ telescope.setup {
       theme = "dropdown",
       -- previewer = false,
     },
+    filetypes = {
+      theme = "dropdown",
+    },
     help_tags = {
+      theme = "dropdown",
+    },
+    git_commits = {
+      theme = "dropdown",
+    },
+    git_branches = {
       theme = "dropdown",
     },
     lsp_references = {
@@ -324,14 +333,18 @@ local function telescope_builtin_filetypes()
   telescope_builtin.filetypes()
 end
 
-vim.keymap.set("n", "<leader>fb", function() telescope_builtin_buffers(false) end, { noremap = true, silent = true, desc = "Telescope Buffers" })
-vim.keymap.set("n", "<leader>fB", function() telescope_builtin_buffers(true) end, { noremap = true, silent = true, desc = "Telescope Buffers (Show All)" })
-vim.keymap.set("n", "<leader>ff", function() telescope_builtin_find_files(false) end, { noremap = true, silent = true, desc = "Telescope Find Files" })
-vim.keymap.set("n", "<leader>fF", function() telescope_builtin_find_files(true) end, { noremap = true, silent = true, desc = "Telescope Find Files (Show All)" })
-vim.keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { noremap = true, silent = true, desc = "Telescope Live Grep" })
-vim.keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, silent = true, desc = "Telescope Oldfiles" })
-vim.keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })
-vim.keymap.set("n", "<leader>ft", function() telescope_builtin_filetypes() end, { noremap = true, silent = true, desc = "Telescope Filetypes" })
+local keymap = vim.keymap
+keymap.set("n", "<leader>fb", function() telescope_builtin_buffers(false) end, { noremap = true, silent = true, desc = "Telescope Buffers" })
+keymap.set("n", "<leader>fB", function() telescope_builtin_buffers(true) end, { noremap = true, silent = true, desc = "Telescope Buffers (Show All)" })
+keymap.set("n", "<leader>ff", function() telescope_builtin_find_files(false) end, { noremap = true, silent = true, desc = "Telescope Find Files" })
+keymap.set("n", "<leader>fF", function() telescope_builtin_find_files(true) end, { noremap = true, silent = true, desc = "Telescope Find Files (Show All)" })
+keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { noremap = true, silent = true, desc = "Telescope Live Grep" })
+keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { noremap = true, silent = true, desc = "Telescope Oldfiles" })
+keymap.set("n", "<leader>fh", telescope_builtin_help_tags, { noremap = true, silent = true, desc = "Telescope Help Tags" })
+keymap.set("n", "<leader>ft", function() telescope_builtin_filetypes() end, { noremap = true, silent = true, desc = "Telescope Filetypes" })
+keymap.set("n", "<leader>ft", function() telescope_builtin_filetypes() end, { noremap = true, silent = true, desc = "Telescope Filetypes" })
+keymap.set("n", "<leader>gc", function() telescope_builtin.git_commits() end, { noremap = true, silent = true, desc = "Telescope Git Commits" })
+keymap.set("n", "<leader>gb", function() telescope_builtin.git_branches() end, { noremap = true, silent = true, desc = "Telescope Git Branches" })
 
 -- vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
 -- vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })

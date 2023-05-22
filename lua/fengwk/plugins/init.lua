@@ -1,5 +1,6 @@
 require("fengwk.plugins.workspaces")
 require("fengwk.plugins.aerial")
+require("fengwk.plugins.chatgpt")
 require("fengwk.plugins.comment")
 require("fengwk.plugins.gitsigns")
 require("fengwk.plugins.hop")

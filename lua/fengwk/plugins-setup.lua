@@ -43,7 +43,7 @@ return packer.startup(function(use)
 
   -- themes
   -- use("ellisonleao/gruvbox.nvim")
-  use("rebelot/kanagawa.nvim")
+  -- use("rebelot/kanagawa.nvim")
   use("Mofiqul/vscode.nvim")
   -- use("bluz71/vim-nightfly-colors")
   -- use("fengwk/my-darkplus.nvim")
@@ -141,7 +141,21 @@ return packer.startup(function(use)
   -- nvim-treesitter-textobjects | 使用treesitter增强textobjets
   use("nvim-treesitter/nvim-treesitter-textobjects")
 
-	-- 这个命令需要在最后执行，它会在首次安装packer时自动进行配置安装
+  -- chatgpt
+  use({
+    "jackMort/ChatGPT.nvim",
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    }
+  })
+
+
+  -- libs
+  use_rocks { "utf8" }
+  require("packer.luarocks").setup_paths()
+
 	if packer_bootstrap then
 		require("packer").sync()
 	end

@@ -1,0 +1,28 @@
+{
+  "explain_code_cn": {
+    "type": "chat",
+    "opts": {
+      "title": " Explain Code CN",
+      "template": "Explain the following code:\n\nCode:\n```{{filetype}}\n{{input}}\n```\n\nUse markdown format and use Chinese.\nHere's what the above code is doing:\n```",
+      "strategy": "display",
+      "params": {
+        "model": "gpt-3.5-turbo",
+        "stop": [
+          "```"
+        ]
+      }
+    }
+  },
+  "javadoc": {
+    "type": "chat",
+    "opts": {
+      "template": "Generate standard javadoc for the following code.\n\nCode:\n```{{filetype}}\n{{input}}\n```",
+      "strategy": "prepend",
+      "params": {
+        "model": "gpt-3.5-turbo",
+        "temperature": 0.5,
+        "max_tokens": 2048
+      }
+    }
+  }
+}

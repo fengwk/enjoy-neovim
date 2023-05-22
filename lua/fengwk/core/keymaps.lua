@@ -55,6 +55,9 @@ keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override re
 -- 删除单个字符不复制到寄存器中
 -- keymap.set("n", "x", "\"_x", { noremap = true })
 
+-- 在terimal模式下使用jk作为esc，避免和推出命令模式的esc按键冲突
+vim.api.nvim_set_keymap("t", "jk", "<Esc>", {noremap = true})
+
 -- 这个脚本允许在选中的每行执行宏
 vim.cmd([[
 xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>

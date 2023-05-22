@@ -52,6 +52,14 @@ local auto_add_ws_clients = {
   "clangd", "gopls", "groovy", "lua_ls", "jedi_language_server", "tsserver", "jdtls"
 }
 
+local function get_range()
+  local bufnr = vim.api.nvim_get_current_buf()
+  return {
+    start = vim.api.nvim_buf_get_mark(bufnr, '<'),
+    ["end"] = vim.api.nvim_buf_get_mark(bufnr, '>'),
+  }
+end
+
 -- 默认的lsp on_attach
 local function on_attach(client, bufnr)
 
@@ -70,8 +78,20 @@ local function on_attach(client, bufnr)
   keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Rename" })
   keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Code Action" })
   keymap.set("n", "<leader>fm", function() vim.lsp.buf.format({ async = true }) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
-  keymap.set("v", "<leader>ca", "<Esc><Cmd>lua vim.lsp.buf.range_code_action()<CR>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Code Action" })
-  keymap.set("v", "<leader>fm", "<Cmd>lua vim.lsp.buf.format({async=true})<CR><Esc>", { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
+  keymap.set("v", "<leader>ca", function ()
+    local range = get_range();
+    vim.api.nvim_input("<Esc>")
+    vim.lsp.buf.code_action(range)
+  end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Code Action" })
+  keymap.set("v", "<leader>fm", function ()
+    local range = get_range();
+    vim.api.nvim_input("<Esc>")
+    print(vim.inspect(range))
+    vim.lsp.buf.format({
+      range = range,
+      async = true
+    })
+  end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
 
   local function telescope_builtin_lsp_references()
     require("telescope.builtin").lsp_references({
@@ -89,14 +109,17 @@ local function on_attach(client, bufnr)
 
   -- telescope
   keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
+  -- keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
+  -- keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
   keymap.set("n", "g ", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
   keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  -- keymap.set("n", "gd", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
   keymap.set("n", "gw",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  keymap.set("n", "<leader>ci", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
-  keymap.set("n", "<leader>co", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+  keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+  keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
   cd_lsp_root(vim.tbl_contains(auto_add_ws_clients, client.name))
@@ -124,7 +147,7 @@ local lsp_configs = {
   "html",                                                     -- { "html" }
   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
   utils.os_name == "win" and "powershell_es" or nil,          -- { "ps1" }
-  "jedi_language_server",                                     -- { "python" }
+  "pylsp",                                                    -- { "python" }
   ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),  -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "vimls",                                                    -- { "vim" }
   "yamlls",                                                   -- { "yaml", "yaml.docker-compose" }
