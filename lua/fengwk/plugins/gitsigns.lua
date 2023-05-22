@@ -34,4 +34,4 @@ gitsigns.setup({
 })
 
 -- blame开关
-vim.keymap.set("n", "<leader>gB", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { silent = true, desc = "Toggle Git Blame" })
+vim.keymap.set("n", "<leader>gb", "<Cmd>Gitsigns toggle_current_line_blame<CR>", { silent = true, desc = "Toggle Git Blame" })

@@ -108,12 +108,13 @@ local function on_attach(client, bufnr)
   end
 
   -- telescope
-  keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
   -- keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
+  -- keymap.set("n", "gs", function() vim.lsp.buf.document_symbol({}) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  -- keymap.set("n", "gs", "<Cmd>Telescope aerial theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
   keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-  -- keymap.set("n", "gs", vim.lsp.buf.document_symbol, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
-  keymap.set("n", "g ", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  keymap.set("n", "g<leader>", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
   keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
   -- keymap.set("n", "gd", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })

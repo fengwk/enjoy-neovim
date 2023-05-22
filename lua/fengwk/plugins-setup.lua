@@ -57,6 +57,7 @@ return packer.startup(function(use)
 
   -- git
   use("lewis6991/gitsigns.nvim")
+  -- use("sindrets/diffview.nvim")
 
   -- markdown
   use({ "iamcco/markdown-preview.nvim", run = "cd app && yarn install", ft = "markdown" }) -- 在浏览器中预览Markdown
