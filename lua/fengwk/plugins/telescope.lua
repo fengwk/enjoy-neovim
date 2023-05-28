@@ -47,7 +47,8 @@ telescope.setup {
         return path
       else
         -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
-        return Path:new(path):shorten(1, { 1, 2, -1 })
+        -- return Path:new(path):shorten(1, { 1, 2, -1 })
+        return Path:new(path):shorten(1, { 1, -1 })
       end
     end,
 
@@ -210,7 +211,8 @@ telescope.setup {
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
 telescope.load_extension("live_grep_args")
-telescope.load_extension("lsp_handlers")
+-- telescope.load_extension("lsp_handlers")
+telescope.load_extension("jdtls")
 -- Token      Match type                    Description
 -- sbtrkt     fuzzy-match                   Items that match sbtrkt
 -- 'wild      exact-match (quoted)          Items that include wild

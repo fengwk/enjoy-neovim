@@ -67,3 +67,19 @@ function! ExecuteMacroOverVisualRange()
   execute ":'<,'>normal @".nr2char(getchar())
 endfunction
 ]])
+
+-- 如果当前行为空，使用A时将遵循上一行的缩进
+vim.keymap.set("n", "A", function ()
+  local cur_line = vim.fn.line('.')
+  local last_line = vim.fn.line('$')
+  if cur_line > 1 and vim.fn.trim(vim.fn.getline('.')) == '' then
+    vim.api.nvim_del_current_line()
+    if cur_line == last_line then
+      vim.api.nvim_feedkeys("o", 'n', true)
+    else
+      vim.api.nvim_feedkeys("O", 'n', true)
+    end
+  else
+    vim.api.nvim_feedkeys("A", 'n', true)
+  end
+end, { desc = "Auto Indent" })

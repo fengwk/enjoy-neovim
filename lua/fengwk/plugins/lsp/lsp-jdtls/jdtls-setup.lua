@@ -183,38 +183,10 @@ local function setup()
     "-data", data_dir,
   }
 
-  -- local function typeHierarchy()
-  --   local bufnr = 0
-  --   local util = require('jdtls.util')
-  --   local pos_params = vim.lsp.util.make_position_params(bufnr)
-  --   -- JDTDelegateCommandHandler
-  --   local command = {
-  --     command = 'java.navigate.openTypeHierarchy',
-  --     arguments = { vim.fn.json_encode(pos_params), "2", "1" }
-  --   }
-  --   print(vim.inspect(command))
-  --   util.execute_command(command, function(err, result) print(err, vim.inspect(result)) end)
-  --
-  --   -- execute_command(command, function(a, b, c, d)
-  --   --   print(a, b, c, d)
-  --   -- end, 0)
-  --   -- local client = nil
-  --   -- for _, c in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-  --   --   if c.name == 'jdtls' then
-  --   --     client = c
-  --   --     break
-  --   --   end
-  --   -- end
-  --   -- local params = vim.lsp.util.make_position_params(0)
-  --   -- params.direction = "Both"
-  --   -- client.request("textDocument/typeHierarchy", params, function(err, result, _, _) print(vim.inspect(result)) end, 0)
-  -- end
-
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
   config.on_attach = function(client, bufnr)
     lspconfig.on_attach(client, bufnr)
-    -- vim.api.nvim_create_user_command("TestTy", function() typeHierarchy() end, {})
 
     -- jdtls特性
     jdtls.setup_dap({ hotcodereplace = "auto" })
@@ -225,54 +197,21 @@ local function setup()
     if not is_single_file then
       require("jdtls.dap").setup_dap_main_class_configs()
     end
-    -- 运行当前类的main方法
-    -- vim.keymap.set("n", "<leader>dd", "<Cmd>lua require('dap').run({type='java',request='launch'})<CR>", { noremap = true, silent = true, desc = "Dap Continue" })
 
-    -- local dap = require('dap')
-    -- dap.configurations.java = {
-    --   {
-    --     type = 'java';
-    --     request = 'attach';
-    --     name = "Debug (Attach) - Remote";
-    --     hostName = "127.0.0.1";
-    --     port = 5005;
-    --   },
-    -- }
     -- 注册调试命令
-    vim.cmd([[
-      command! JdtTestClass lua require"jdtls".test_class()
-      command! JdtTestMethod lua require"jdtls".test_nearest_method()
-      command! JdtRemoteDebug lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".remote_debug_by_input()
-      command! JdtDebug lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".debug()
-      " command! JdtA lua require"fengwk.plugins.lsp.lsp-jdtls.jdtls-command".test()
-    ]])
+    vim.api.nvim_create_user_command("JdtTestClass", function() require("jdtls").test_class() end, {})
+    vim.api.nvim_create_user_command("JdtTestMethod", function() require("jdtls").test_nearest_method() end, {})
+    vim.api.nvim_create_user_command("JdtRemoteDebug", function() require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").remote_debug() end, {})
+    vim.api.nvim_create_user_command("JdtDebug", function() require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").debug() end, {})
 
     -- 设置jdt的扩展快捷键，跳转到父类或接口
     vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
+    -- inherited_members扩展
+    vim.keymap.set("n", "gS", "<Cmd>Telescope jdtls inherited_members theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Inherited Members" })
 
   end
 
-  -- config.capabilities = lspconfig.make_capabilities()
-  -- local jdtls_capabilities = {
-  --   textDocument = {
-  --     documentSymbol = {
-  --       hierarchicalDocumentSymbolSupport = true
-  --     }
-  --   }
-  -- }
-  -- config.capabilities = vim.tbl_deep_extend("force", config.capabilities, jdtls_capabilities)
-  -- print(vim.inspect(config))
-  -- config.capabilities = {
-  --   textDocument = {
-  --     documentSymbol = {
-  --       hierarchicalDocumentSymbolSupport = true,
-  --       symbolKind = {
-  --         -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#symbolKind
-  --         valueSet = { 6 }
-  --       },
-  --     }
-  --   }
-  -- }
+  config.capabilities = lspconfig.make_capabilities()
 
   config.root_dir = workspace_dir
 
@@ -317,7 +256,7 @@ local function setup()
   vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ stdpath_data, "mason", "packages", "java-test", "extension", "server", "*.jar" })), "\n"))
   -- eclipse插件支持
   -- https://github.com/eclipse/eclipse.jdt.ls/blob/master/CONTRIBUTING.md
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ vim.fn.stdpath("config"), "lua", "fengwk", "plugins", "lsp", "lsp-jdtls", "eclipse-pde", "*.jar" })), "\n"))
+  -- vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs_concat({ vim.fn.stdpath("config"), "lua", "fengwk", "plugins", "lsp", "lsp-jdtls", "eclipse-pde", "*.jar" })), "\n"))
 
   local extendedClientCapabilities = vim.deepcopy(jdtls.extendedClientCapabilities)
   extendedClientCapabilities.resolveAdditionalTextEditsSupport = true

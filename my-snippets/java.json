@@ -1,26 +1,4 @@
 {
-  "class": {
-    "prefix": ["class"],
-    "body": [
-      "/**",
-      " * @author ${VIM:\\$USER}",
-      " */",
-      "public class ${2:$TM_FILENAME_BASE} {",
-      "    $0",
-      "}"
-    ]
-  },
-  "interface": {
-    "prefix": ["interface"],
-    "body": [
-      "/**",
-      " * @author ${VIM:\\$USER}",
-      " */",
-      "public interface ${2:$TM_FILENAME_BASE} {",
-      "    $0",
-      "}"
-    ]
-  },
   "enum": {
     "prefix": ["enum"],
     "body": [
@@ -58,24 +36,65 @@
     "prefix": ["log"],
     "body": ["private final Logger log = LoggerFactory.getLogger(getClass());$0"]
   },
-  "emptyList": {
-    "prefix": ["emptyList"],
+  "emptylist": {
+    "prefix": ["emptylist"],
     "body": ["Collections.emptyList()$0"]
   },
-  "emptySet": {
-    "prefix": ["emptySet"],
+  "emptyset": {
+    "prefix": ["emptyset"],
     "body": ["Collections.emptySet()$0"]
   },
-  "emptyMap": {
-    "prefix": ["emptyMap"],
+  "emptymap": {
+    "prefix": ["emptymap"],
     "body": ["Collections.emptyMap()$0"]
   },
-  "isEmpty": {
-    "prefix": ["isEmpty"],
+  "isempty": {
+    "prefix": ["isempty"],
     "body": ["CollectionUtils.isEmpty($1)$0"]
   },
-  "isNotEmpty": {
-    "prefix": ["isNotEmpty"],
+  "isnotempty": {
+    "prefix": ["isnotempty"],
     "body": ["CollectionUtils.isNotEmpty($1)$0"]
+  },
+  "confignotify": {
+    "prefix": ["confignotify"],
+    "body": [
+      "private volatile ${2:type} ${1:field};",
+      "",
+      "@ConfigNotify(\"$TM_FILENAME_BASE.$1\")",
+      "public void $1Notify(String json) {",
+      "    try {",
+      "        this.$1 = JSON.parseObject(json, ${3:$2});",
+      "        log.error(\"change $1 success, json={}\", json);",
+      "    } catch (Exception ex) {",
+      "        log.error(\"change $1 failed, json={}\", json, ex);",
+      "    }",
+      "}$0"
+    ]
+  },
+  "configitem": {
+    "prefix": ["configitem"],
+    "body": [
+      "@Item(value = \"$TM_FILENAME_BASE.$1\", ignoreMiss = true)",
+      "public volatile ${2:type} ${1:field};$0"
+    ]
+  },
+  "newset": {
+    "prefix": ["newset"],
+    "body": [
+      "Set<$2> ${1:set} = new HashSet<>();$0"
+    ]
+  },
+  "newlist": {
+    "prefix": ["newlist"],
+    "body": [
+      "List<$2> ${1:list} = new ArrayList<>();$0"
+    ]
+  },
+  "newmap": {
+    "prefix": ["newmap"],
+    "body": [
+      "Map<$2, $3> ${1:map} = new HashMap<>();$0"
+    ]
   }
 }

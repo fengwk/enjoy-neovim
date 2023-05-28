@@ -86,7 +86,6 @@ local function on_attach(client, bufnr)
   keymap.set("v", "<leader>fm", function ()
     local range = get_range();
     vim.api.nvim_input("<Esc>")
-    print(vim.inspect(range))
     vim.lsp.buf.format({
       range = range,
       async = true
@@ -113,12 +112,12 @@ local function on_attach(client, bufnr)
   -- keymap.set("n", "gs", function() vim.lsp.buf.document_symbol({}) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   -- keymap.set("n", "gs", "<Cmd>Telescope aerial theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
   keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-  keymap.set("n", "gS", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
   keymap.set("n", "g<leader>", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
   keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
   -- keymap.set("n", "gd", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
   keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
-  keymap.set("n", "gw",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  keymap.set("n", "gw", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
+  keymap.set("n", "gW",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
   keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
   keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 

@@ -49,7 +49,7 @@ local function jump_fn(prompt_bufnr, action, offset_encoding)
     end
 
     jump_to_location({
-      uri = vim.uri_from_fname(selection.filename),
+      uri = uri,
       range = {
         start = pos,
         ['end'] = pos,

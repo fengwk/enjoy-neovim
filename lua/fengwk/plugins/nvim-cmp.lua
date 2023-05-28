@@ -61,6 +61,13 @@ local function get_weight(e)
   end
 end
 
+local function get_detail(e)
+  if e.completion_item.labelDetails and e.completion_item.labelDetails.detail then
+    return e.completion_item.labelDetails.detail
+  end
+  return ""
+end
+
 local function weight_sort(e1, e2)
   local w1 = get_weight(e1)
   local w2 = get_weight(e2)
@@ -71,6 +78,17 @@ local function weight_sort(e1, e2)
       return true
     elseif diff > 0 then
       return false
+    else
+      -- 如果签名长度一致，比较detail
+      -- 对于jdtls而言，label中存储了方法名，detail中存储了参数签名
+      local d1 = get_detail(e1)
+      local d2 = get_detail(e2)
+      diff = #d1 - #d2
+      if diff < 0 then
+        return true
+      elseif diff > 0 then
+        return false
+      end
     end
   elseif not w1 and not w2 then
     return nil
@@ -90,12 +108,15 @@ cmp.setup({
       vim.fn["vsnip#anonymous"](args.body)
     end,
   },
+  -- completion = {
+  --   autocomplete = false, -- 关闭自动打开补全菜单
+  -- },
   -- 快捷键映射
   mapping = cmp.mapping.preset.insert({
     -- 向上滚动补全项文档
-    ["<C-k>"] = cmp.mapping.scroll_docs(-4),
+    ["<C-u>"] = cmp.mapping.scroll_docs(-5),
     -- 向下滚动补全项文档
-    ["<C-j>"] = cmp.mapping.scroll_docs(4),
+    ["<C-d>"] = cmp.mapping.scroll_docs(5),
     -- 关闭补全项窗口
     ["<C-e>"] = cmp.mapping.abort(),
     -- ["<Esc>"] = cmp.mapping.abort(),
@@ -103,22 +124,24 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
+      if cmp.visible() then -- 补全已开启则选择下一项
         cmp.select_next_item()
-      elseif vim.fn["vsnip#available"](1) == 1 then
-        feedkey("<Plug>(vsnip-expand-or-jump)", "")
-      elseif has_words_before() then
+      -- elseif vim.fn["vsnip#available"](1) == 1 then
+      --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      elseif has_words_before() then -- 前边有单词则开启补全
         cmp.complete()
       else
         fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`.
       end
     end, { "i", "s" }),
     -- 上一个补全项
-    ["<S-Tab>"] = cmp.mapping(function()
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-        feedkey("<Plug>(vsnip-jump-prev)", "")
+      -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+      --   feedkey("<Plug>(vsnip-jump-prev)", "")
+      else
+        fallback()
       end
     end, { "i", "s" }),
   }),
@@ -184,10 +207,10 @@ cmp.setup({
     comparators = {
       weight_sort, -- 基于权重排序
       compare.offset, -- lsp给出的顺序
-      -- -- compare.exact,
+      -- compare.exact,
       -- compare.recently_used, -- 近期使用
       -- compare.locality, -- 当前缓冲区优先
-      compare.length, -- 长度
+      -- compare.length, -- 长度
       compare.order, -- id序，兜底
     },
   },

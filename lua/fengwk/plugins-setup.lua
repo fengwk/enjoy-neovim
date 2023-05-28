@@ -98,7 +98,7 @@ return packer.startup(function(use)
 	use("rafamadriz/friendly-snippets") -- 现成的snippets
 
 	-- fuzzy finding
-  use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" }, tag = "0.1.x" }) -- 模糊搜索插件
+  use({ "nvim-telescope/telescope.nvim", requires = { "nvim-lua/plenary.nvim" }, tag = "0.1.1" }) -- 模糊搜索插件
   use("nvim-telescope/telescope-ui-select.nvim") -- ui.select与telescope集成 
   use("nvim-telescope/telescope-live-grep-args.nvim") -- live grep增强
   use({ "nvim-telescope/telescope-fzf-native.nvim", run = "make" }) -- 模糊搜索增强
