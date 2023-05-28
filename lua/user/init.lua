@@ -1,5 +1,0 @@
-require "user.vimrc"
-require "user.plugins"
-require "user.my-plugins"
-require "user.themes"
-require "user.ide"
