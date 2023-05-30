@@ -56,7 +56,8 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'f',     api.live_filter.start,                 opts('Filter'))
   vim.keymap.set('n', 'g?',    api.tree.toggle_help,                  opts('Help'))
   vim.keymap.set('n', 'gy',    api.fs.copy.absolute_path,             opts('Copy Absolute Path'))
-  vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
+  -- vim.keymap.set('n', 'H',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
+  vim.keymap.set('n', 'zh',     api.tree.toggle_hidden_filter,         opts('Toggle Dotfiles'))
   vim.keymap.set('n', 'I',     api.tree.toggle_gitignore_filter,      opts('Toggle Git Ignore'))
   vim.keymap.set('n', 'J',     api.node.navigate.sibling.last,        opts('Last Sibling'))
   vim.keymap.set('n', 'K',     api.node.navigate.sibling.first,       opts('First Sibling'))
@@ -66,6 +67,7 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'p',     api.fs.paste,                          opts('Paste'))
   vim.keymap.set('n', 'P',     api.node.navigate.parent,              opts('Parent Directory'))
   -- vim.keymap.set('n', 'q',     api.tree.close,                        opts('Close'))
+  vim.keymap.set('n', '<C-q>', api.tree.close,                        opts('Close'))
   vim.keymap.set('n', 'r',     api.fs.rename,                         opts('Rename'))
   vim.keymap.set('n', 'R',     api.tree.reload,                       opts('Refresh'))
   vim.keymap.set('n', 's',     api.node.run.system,                   opts('Run System'))
@@ -88,28 +90,28 @@ local function on_attach(bufnr)
   -- The dummy set before del is done for safety, in case a default mapping does not exist.
   --
   -- You might tidy things by removing these along with their default mapping.
-  vim.keymap.set('n', 'O', '', { buffer = bufnr })
-  vim.keymap.del('n', 'O', { buffer = bufnr })
-  vim.keymap.set('n', '<2-RightMouse>', '', { buffer = bufnr })
-  vim.keymap.del('n', '<2-RightMouse>', { buffer = bufnr })
-  vim.keymap.set('n', 'D', '', { buffer = bufnr })
-  vim.keymap.del('n', 'D', { buffer = bufnr })
-  vim.keymap.set('n', 'E', '', { buffer = bufnr })
-  vim.keymap.del('n', 'E', { buffer = bufnr })
+  -- vim.keymap.set('n', 'O', '', { buffer = bufnr })
+  -- vim.keymap.del('n', 'O', { buffer = bufnr })
+  -- vim.keymap.set('n', '<2-RightMouse>', '', { buffer = bufnr })
+  -- vim.keymap.del('n', '<2-RightMouse>', { buffer = bufnr })
+  -- vim.keymap.set('n', 'D', '', { buffer = bufnr })
+  -- vim.keymap.del('n', 'D', { buffer = bufnr })
+  -- vim.keymap.set('n', 'E', '', { buffer = bufnr })
+  -- vim.keymap.del('n', 'E', { buffer = bufnr })
 
 
   -- Mappings migrated from view.mappings.list
   --
   -- You will need to insert "your code goes here" for any mappings with a custom action_cb
-  vim.keymap.set('n', 'A', api.tree.expand_all, opts('Expand All'))
-  vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
-  vim.keymap.set('n', 'C', api.tree.change_root_to_node, opts('CD'))
-  vim.keymap.set('n', 'P', function()
-    local node = api.tree.get_node_under_cursor()
-    print(node.absolute_path)
-  end, opts('Print Node Path'))
+  -- vim.keymap.set('n', 'A', api.tree.expand_all, opts('Expand All'))
+  -- vim.keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+  -- vim.keymap.set('n', 'C', api.tree.change_root_to_node, opts('CD'))
+  -- vim.keymap.set('n', 'P', function()
+  --   local node = api.tree.get_node_under_cursor()
+  --   print(node.absolute_path)
+  -- end, opts('Print Node Path'))
 
-  vim.keymap.set('n', 'Z', api.node.run.system, opts('Run System'))
+  -- vim.keymap.set('n', 'Z', api.node.run.system, opts('Run System'))
 
 end
 
@@ -210,6 +212,13 @@ nvim_tree.setup(config)
 vim.keymap.set("n", "<leader>e", function()
   nvim_tree_api.tree.toggle({
     focus = true,
+    find_file = true,
+  })
+end, { desc = "NvimTree Find File Toggle" })
+
+-- 如果没有打开则打开NvimTree，然后定位到相应文件的位置
+vim.keymap.set("n", "<leader>E", function()
+  nvim_tree_api.tree.open({
     find_file = true,
   })
 end, { desc = "NvimTree Find File Toggle" })

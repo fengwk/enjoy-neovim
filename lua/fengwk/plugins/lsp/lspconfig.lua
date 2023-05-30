@@ -8,7 +8,7 @@ local Path = require("plenary.path")
 local utils = require("fengwk.utils")
 
 -- 将cwd设置为lsp根目录
-local function cd_lsp_root(auto_add_ws)
+local function cd_lsp_root(buffer, auto_add_ws)
   local root = vim.lsp.buf.list_workspace_folders()
   local is_single_file = false
   if root ~= nil and #root > 0 then
@@ -107,22 +107,31 @@ local function on_attach(client, bufnr)
   end
 
   -- telescope
-  -- keymap.set("n", "gr", vim.lsp.buf.references, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
-  keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
-  -- keymap.set("n", "gs", function() vim.lsp.buf.document_symbol({}) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
+  -- keymap.set("n", "gr", telescope_builtin_lsp_references, { buffer = bufnr, desc = "Lsp References" })
   -- keymap.set("n", "gs", "<Cmd>Telescope aerial theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
   keymap.set("n", "gs", "<Cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-  keymap.set("n", "g<leader>", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
-  keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
-  -- keymap.set("n", "gd", vim.lsp.buf.declaration, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Document Symbol" })
-  keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
-  keymap.set("n", "gw", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
-  keymap.set("n", "gW",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
-  keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
-  keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+  -- keymap.set("n", "g<leader>", "<Cmd>lua require('telescope.builtin').lsp_implementations()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  -- keymap.set("n", "gd", "<Cmd>lua require('telescope.builtin').lsp_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  -- keymap.set("n", "gt", "<Cmd>lua require('telescope.builtin').lsp_type_definitions()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
+  -- keymap.set("n", "gw", telescope_builtin_lsp_workspace_symbols, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
+  -- keymap.set("n", "gW",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  -- keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+  -- keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+  keymap.set("n", "gw",  "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+
+  -- lsp
+  keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Lsp References" })
+  -- keymap.set("n", "gs", vim.lsp.buf.document_symbol, { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
+  keymap.set("n", "g<leader>", vim.lsp.buf.implementation, { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+  keymap.set("n", "gd", vim.lsp.buf.definition, { silent = true, buffer = bufnr, desc = "Lsp Definition" })
+  keymap.set("n", "gD", vim.lsp.buf.declaration, { silent = true, buffer = bufnr, desc = "Lsp Declaration" })
+  keymap.set("n", "gt", vim.lsp.buf.type_definition, { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
+  keymap.set("n", "gW", vim.lsp.buf.workspace_symbol, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
+  keymap.set("n", "<leader>gi", vim.lsp.buf.incoming_calls, { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+  keymap.set("n", "<leader>go", vim.lsp.buf.outgoing_calls, { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
-  cd_lsp_root(vim.tbl_contains(auto_add_ws_clients, client.name))
+  cd_lsp_root(buffer, vim.tbl_contains(auto_add_ws_clients, client.name))
   -- 在workspace增强逻辑中完成cwd自动切换
   -- vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
 end

@@ -98,6 +98,7 @@ end
 
 local function inherited_members(opts)
   opts = opts or {}
+  opts = vim.tbl_deep_extend("keep", base_opts, opts)
   opts = vim.tbl_deep_extend("keep", {
     path_display = "hidden" -- 隐藏文件路径显示
   }, opts)
@@ -153,9 +154,22 @@ local function inherited_members(opts)
 end
 
 return require("telescope").register_extension({
-  -- setup = function(opts)
-  --   base_opts = opts or {}
-  -- end,
+  setup = function(opts)
+    base_opts = opts or {}
+
+    -- vim.keymap.set("n", "yr", function ()
+    --   local bufnr = vim.api.nvim_get_current_buf()
+    --   local client = select_client(bufnr)
+    --   if not client then
+    --     return
+    --   end
+    --   coroutine.wrap(function()
+    --     local types = {}
+    --     collect_types(types, client, bufnr, nil)
+    --     print(vim.inspect(types))
+    --   end)()
+    -- end)
+  end,
   exports = {
     inherited_members = inherited_members,
   },

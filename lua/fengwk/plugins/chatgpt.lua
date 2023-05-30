@@ -1,3 +1,4 @@
+-- https://github.com/jackMort/ChatGPT.nvim
 local ok, chatgpt = pcall(require, "chatgpt")
 if not ok then
   return
@@ -37,7 +38,6 @@ chatgpt.setup({
       },
     },
     keymaps = {
-      -- close = { --[["<C-c>",--]] "<C-q>" },
       close = { "<C-c>", "<C-q>" },
       yank_last = "<C-y>",
       yank_last_code = "<C-k>",
@@ -49,7 +49,7 @@ chatgpt.setup({
       select_session = { "<Space>", "<CR>" },
       rename_session = "r",
       delete_session = "d",
-      draft_message = "<C-d>",
+      daft_message = "<C-x>", -- 将当前输入框内的内容作为草稿发送（此时先不会提交）
       toggle_settings = "<C-o>",
       toggle_message_role = "<C-r>",
       toggle_system_role_open = "<C-s>",

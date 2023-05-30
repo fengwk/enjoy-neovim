@@ -211,7 +211,7 @@ telescope.setup {
 -- load_extension, somewhere after setup function:
 telescope.load_extension("ui-select")
 telescope.load_extension("live_grep_args")
--- telescope.load_extension("lsp_handlers")
+telescope.load_extension("lsp_handlers")
 telescope.load_extension("jdtls")
 -- Token      Match type                    Description
 -- sbtrkt     fuzzy-match                   Items that match sbtrkt

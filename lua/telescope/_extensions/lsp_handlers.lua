@@ -5,6 +5,9 @@ local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 local make_entry = require('telescope.make_entry')
 local conf = require('telescope.config').values
+local sorters = require "telescope.sorters"
+local channel = require("plenary.async.control").channel
+local utils = require "telescope.utils"
 
 local lsp_util = vim.lsp.util
 local lsp_buf = vim.lsp.buf
@@ -110,6 +113,7 @@ local function find(prompt_title, items, find_opts, offset_encoding)
   local opts = find_opts.opts or {}
 
   local entry_maker = find_opts.entry_maker or make_entry.gen_from_quickfix(opts)
+  local sorter = find_opts.sorter or conf.generic_sorter(opts)
   local attach_mappings = find_opts.attach_mappings or attach_location_mappings(offset_encoding)
   local previewer = nil
   if not find_opts.hide_preview then
@@ -124,7 +128,7 @@ local function find(prompt_title, items, find_opts, offset_encoding)
           entry_maker = entry_maker,
         }),
         previewer = previewer,
-        sorter = conf.generic_sorter(opts),
+        sorter = sorter,
         attach_mappings = attach_mappings,
       })
       :find()
@@ -165,7 +169,6 @@ local function symbol_handler(prompt_name, opts)
 
   -- Each lsp-handler has this signature: function(err, result, ctx, config)
   return function(_, result, context, _)
-    print("结果", result)
     local res = get_correct_result(result, context)
     if not res or vim.tbl_isempty(res) then
       print(opts.no_results_message)
@@ -174,7 +177,12 @@ local function symbol_handler(prompt_name, opts)
 
     local items = lsp_util.symbols_to_items(res)
     local client = vim.lsp.get_client_by_id(context.client_id)
-    find(prompt_name, items, { opts = opts.telescope }, client.offset_encoding)
+    find(prompt_name, items,
+    {
+      opts = opts.telescope,
+      entry_maker = make_entry.gen_from_lsp_symbols,
+      sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = conf.generic_sorter(opts), }
+    }, client.offset_encoding)
   end
 end
 
@@ -236,6 +244,74 @@ local function code_action_handler(prompt_title, opts)
   end
 end
 
+local function select_client(bufnr)
+  local candidates = vim.lsp.get_active_clients({ bufnr = bufnr })
+  if candidates and #candidates > 0 then
+    return candidates[1]
+  end
+  return nil
+end
+
+-- 动态查询workspace symbols
+local function get_workspace_symbols_requester(client, bufnr, opts)
+  local cancel = function() end
+
+  return function(prompt)
+    cancel()
+
+    local tx, rx = channel.oneshot()
+
+    -- 更新取消函数
+    local old_cancel = cancel;
+    cancel = function()
+      old_cancel()
+      pcall(tx, nil, nil)
+    end
+
+    client.request("workspace/symbol", { query = prompt }, function (err, res)
+      -- 防止已被取消
+      pcall(tx, err, res)
+    end, bufnr)
+
+    local err, res = rx()
+
+    if err then
+      vim.notify(err, vim.log.levels.WARN)
+      return {}
+    end
+
+    if not res or vim.tbl_isempty(res) then
+      return {}
+    end
+
+    local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
+    if not vim.tbl_isempty(locations) then
+      locations = utils.filter_symbols(locations, opts) or {}
+    end
+    return locations
+  end
+end
+
+local function dynamic_workspace_symbols(opts)
+  local client = select_client(opts.bufnr)
+  if not client then
+    return
+  end
+  pickers
+    .new(opts, {
+      prompt_title = "LSP Dynamic Workspace Symbols",
+      finder = finders.new_dynamic {
+        entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts),
+        fn = get_workspace_symbols_requester(client, opts.bufnr, opts),
+      },
+      previewer = conf.qflist_previewer(opts),
+      sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = conf.generic_sorter(opts), },
+      -- sorter = sorters.highlighter_only(opts),
+      attach_mappings = attach_location_mappings(client.offset_encoding),
+    })
+    :find()
+end
+
 return telescope.register_extension({
   setup = function(opts)
     -- Use default options if needed.
@@ -279,5 +355,7 @@ return telescope.register_extension({
       end
     end
   end,
-  exports = {},
+  exports = {
+    dynamic_workspace_symbols = dynamic_workspace_symbols,
+  },
 })
