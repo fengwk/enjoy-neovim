@@ -180,7 +180,7 @@ local function symbol_handler(prompt_name, opts)
     find(prompt_name, items,
     {
       opts = opts.telescope,
-      entry_maker = make_entry.gen_from_lsp_symbols,
+      entry_maker = make_entry.gen_from_lsp_symbols(opts),
       sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = conf.generic_sorter(opts), }
     }, client.offset_encoding)
   end
@@ -252,47 +252,114 @@ local function select_client(bufnr)
   return nil
 end
 
--- 动态查询workspace symbols
+local _callable_obj = function()
+  local obj = {}
+
+  obj.__index = obj
+  obj.__call = function(t, ...)
+    return t:_find(...)
+  end
+
+  obj.close = function() end
+
+  return obj
+end
+
+local WorkspaceSymbolDynamicFinder = _callable_obj()
+
+function WorkspaceSymbolDynamicFinder:new(opts)
+  opts = opts or {}
+
+  assert(not opts.results, "`results` should be used with finder.new_table")
+  assert(not opts.static, "`static` should be used with finder.new_oneshot_job")
+
+  local obj = setmetatable({
+    curr_buf = opts.curr_buf,
+    fn = opts.fn,
+    entry_maker = opts.entry_maker or make_entry.gen_from_string(opts),
+  }, self)
+
+  return obj
+end
+
+function WorkspaceSymbolDynamicFinder:_find(prompt, process_result, process_complete)
+  self.fn(prompt, function(results)
+    for _, result in ipairs(results) do
+      if process_result(self.entry_maker(result)) then
+        return
+      end
+    end
+
+    process_complete()
+  end)
+end
+
+local function fzy_sorter(opts)
+  opts = opts or {}
+  local fzy = opts.fzy_mod or require "telescope.algos.fzy"
+  local OFFSET = -fzy.get_score_floor()
+
+  return sorters.Sorter:new {
+    discard = true,
+
+    scoring_function = function(_, prompt, line)
+      -- 预处理prompt
+      if opts.sort_prompt_pre_process then
+        prompt = opts.sort_prompt_pre_process(prompt)
+      end
+
+      -- Check for actual matches before running the scoring alogrithm.
+      if not fzy.has_match(prompt, line) then
+        return -1
+      end
+
+      local fzy_score = fzy.score(prompt, line)
+
+      -- The fzy score is -inf for empty queries and overlong strings.  Since
+      -- this function converts all scores into the range (0, 1), we can
+      -- convert these to 1 as a suitable "worst score" value.
+      if fzy_score == fzy.get_score_min() then
+        return 1
+      end
+
+      -- Poor non-empty matches can also have negative values. Offset the score
+      -- so that all values are positive, then invert to match the
+      -- telescope.Sorter "smaller is better" convention. Note that for exact
+      -- matches, fzy returns +inf, which when inverted becomes 0.
+      return 1 / (fzy_score + OFFSET)
+    end,
+
+    -- The fzy.positions function, which returns an array of string indices, is
+    -- compatible with telescope's conventions. It's moderately wasteful to
+    -- call call fzy.score(x,y) followed by fzy.positions(x,y): both call the
+    -- fzy.compute function, which does all the work. But, this doesn't affect
+    -- perceived performance.
+    highlighter = function(_, prompt, display)
+      return fzy.positions(prompt, display)
+    end,
+  }
+end
+
 local function get_workspace_symbols_requester(client, bufnr, opts)
-  local cancel = function() end
+  local latest_prompt = ""
 
-  return function(prompt)
-    cancel()
-
-    local tx, rx = channel.oneshot()
-
-    -- 更新取消函数
-    local old_cancel = cancel;
-    cancel = function()
-      old_cancel()
-      pcall(tx, nil, nil)
-    end
-
-    client.request("workspace/symbol", { query = prompt }, function (err, res)
-      -- 防止已被取消
-      pcall(tx, err, res)
+  return function(prompt, complete_func)
+    latest_prompt = prompt
+    -- TODO hold request 200ms
+    client.request("workspace/symbol", { query = prompt }, function (_, res)
+      if prompt == latest_prompt then
+        local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
+        if not vim.tbl_isempty(locations) then
+          locations = utils.filter_symbols(locations, opts) or {}
+        end
+        complete_func(locations)
+      end
     end, bufnr)
-
-    local err, res = rx()
-
-    if err then
-      vim.notify(err, vim.log.levels.WARN)
-      return {}
-    end
-
-    if not res or vim.tbl_isempty(res) then
-      return {}
-    end
-
-    local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
-    if not vim.tbl_isempty(locations) then
-      locations = utils.filter_symbols(locations, opts) or {}
-    end
-    return locations
   end
 end
 
 local function dynamic_workspace_symbols(opts)
+  opts = opts or {}
   local client = select_client(opts.bufnr)
   if not client then
     return
@@ -300,12 +367,12 @@ local function dynamic_workspace_symbols(opts)
   pickers
     .new(opts, {
       prompt_title = "LSP Dynamic Workspace Symbols",
-      finder = finders.new_dynamic {
+      finder = WorkspaceSymbolDynamicFinder:new {
         entry_maker = opts.entry_maker or make_entry.gen_from_lsp_symbols(opts),
         fn = get_workspace_symbols_requester(client, opts.bufnr, opts),
       },
       previewer = conf.qflist_previewer(opts),
-      sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = conf.generic_sorter(opts), },
+      sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = fzy_sorter(opts), },
       -- sorter = sorters.highlighter_only(opts),
       attach_mappings = attach_location_mappings(client.offset_encoding),
     })

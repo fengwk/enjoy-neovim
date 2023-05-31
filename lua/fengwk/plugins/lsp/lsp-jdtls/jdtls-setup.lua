@@ -208,7 +208,18 @@ local function setup()
     vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
     -- inherited_members扩展
     vim.keymap.set("n", "gS", "<Cmd>Telescope jdtls inherited_members theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Inherited Members" })
-
+    -- 添加排序时过滤
+    vim.keymap.set("n", "gw", function ()
+      local opts = require("telescope.themes").get_dropdown()
+      opts = vim.tbl_deep_extend("force", opts, {
+        sort_prompt_pre_process = function(prompt)
+          -- jdtls中可能会使用*进行模糊匹配查询，这与最后fzf时的sort冲突，因此在进行fzf搜索前先将*过滤掉
+          prompt = string.gsub(prompt, "*", "")
+          return prompt
+        end
+      })
+      require("telescope").extensions.lsp_handlers.dynamic_workspace_symbols(opts)
+    end, { buffer = bufnr, desc = "Lsp Workspace Symbol" })
   end
 
   config.capabilities = lspconfig.make_capabilities()

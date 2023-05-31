@@ -117,7 +117,9 @@ local function on_attach(client, bufnr)
   -- keymap.set("n", "gW",  "<Cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
   -- keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
   -- keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
-  keymap.set("n", "gw",  "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Workspace Symbol" })
+  keymap.set("n", "gw", function ()
+    require("telescope").extensions.lsp_handlers.dynamic_workspace_symbols(require("telescope.themes").get_dropdown())
+  end, { buffer = bufnr, desc = "Lsp Workspace Symbol" })
 
   -- lsp
   keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Lsp References" })
@@ -131,7 +133,7 @@ local function on_attach(client, bufnr)
   keymap.set("n", "<leader>go", vim.lsp.buf.outgoing_calls, { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
   -- 在attatch成功后改变vim的cwd，并且注册跳转
-  cd_lsp_root(buffer, vim.tbl_contains(auto_add_ws_clients, client.name))
+  cd_lsp_root(bufnr, vim.tbl_contains(auto_add_ws_clients, client.name))
   -- 在workspace增强逻辑中完成cwd自动切换
   -- vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
 end

@@ -83,3 +83,6 @@ vim.keymap.set("n", "A", function ()
     vim.api.nvim_feedkeys("A", 'n', true)
   end
 end, { desc = "Auto Indent" })
+
+-- 展示当前缓冲区名称
+vim.api.nvim_create_user_command("ShowBuffName", function() print(vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())) end, {})

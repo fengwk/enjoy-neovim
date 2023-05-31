@@ -118,7 +118,8 @@ return packer.startup(function(use)
 	use("stevearc/aerial.nvim") -- outline
   use("RRethy/vim-illuminate") -- 代码符号高亮，并支持在符号之间跳跃
 	-- use("jose-elias-alvarez/typescript.nvim") -- ts lsp增强
-	use("mfussenegger/nvim-jdtls") -- java lsp增强
+	-- use("mfussenegger/nvim-jdtls") -- java lsp增强
+	use({"fengwk/nvim-jdtls", branch = "fix/jump-from-pom"})
 
 	-- formatting & linting
 	-- use("jayp0521/mason-null-ls.nvim") -- bridges gap b/w mason & null-ls
