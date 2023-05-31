@@ -342,19 +342,42 @@ end
 
 local function get_workspace_symbols_requester(client, bufnr, opts)
   local latest_prompt = ""
+  local cache = {}
 
   return function(prompt, complete_func)
+    if opts.exclude_prompt and opts.exclude_prompt(prompt) then
+      return
+    end
+
     latest_prompt = prompt
-    -- TODO hold request 200ms
-    client.request("workspace/symbol", { query = prompt }, function (_, res)
-      if prompt == latest_prompt then
-        local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
-        if not vim.tbl_isempty(locations) then
-          locations = utils.filter_symbols(locations, opts) or {}
+
+    -- 尝试直接从缓存中获取
+    if cache[prompt] then
+      complete_func(cache[prompt])
+    else
+      -- hold住请求，延迟执行避免产生大量请求浪费lsp性能
+      vim.defer_fn(function()
+        -- 如果在请求期间没有发生prompt修改则继续
+        if prompt == latest_prompt then
+          if cache[prompt] then
+            complete_func(cache[prompt])
+          else
+            print("req", prompt)
+            -- 进行请求
+            client.request("workspace/symbol", { query = prompt }, function (_, res)
+              local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
+              if not vim.tbl_isempty(locations) then
+                locations = utils.filter_symbols(locations, opts) or {}
+              end
+              cache[prompt] = locations
+              if prompt == latest_prompt then
+                complete_func(locations)
+              end
+            end, bufnr)
+          end
         end
-        complete_func(locations)
-      end
-    end, bufnr)
+      end, 200)
+    end
   end
 end
 

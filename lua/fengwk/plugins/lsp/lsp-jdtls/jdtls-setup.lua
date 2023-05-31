@@ -212,6 +212,10 @@ local function setup()
     vim.keymap.set("n", "gw", function ()
       local opts = require("telescope.themes").get_dropdown()
       opts = vim.tbl_deep_extend("force", opts, {
+        exclude_prompt = function(prompt)
+          -- 过滤掉空字符提升检索效率
+          return prompt == ""
+        end,
         sort_prompt_pre_process = function(prompt)
           -- jdtls中可能会使用*进行模糊匹配查询，这与最后fzf时的sort冲突，因此在进行fzf搜索前先将*过滤掉
           prompt = string.gsub(prompt, "*", "")
