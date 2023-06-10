@@ -1,3 +1,9 @@
+local ok, _ = pcall(require, "jdtls")
+if not ok then
+  return
+end
+
+local ext_common = require("telescope._extensions.common")
 local pickers = require "telescope.pickers"
 local finders = require "telescope.finders"
 local conf = require("telescope.config").values
@@ -6,6 +12,131 @@ local action_state = require "telescope.actions.state"
 local make_entry = require('telescope.make_entry')
 
 local base_opts = {}
+
+local function enhance_pick_one(fallback)
+  return function(items, prompt, label_fn)
+    local co = coroutine.running()
+    -- 如果当前不在协程环境中使用降级方式进行选择
+    if not co then
+      return fallback(items, prompt, label_fn)
+    end
+
+    -- 使用telescope进行选择
+    local choices = {}
+    local choice_to_item = {}
+    label_fn = label_fn and label_fn or function(item) return item end
+    for i, item in ipairs(items) do
+      local choice = string.format('%d: %s', i, label_fn(item))
+      table.insert(choices, choice)
+      choice_to_item[choice] = item
+    end
+
+    local opts = vim.tbl_deep_extend("keep", base_opts, { bufnr = vim.api.nvim_get_current_buf() })
+
+    pickers.new(opts, {
+      prompt_title = prompt,
+      finder = finders.new_table { results = choices },
+      attach_mappings = function(_, map)
+        ext_common.map_select_one(map, function(prompt_bufnr)
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          local selection = picker:get_selection()
+          local selected = selection and selection[1] and choice_to_item[selection[1]] or nil
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, selected)
+        end)
+        map({ "n", "i" }, "<C-c>", function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
+        end)
+        map({ "n", "i" }, "<C-q>", function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
+        end)
+        -- 不使用默认绑定
+        return false
+      end,
+      sorter = conf.generic_sorter(opts),
+    }):find()
+    return coroutine.yield()
+  end
+end
+
+local function enhance_pick_many(fallback)
+  return function(items, prompt, label_fn)
+    local co = coroutine.running()
+    -- 如果当前不在协程环境中使用降级方式进行选择
+    if not co then
+      return fallback(items, prompt, label_fn)
+    end
+
+    -- 使用telescope进行选择
+    local choices = {}
+    local choice_to_item = {}
+    label_fn = label_fn and label_fn or function(item) return item end
+    for i, item in ipairs(items) do
+      local choice = string.format('%d: %s', i, label_fn(item))
+      table.insert(choices, choice)
+      choice_to_item[choice] = item
+    end
+
+    local opts = vim.tbl_deep_extend("keep", base_opts, { bufnr = vim.api.nvim_get_current_buf() })
+
+    pickers.new(opts, {
+      prompt_title = prompt,
+      finder = finders.new_table { results = choices },
+      attach_mappings = function(_, map)
+        ext_common.map_select_many(map, function(prompt_bufnr)
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          local multi_selection = picker:get_multi_selection()
+          local selecteds = {}
+          for _, selection in ipairs(multi_selection) do
+            local selected = selection and selection[1] and choice_to_item[selection[1]] or nil
+            if selected then
+              table.insert(selecteds, selected)
+            end
+          end
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, selecteds)
+        end)
+        map({ "n", "i" }, "<C-c>", function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
+        end)
+        map({ "n", "i" }, "<C-q>", function(prompt_bufnr)
+          actions.close(prompt_bufnr)
+          coroutine.resume(co, nil)
+        end)
+        -- 不使用默认绑定
+        return false
+      end,
+      sorter = conf.generic_sorter(opts),
+    }):find()
+    return coroutine.yield()
+  end
+end
+
+local function setup_ui()
+  local jdtls_ui = require("jdtls.ui")
+  jdtls_ui.pick_one = enhance_pick_one(jdtls_ui.pick_one)
+  jdtls_ui.pick_many = enhance_pick_many(jdtls_ui.pick_many)
+end
+
+-- local enable_auto_organize_imports = false
+-- local function setup_auto_organize_imports()
+--   local jdtls = require("jdtls")
+--   local command = "java.action.organizeImports.chooseImports"
+--   -- 存在问题，如果没有需要选择则无法清理当次的enable_auto_organize_imports
+--   local origin_java_choose_imports = jdtls.commands[command]
+--   local java_choose_imports = function(...)
+--     if enable_auto_organize_imports then
+--       enable_auto_organize_imports = false
+--       return {}
+--     end
+--     return origin_java_choose_imports(...)
+--   end
+--   jdtls.commands[command] = java_choose_imports
+--   vim.lsp.commands[command] = java_choose_imports
+-- end
 
 local function select_client(bufnr)
   local candidates = vim.lsp.get_active_clients({ name = "jdtls", bufnr = bufnr })
@@ -32,7 +163,7 @@ local function make_pos(uri)
   return {
     position = {
       character = 0,
-      line = 1
+      line = 0
     },
     textDocument = {
       uri = uri
@@ -93,15 +224,15 @@ local function jump_location(offset_encoding)
     range = {
       start = pos,
       ['end'] = pos,
-    }}, offset_encoding)
+    }
+  }, offset_encoding)
 end
 
 local function inherited_members(opts)
-  opts = opts or {}
-  opts = vim.tbl_deep_extend("keep", base_opts, opts)
-  opts = vim.tbl_deep_extend("keep", {
-    path_display = "hidden" -- 隐藏文件路径显示
-  }, opts)
+  opts = vim.tbl_deep_extend("keep", opts or {}, base_opts, {
+    path_display = "hidden", -- 隐藏文件路径显示
+    bufnr = vim.api.nvim_get_current_buf(),
+  })
   local bufnr = opts.bufnr
   local client = select_client(bufnr)
   if not client then
@@ -155,20 +286,11 @@ end
 
 return require("telescope").register_extension({
   setup = function(opts)
-    base_opts = opts or {}
-
-    -- vim.keymap.set("n", "yr", function ()
-    --   local bufnr = vim.api.nvim_get_current_buf()
-    --   local client = select_client(bufnr)
-    --   if not client then
-    --     return
-    --   end
-    --   coroutine.wrap(function()
-    --     local types = {}
-    --     collect_types(types, client, bufnr, nil)
-    --     print(vim.inspect(types))
-    --   end)()
-    -- end)
+    if opts and #opts >= 1 then
+      base_opts = opts[1]
+    end
+    setup_ui()
+    -- setup_auto_organize_imports()
   end,
   exports = {
     inherited_members = inherited_members,

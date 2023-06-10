@@ -18,5 +18,3 @@ ws_enhancer.setup({
   -- enable info-level notifications after adding or removing a workspace
   notify_info = true,
 })
-
-vim.keymap.set("n", "<leader>fs", "<Cmd>Telescope workspaces theme=dropdown<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })

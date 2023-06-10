@@ -8,7 +8,8 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
-insert_final_newline = false
+# 避免文件自动修改最后一行导致nvim无法直接退出
+#insert_final_newline = false
 
 [*.{java,groovy,xml}]
 indent_style = space
@@ -25,17 +26,14 @@ indent_style = tab
 [*.go]
 indent_style = tab
 
-# 参考 Google c++ 风格指南
-# https://zh-google-styleguide.readthedocs.io/en/latest/google-cpp-styleguide/formatting/
 [*.{h,c,cpp}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
-# 参考 Google python 风格规范
-# https://google-styleguide.readthedocs.io/zh_CN/latest/google-python-styleguide/python_style_rules.html#
+# E111 indentation is a multiple of 4
 [*.py]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # 参考 Google Shell 风格指南
 # https://google-styleguide.readthedocs.io/zh_CN/latest/google-shell-styleguide/formatting.html
@@ -43,11 +41,9 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
-# 参考 Google Javascript风格规范
-# https://google-styleguide.readthedocs.io/zh_CN/latest/google-javascript-styleguide/javascript_style_rules.html#
 [*.{js,json,html,css,less,sass,ts,vue,jsx}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 # lua
 [*.lua]

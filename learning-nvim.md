@@ -308,6 +308,15 @@ local imgdir = vim.fn.expand('%:t:r') .. '.assets'
 - 使用`:cdo`配合`s#{pattern}#{string}#g`命令可以替换所有选中行的内容。
 - 使用`:cfdo`配合`%s#{pattern}#{string}#g`命令可以替换所有选中文件的内容。
 
+## diff
+
+在vim中，你可以使用`:diffthis`命令来将当前窗口的缓冲区添加到diff对比中。然后，你可以打开另一个窗口，并使用`:diffthis`命令将另一个缓冲区添加到diff对比中。这样，你就可以在两个窗口中同时查看两个缓冲区的差异了。
+以下是具体的步骤：
+1. 打开第一个缓冲区，并使用`:diffthis`命令将当前窗口的缓冲区添加到diff对比中。
+2. 打开第二个缓冲区，并使用`:diffthis`命令将另一个缓冲区添加到diff对比中。
+3. 在两个窗口中查看缓冲区的差异。你可以使用`:wincmd w`命令在两个窗口之间切换。
+4. 如果你想退出diff对比，可以使用`:diffoff`命令来关闭diff模式。
+
 # 插件（Plugin）
 
 ## tabular

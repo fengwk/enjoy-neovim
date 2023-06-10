@@ -25,6 +25,7 @@ local java_home_preset = {
   java_home_18 = os.getenv("JAVA_HOME_18"),
 }
 
+local stdpath_config = vim.fn.stdpath("config")
 local stdpath_data = vim.fn.stdpath("data")
 local stdpath_cache = vim.fn.stdpath("cache")
 
@@ -140,8 +141,6 @@ local function build_runtimes()
   return runtimes
 end
 
-local M = {}
-
 local function setup()
 
   -- 获取工作目录
@@ -160,6 +159,9 @@ local function setup()
   local workspace_name = utils.path_to_name(workspace_dir)
   -- 数据目录
   local data_dir = utils.fs_concat({ stdpath_cache, "lsp", "jdtls", workspace_name })
+
+  -- java全局首选项
+  local java_settings_url = utils.fs_concat({ stdpath_config, "lua", "fengwk", "plugins", "lsp", "lsp-jdtls", "org.eclipse.jdt.core.prefs" })
 
   -- jdtls配置
   local config = {}
@@ -204,10 +206,34 @@ local function setup()
     vim.api.nvim_create_user_command("JdtRemoteDebug", function() require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").remote_debug() end, {})
     vim.api.nvim_create_user_command("JdtDebug", function() require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").debug() end, {})
 
+    -- 拷贝引用
+    vim.api.nvim_create_user_command("JdtCopyReference", function()
+      require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").copy_reference()
+    end, {})
+
+    -- 跳转到目标
+    vim.api.nvim_create_user_command("JdtJumpToLocation", function()
+      require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").jump_to_location()
+    end, {})
+
+    -- 自动导包
+    -- vim.keymap.set("n", "<leader>i", function ()
+    --   require("jdtls").auto_organize_imports()
+    -- end, { silent = true, buffer = bufnr, desc = "Auto Organize Imports" })
+    -- vim.api.nvim_create_augroup("jdtls_auto_organize_imports", { clear = true })
+    -- vim.api.nvim_create_autocmd(
+    -- { "InsertLeave" },
+    -- { group = "jdtls_auto_organize_imports", buffer = bufnr, callback = function()
+    --   vim.defer_fn(function()
+    --     if vim.api.nvim_get_mode().mode == "n" then
+    --       require("jdtls").auto_organize_imports()
+    --     end
+    --   end, 500)
+    -- end})
     -- 设置jdt的扩展快捷键，跳转到父类或接口
     vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
     -- inherited_members扩展
-    vim.keymap.set("n", "gS", "<Cmd>Telescope jdtls inherited_members theme=dropdown<CR>", { silent = true, buffer = bufnr, desc = "Lsp Inherited Members" })
+    vim.keymap.set("n", "gS", "<Cmd>Telescope jdtls inherited_members<CR>", { silent = true, buffer = bufnr, desc = "Lsp Inherited Members" })
     -- 添加排序时过滤
     vim.keymap.set("n", "gw", function ()
       local opts = require("telescope.themes").get_dropdown()
@@ -258,6 +284,11 @@ local function setup()
         -- And search for `interface RuntimeOption`
         -- The `name` is NOT arbitrary, but must match one of the elements from `enum ExecutionEnvironment` in the link above
         runtimes = build_runtimes(),
+      },
+      settings = {
+        -- https://github.com/eclipse/eclipse.jdt.ls/issues/1892#issuecomment-929715918
+        -- https://github.com/redhat-developer/vscode-java/wiki/Settings-Global-Preferences
+        url = java_settings_url
       },
     },
   }

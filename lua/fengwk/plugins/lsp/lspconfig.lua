@@ -60,6 +60,13 @@ local function get_range()
   }
 end
 
+-- 设置hover边框
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = "rounded",
+  }
+)
+
 -- 默认的lsp on_attach
 local function on_attach(client, bufnr)
 

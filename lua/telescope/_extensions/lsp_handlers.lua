@@ -1,3 +1,4 @@
+local my_utils = require("fengwk.utils")
 local telescope = require('telescope')
 local pickers = require('telescope.pickers')
 local finders = require('telescope.finders')
@@ -6,8 +7,8 @@ local action_state = require('telescope.actions.state')
 local make_entry = require('telescope.make_entry')
 local conf = require('telescope.config').values
 local sorters = require "telescope.sorters"
-local channel = require("plenary.async.control").channel
 local utils = require "telescope.utils"
+local Path = require "plenary.path"
 
 local lsp_util = vim.lsp.util
 local lsp_buf = vim.lsp.buf
@@ -30,7 +31,7 @@ local mapping_actions = {
 local function jump_fn(prompt_bufnr, action, offset_encoding)
   return function()
     local selection = action_state.get_selected_entry(prompt_bufnr)
-    if not selection then
+    if not selection or not selection.lnum or not selection.col then
       return
     end
 
@@ -47,7 +48,7 @@ local function jump_fn(prompt_bufnr, action, offset_encoding)
 
     -- process to uri if filename is not uri
     local uri = selection.filename
-    if not string.match(uri, "^[^:]+://") then
+    if not my_utils.is_uri(uri) then
       uri = vim.uri_from_fname(selection.filename)
     end
 
@@ -109,6 +110,20 @@ local function attach_code_action_mappings(offset_encoding)
   end
 end
 
+local function lsp_path(_, path)
+  local cwd = vim.fn.getcwd()
+
+  if Path:new(cwd):is_dir() then
+    path = Path:new(path):make_relative(cwd)
+  end
+
+  if string.len(path) < 30 then
+    return path
+  end
+
+  return Path:new(path):shorten(1, { -1 })
+end
+
 local function find(prompt_title, items, find_opts, offset_encoding)
   local opts = find_opts.opts or {}
 
@@ -160,7 +175,11 @@ local function location_handler(prompt_title, opts)
     end
 
     local items = lsp_util.locations_to_items(res, client.offset_encoding)
-    find(prompt_title, items, { opts = opts.telescope }, client.offset_encoding)
+    local find_opts = opts.telescope
+    find_opts = vim.tbl_deep_extend("force", find_opts, {
+        path_display = lsp_path,
+    })
+    find(prompt_title, items, { opts = find_opts }, client.offset_encoding)
   end
 end
 
@@ -362,7 +381,6 @@ local function get_workspace_symbols_requester(client, bufnr, opts)
           if cache[prompt] then
             complete_func(cache[prompt])
           else
-            print("req", prompt)
             -- 进行请求
             client.request("workspace/symbol", { query = prompt }, function (_, res)
               local locations = vim.lsp.util.symbols_to_items(res or {}, bufnr) or {}
@@ -383,6 +401,7 @@ end
 
 local function dynamic_workspace_symbols(opts)
   opts = opts or {}
+  opts.bufnr = opts.bufnr and opts.bufnr or vim.api.nvim_get_current_buf()
   local client = select_client(opts.bufnr)
   if not client then
     return

@@ -29,6 +29,7 @@ local Path = require "plenary.path"
 
 telescope.setup {
   defaults = {
+    winblend = vim.o.winblend, -- 提供窗口透明，使用全局的winblend
     -- Determines how file paths are displayed
     -- path_display = {
     --   -- truncate = 3,
@@ -42,14 +43,21 @@ telescope.setup {
         path = Path:new(path):make_relative(cwd)
       end
 
-      -- 超过80个字符使用短路径
-      if #path < 80 then
+      local limit = 70
+
+      if string.len(path) < limit then
         return path
-      else
-        -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
-        -- return Path:new(path):shorten(1, { 1, 2, -1 })
-        return Path:new(path):shorten(1, { 1, -1 })
       end
+
+      -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
+      -- return Path:new(path):shorten(1, { 1, 2, -1 })
+      -- return Path:new(path):shorten(1, { 1, -1 })
+      path = Path:new(path):shorten(1, { 1, -1 })
+      if string.len(path) < limit then
+        return path
+      end
+
+      return Path:new(path):shorten(1, { -1 })
     end,
 
     -- Default configuration for telescope goes here:
@@ -61,20 +69,21 @@ telescope.setup {
         -- e.g. git_{create, delete, ...}_branch for the git_branches picker
         -- ["<C-h>"] = "which_key"
         -- 回溯历史输入并进入了的内容
-        ["<C-n>"] = "cycle_history_next",
-        ["<C-p>"] = "cycle_history_prev",
+        ["<C-n>"] = actions.cycle_history_next,
+        ["<C-p>"] = actions.cycle_history_prev,
         -- 上下移动
-        ["<C-j>"] = "move_selection_next",
-        ["<C-k>"] = "move_selection_previous",
-        -- esc直接关闭
-        -- ["<Esc>"] = "close",
+        ["<C-j>"] = actions.move_selection_next,
+        ["<C-k>"] = actions.move_selection_previous,
         -- 转到搜索模式
         ["<C-f>"] = actions.to_fuzzy_refine,
         -- 上下移动preview
         -- <C-u>/<C-d>
+        ["<C-c>"] = actions.close,
+        ["<C-a>"] = actions.toggle_all,
       },
       n = {
-        ["<C-c>"] = "close",
+        ["<C-c>"] = actions.close,
+        ["<C-a>"] = actions.toggle_all,
       },
     }
   },
@@ -102,6 +111,12 @@ telescope.setup {
       -- previewer = false,
     },
     filetypes = {
+      theme = "dropdown",
+    },
+    colorscheme = {
+      theme = "dropdown",
+    },
+    quickfixhistory = {
       theme = "dropdown",
     },
     help_tags = {
@@ -150,10 +165,16 @@ telescope.setup {
     --   extension_config_key = value,
     -- }
     -- please take a look at the readme of the extension you want to configure
-    ["ui-select"] = {
-      telescope_themes.get_dropdown {
-        -- even more opts
-      },
+    ["my-ui-select"] = {
+      telescope_themes.get_dropdown {},
+    },
+
+    ["my-workspace"] = {
+      telescope_themes.get_dropdown {},
+    },
+
+    ["jdtls"] = {
+      telescope_themes.get_dropdown {},
     },
 
     ["live_grep_args"] = {
@@ -200,16 +221,12 @@ telescope.setup {
       },
     },
 
-    workspaces = {
-      -- keep insert mode after selection in the picker, default is false
-      -- keep_insert = true,
-    },
-
   },
 }
 
 -- load_extension, somewhere after setup function:
-telescope.load_extension("ui-select")
+telescope.load_extension("my-ui-select")
+telescope.load_extension("my-workspace")
 telescope.load_extension("live_grep_args")
 telescope.load_extension("lsp_handlers")
 telescope.load_extension("jdtls")
@@ -222,10 +239,10 @@ telescope.load_extension("jdtls")
 -- !^music    inverse-prefix-exact-match    Items that do not start with music
 -- !.mp3$     inverse-suffix-exact-match    Items that do not end with .mp3
 telescope.load_extension("fzf")
-telescope.load_extension("aerial")
+-- telescope.load_extension("aerial")
 -- telescope.load_extension("dap")
-telescope.load_extension("workspaces")
 telescope.load_extension("diff")
+telescope.load_extension("vim_bookmarks")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
@@ -336,12 +353,12 @@ keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { desc = "Telesc
 keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { desc = "Telescope Oldfiles" })
 keymap.set("n", "<leader>fh", function() telescope_builtin.help_tags() end, { desc = "Telescope Help Tags" })
 keymap.set("n", "<leader>ft", function() telescope_builtin.filetypes() end, { desc = "Telescope Filetypes" })
--- keymap.set("n", "<leader>fc", function() telescope_builtin.git_commits() end, { desc = "Telescope Git Commits" })
--- keymap.set("n", "<leader>fb", function() telescope_builtin.git_branches() end, { desc = "Telescope Git Branches" })
--- keymap.set("n", "<leader>fd", function () telescope.extensions.diff.diff_file({ hidden = false, no_ignore = false, no_ignore_parent = false }) end, { desc = "Telescope Diff File" })
+keymap.set("n", "<leader>fc", function() telescope_builtin.colorscheme() end, { desc = "Telescope Colorscheme" })
 vim.api.nvim_create_user_command("GitCommits", function() telescope_builtin.git_commits() end, {})
 vim.api.nvim_create_user_command("GitBranchs", function() telescope_builtin.git_branches() end, {})
-vim.api.nvim_create_user_command("DiffFile", function () telescope.extensions.diff.diff_file({ hidden = false, no_ignore = false, no_ignore_parent = false }) end, {})
+vim.api.nvim_create_user_command("DiffFile", function () telescope.extensions.diff.diff_file() end, {})
+vim.keymap.set("n", "<leader>fq", "<Cmd>Telescope quickfixhistory<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
+vim.keymap.set("n", "<leader>fs", "<Cmd>Telescope my-workspace workspaces<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
 
 -- vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
 -- vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })

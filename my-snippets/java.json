@@ -1,100 +1,350 @@
 {
-  "enum": {
-    "prefix": ["enum"],
-    "body": [
-      "/**",
-      " * @author ${VIM:\\$USER}",
-      " */",
-      "public enum ${2:$TM_FILENAME_BASE} {",
-      "    $0",
-      "}"
-    ]
-  },
-  "record": {
-    "prefix": ["record"],
-    "body": [
-      "/**",
-      " * @author ${VIM:\\$USER}",
-      " */",
-      "public record ${2:$TM_FILENAME_BASE} {",
-      "    $0",
-      "}"
-    ]
-  },
-  "@interface": {
-    "prefix": ["@interface", "annotation"],
-    "body": [
-      "/**",
-      " * @author ${VIM:\\$USER}",
-      " */",
-      "public @interface ${2:$TM_FILENAME_BASE} {",
-      "    $0",
-      "}"
-    ]
-  },
-  "log": {
-    "prefix": ["log"],
-    "body": ["private final Logger log = LoggerFactory.getLogger(getClass());$0"]
-  },
-  "emptylist": {
-    "prefix": ["emptylist"],
-    "body": ["Collections.emptyList()$0"]
-  },
-  "emptyset": {
-    "prefix": ["emptyset"],
-    "body": ["Collections.emptySet()$0"]
-  },
-  "emptymap": {
-    "prefix": ["emptymap"],
-    "body": ["Collections.emptyMap()$0"]
-  },
-  "isempty": {
-    "prefix": ["isempty"],
-    "body": ["CollectionUtils.isEmpty($1)$0"]
-  },
-  "isnotempty": {
-    "prefix": ["isnotempty"],
-    "body": ["CollectionUtils.isNotEmpty($1)$0"]
-  },
-  "confignotify": {
-    "prefix": ["confignotify"],
-    "body": [
-      "private volatile ${2:type} ${1:field};",
-      "",
-      "@ConfigNotify(\"$TM_FILENAME_BASE.$1\")",
-      "public void $1Notify(String json) {",
-      "    try {",
-      "        this.$1 = JSON.parseObject(json, ${3:$2});",
-      "        log.error(\"change $1 success, json={}\", json);",
-      "    } catch (Exception ex) {",
-      "        log.error(\"change $1 failed, json={}\", json, ex);",
-      "    }",
-      "}$0"
-    ]
-  },
-  "configitem": {
-    "prefix": ["configitem"],
-    "body": [
-      "@Item(value = \"$TM_FILENAME_BASE.$1\", ignoreMiss = true)",
-      "public volatile ${2:type} ${1:field};$0"
-    ]
-  },
-  "newset": {
-    "prefix": ["newset"],
-    "body": [
-      "Set<$2> ${1:set} = new HashSet<>();$0"
-    ]
-  },
-  "newlist": {
-    "prefix": ["newlist"],
-    "body": [
-      "List<$2> ${1:list} = new ArrayList<>();$0"
-    ]
-  },
-  "newmap": {
-    "prefix": ["newmap"],
-    "body": [
-      "Map<$2, $3> ${1:map} = new HashMap<>();$0"
-    ]
-  }
+    "enum": {
+        "prefix": "enum",
+        "body": [
+            "/**",
+            " * @author ${VIM:\\$USER}",
+            " */",
+            "public enum ${2:$TM_FILENAME_BASE} {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Public enum"
+    },
+    "record": {
+        "prefix": "record",
+        "body": [
+            "/**",
+            " * @author ${VIM:\\$USER}",
+            " */",
+            "public record ${2:$TM_FILENAME_BASE} {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Public record"
+    },
+    "@interface": {
+        "prefix": [
+            "@interface",
+            "annotation"
+        ],
+        "body": [
+            "/**",
+            " * @author ${VIM:\\$USER}",
+            " */",
+            "public @interface ${2:$TM_FILENAME_BASE} {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Public @interface"
+    },
+    "log": {
+        "prefix": "log",
+        "body": [
+            "private final Logger log = LoggerFactory.getLogger(getClass());$0"
+        ],
+        "description": "Private static final slf4j log"
+    },
+    "emptylist": {
+        "prefix": "emptylist",
+        "body": [
+            "Collections.emptyList()$0"
+        ],
+        "description": "Empty list"
+    },
+    "emptyset": {
+        "prefix": "emptyset",
+        "body": [
+            "Collections.emptySet()$0"
+        ],
+        "description": "Empty set"
+    },
+    "emptymap": {
+        "prefix": "emptymap",
+        "body": [
+            "Collections.emptyMap()$0"
+        ],
+        "description": "Empty map"
+    },
+    "isempty": {
+        "prefix": "isempty",
+        "body": [
+            "CollectionUtils.isEmpty($1)$0"
+        ],
+        "description": "Check is empty"
+    },
+    "isnotempty": {
+        "prefix": "isnotempty",
+        "body": [
+            "CollectionUtils.isNotEmpty($1)$0"
+        ],
+        "description": "Check is not empty"
+    },
+    "newset": {
+        "prefix": "newset",
+        "body": [
+            "Set<$2> ${1:set} = new HashSet<>();$0"
+        ],
+        "description": "New HashSet"
+    },
+    "newlist": {
+        "prefix": "newlist",
+        "body": [
+            "List<$2> ${1:list} = new ArrayList<>();$0"
+        ],
+        "description": "New ArrayList"
+    },
+    "newmap": {
+        "prefix": "newmap",
+        "body": [
+            "Map<$2, $3> ${1:map} = new HashMap<>();$0"
+        ],
+        "description": "New HashMap"
+    },
+    "main": {
+        "prefix": "main",
+        "body": [
+            "public static void main(String[] args) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Public static main method"
+    },
+    "sout": {
+        "prefix": "sysout",
+        "body": [
+            "System.out.println($0);"
+        ],
+        "description": "Print to standard out"
+    },
+    "serr": {
+        "prefix": "syserr",
+        "body": [
+            "System.err.println($0);"
+        ],
+        "description": "Print to standard err"
+    },
+    "fori": {
+        "prefix": "fori",
+        "body": [
+            "for (${1:int} ${2:i} = ${3:0}; $2 < ${4:max}; $2++) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Indexed for loop"
+    },
+    "foreach": {
+        "prefix": "foreach",
+        "body": [
+            "for (${1:type} ${2:var} : ${3:iterable}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Enhanced for loop"
+    },
+    "Public constructor": {
+        "prefix": "constructor",
+        "body": [
+            "public ${1:${TM_FILENAME_BASE}}($2) {",
+            "\t${0:super();}",
+            "}"
+        ],
+        "description": "Public constructor"
+    },
+    "if": {
+        "prefix": "if",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "if statement"
+    },
+    "ifelse": {
+        "prefix": "ifelse",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$2",
+            "} else {",
+            "\t$0",
+            "}"
+        ],
+        "description": "if/else statement"
+    },
+    "ifnull": {
+        "prefix": "ifnull",
+        "body": [
+            "if (${1:condition} == null) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "if statement checking for null"
+    },
+    "ifnotnull": {
+        "prefix": "ifnotnull",
+        "body": [
+            "if (${1:condition} != null) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "if statement checking for not null"
+    },
+    "trycatch": {
+        "prefix": "try_catch",
+        "body": [
+            "try {",
+            "\t$1",
+            "} catch (${2:Exception} ${3:e}) {",
+            "\t$4//${0:TODO}: handle exception",
+            "}"
+        ],
+        "description": "try/catch block"
+    },
+    "tryresources": {
+        "prefix": "try_resources",
+        "body": [
+            "try ($1) {",
+            "\t$2",
+            "} catch (${3:Exception} ${4:e}) {",
+            "\t$5//${0:TODO}: handle exception",
+            "}"
+        ]
+    },
+    "private_method": {
+        "prefix": "private_method",
+        "body": [
+            "private ${1:void} ${2:name}($3) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "private method"
+    },
+    "Public method": {
+        "prefix": "public_method",
+        "body": [
+            "public ${1:void} ${2:name}(${3}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "public method"
+    },
+    "Private static method": {
+        "prefix": "private_static_method",
+        "body": [
+            "private static ${1:Type} ${2:name}(${3}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "private static method"
+    },
+    "Public static method": {
+        "prefix": "public_static_method",
+        "body": [
+            "public static ${1:void} ${2:name}(${3}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "public static method"
+    },
+    "Protected Method": {
+        "prefix": "protected_method",
+        "body": [
+            "protected ${1:void} ${2:name}(${3}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Protected method"
+    },
+    "Switch Statement": {
+        "prefix": "switch",
+        "body": [
+            "switch (${1:key}) {",
+            "\tcase ${2:value}:",
+            "\t\t$0",
+            "\t\tbreak;",
+            "",
+            "\tdefault:",
+            "\t\tbreak;",
+            "}"
+        ],
+        "description": "Switch Statement"
+    },
+    "While Statement": {
+        "prefix": "while",
+        "body": [
+            "while (${1:condition}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "While Statement"
+    },
+    "Do-While Statement": {
+        "prefix": "dowhile",
+        "body": [
+            "do {",
+            "\t$0",
+            "} while (${1:condition});"
+        ],
+        "description": "Do-While Statement"
+    },
+    "newObject": {
+        "prefix": "new",
+        "body": [
+            "${1:Object} ${2:foo} = new ${1:Object}();"
+        ],
+        "description": "Create new Object"
+    },
+    "Public field": {
+        "prefix": "public_field",
+        "body": [
+            "public ${1:String} ${2:name};"
+        ],
+        "description": "Public field"
+    },
+    "Private field": {
+        "prefix": "private_field",
+        "body": [
+            "private ${1:String} ${2:name};"
+        ],
+        "description": "Private field"
+    },
+    "Protected field": {
+        "prefix": "protected_field",
+        "body": [
+            "protected ${1:String} ${2:name};"
+        ],
+        "description": "Protected field"
+    },
+    "todo": {
+        "prefix": "todo",
+        "body": [
+            "// TODO $0"
+        ],
+        "description": "TODO"
+    },
+    "confignotify": {
+        "prefix": "confignotify",
+        "body": [
+            "private volatile ${2:type} ${1:field};",
+            "",
+            "@ConfigNotify(\"$TM_FILENAME_BASE.$1\")",
+            "public void $1Notify(String json) {",
+            "\ttry {",
+            "\t\tthis.$1 = JSON.parseObject(json, ${3:$2});",
+            "\t\t\tlog.error(\"change $1 success, json={}\", json);",
+            "\t\t} catch (Exception ex) {",
+            "\t\t\tlog.error(\"change $1 failed, json={}\", json, ex);",
+            "\t\t}",
+            "}$0"
+        ],
+        "description": "@confignotify"
+    },
+    "configitem": {
+        "prefix": "configitem",
+        "body": [
+            "@Item(value = \"$TM_FILENAME_BASE.$1\", ignoreMiss = true)",
+            "public volatile ${2:type} ${1:field};$0"
+        ],
+        "description": "@Configitem"
+    }
 }

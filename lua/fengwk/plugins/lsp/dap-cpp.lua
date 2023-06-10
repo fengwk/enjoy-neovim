@@ -23,7 +23,9 @@ local conf = {
     program = function()
       local p = nil
       vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)
-        p = input
+        if input then
+          p = input
+        end
       end)
       return p
     end,
@@ -41,7 +43,9 @@ local conf = {
     program = function()
       local p = nil
       vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)
-        p = input
+        if input then
+          p = input
+        end
       end)
       return p
     end,

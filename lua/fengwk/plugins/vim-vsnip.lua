@@ -2,7 +2,8 @@
 
 local utils = require("fengwk.utils")
 
--- 指定个人snippets文件夹位置
+-- 指定个人snippets文件夹位置，可以参考friendly-snippets
+-- https://github.com/rafamadriz/friendly-snippets/tree/main/snippets
 vim.g.vsnip_snippet_dir = utils.fs_concat({ vim.fn.stdpath("config"), "my-snippets" })
 
 -- snippets补全后会进入select模式，编辑会进入insert模式，指定在这两个模式下的跳跃

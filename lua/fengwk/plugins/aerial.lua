@@ -8,6 +8,13 @@ end
 
 local utils = require("fengwk.utils")
 
+local function with_jump_flag(func)
+  return function()
+    vim.cmd "normal! m'"
+    func()
+  end
+end
+
 aerial.setup({
   -- Call this function when aerial attaches to a buffer.
   -- Useful for setting keymaps. Takes a single `bufnr` argument.
@@ -17,16 +24,16 @@ aerial.setup({
     -- Toggle the aerial window with <leader>a
     keymap.set("n", "<leader>o", "<cmd>AerialToggle!<CR>", opts)
     -- Jump forwards/backwards with "{" and "}"
-    keymap.set("n", "{", function() aerial.prev() end, opts)
-    keymap.set("n", "}", function() aerial.next() end, opts)
+    -- keymap.set("n", "{", with_jump_flag(function() aerial.prev() end), opts)
+    -- keymap.set("n", "}", with_jump_flag(function() aerial.next() end), opts)
     -- Jump up the tree with "[[" or "]]"
-    keymap.set("n", "[[", function() aerial.prev_up() end, opts)
-    keymap.set("n", "]]", function() aerial.next_up() end, opts)
+    keymap.set("n", "[[", with_jump_flag(function() aerial.prev_up() end), opts)
+    keymap.set("n", "]]", with_jump_flag(function() aerial.next_up() end), opts)
   end,
 
   -- Priority list of preferred backends for aerial.
   -- This can be a filetype map (see :help aerial-filetype-map)
-  backends = { "lsp" },
+  backends = { "lsp", "treesitter" },
 
   layout = {
     -- These control the width of the aerial window.

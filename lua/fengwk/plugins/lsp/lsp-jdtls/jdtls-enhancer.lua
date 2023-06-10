@@ -1,3 +1,5 @@
+local utils = require("fengwk.utils")
+
 -- 这个函数提供调试功能
 local function debug()
   vim.ui.input({ prompt = "MainClass: " }, function(main_class)
@@ -20,19 +22,71 @@ local function do_remote_debug(host, port)
       hostName = host,
       port = port,
     })
+    vim.notify("attach to " .. host .. ":" .. port)
   end
 end
 
 -- 通过输入参数提供远程调试能力
 local function remote_debug()
   vim.ui.input({ prompt = "Host: " }, function(host)
-    vim.ui.input({ prompt = "Port: " }, function(port)
-      do_remote_debug(host, port)
-    end)
+    if host then
+      vim.ui.input({ prompt = "Port: " }, function(port)
+        if port then
+          do_remote_debug(host, port)
+        end
+      end)
+    end
+  end)
+end
+
+-- 复制引用
+local function copy_reference()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local candidates = vim.lsp.get_active_clients({ name = "jdtls", bufnr = bufnr })
+  if not candidates or #candidates == 0 then
+    print("lsp client not found")
+    return
+  end
+  local client = candidates[1]
+  client.request("textDocument/hover", vim.lsp.util.make_position_params(), function(_, res, _, _)
+    if res and res.contents then
+      local sign = #res.contents > 1 and res.contents[1].value or res.contents.value
+      vim.fn.setreg('+', sign)
+      vim.fn.setreg('"', sign)
+    else
+      print("reference not found")
+    end
+  end)
+end
+
+local function jump_to_location()
+  vim.ui.input({ prompt = "Jump To Location" }, function(uri)
+    if not uri then
+      return
+    end
+
+    if not utils.is_uri(uri) then
+      uri = vim.uri_from_fname(uri)
+    end
+
+    local pos = {
+      character = 0,
+      line = 0
+    }
+
+    vim.lsp.util.jump_to_location({
+      uri = uri,
+      range = {
+        start = pos,
+        ['end'] = pos,
+      },
+    }, "utf-16")
   end)
 end
 
 return {
   debug = debug,
   remote_debug = remote_debug,
+  copy_reference = copy_reference,
+  jump_to_location = jump_to_location,
 }

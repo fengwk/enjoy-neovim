@@ -17,28 +17,31 @@ local function diffspliit(prompt_bufnr, vert, pre_func)
 end
 
 local function diff_file(opts)
-  opts = opts or {}
-  local local_opts = {
+  local bufnr = vim.api.nvim_get_current_buf()
+  opts = vim.tbl_deep_extend("force", opts or {}, {
     prompt_title = "Pick file to diff",
     attach_mappings = function(_, map)
-      map({"n", "i"}, "<CR>", function(prompt_bufnr)
+      map({ "n", "i" }, "<CR>", function(prompt_bufnr)
         diffspliit(prompt_bufnr, true)
       end)
-      map({"n", "i"}, "<C-x>", function(prompt_bufnr)
+      map({ "n", "i" }, "<C-x>", function(prompt_bufnr)
         diffspliit(prompt_bufnr, false)
       end)
-      map({"n", "i"}, "<C-v>", function(prompt_bufnr)
+      map({ "n", "i" }, "<C-v>", function(prompt_bufnr)
         diffspliit(prompt_bufnr, true)
       end)
-      map({"n", "i"}, "<C-t>", function(prompt_bufnr)
+      map({ "n", "i" }, "<C-t>", function(prompt_bufnr)
         diffspliit(prompt_bufnr, true, function()
-          vim.cmd.tabnew(vim.fn.expand(vim.api.nvim_buf_get_name(opts.bufnr)))
+          vim.cmd.tabnew(vim.fn.expand(vim.api.nvim_buf_get_name(bufnr)))
         end)
       end)
       return true
     end,
-  }
-  opts = vim.tbl_extend("force", opts, local_opts)
+    bufnr = bufnr,
+    hidden = false,
+    no_ignore = false,
+    no_ignore_parent = false,
+  })
   builtin.find_files(opts)
 end
 

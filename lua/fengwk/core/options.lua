@@ -9,6 +9,33 @@ utils.set_large_file_size_threshold(1024 * 128)
 -- 历史命令记录条数
 vim.g.history = 200
 
+-- 为悬浮窗口提供透明度，[0..100]，0为不透明，在colorscheme中动态设置
+-- vim.o.winblend = 15
+vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winblend，为了自由切换主题时不产生问题先禁用混合
+
+-- 设置终端名称为文件名
+-- vim.o.title=true
+-- 使用cwd作为名称
+vim.api.nvim_create_augroup("nvim_title", { clear = true })
+vim.api.nvim_create_autocmd(
+  { "BufEnter" },
+  { group = "nvim_title", callback = function()
+    local title
+    if utils.is_not_file_ft() then
+      title = vim.bo.filetype
+    else
+      title = vim.fn.expand('%:t')
+    end
+    if title and string.len(title) > 0 then
+      title = "nvim$" .. title
+    else
+      title = "nvim"
+    end
+    -- 发送title到终端标题
+    io.write("\27]0;" .. title .. "\7")
+  end}
+)
+
 -- 搜索配置
 vim.o.hlsearch = true -- 搜索高亮
 vim.o.incsearch = true -- 搜索时定位到目标位置

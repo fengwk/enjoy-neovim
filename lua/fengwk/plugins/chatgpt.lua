@@ -13,11 +13,12 @@ chatgpt.setup({
   edit_with_instructions = {
     diff = false,
     keymaps = {
+      close = { "<C-c>", "<C-q>" },
       accept = "<C-y>", -- 将修改内容替换到文本中
       toggle_diff = "<C-d>", -- 对比内容
       toggle_settings = "<C-o>",
       cycle_windows = "<Tab>", -- 在不同窗口间切换
-      use_output_as_input = "<C-i>", -- 将回复内容作为新的输入
+      use_output_as_input = "<C-e>", -- 将回复内容作为新的输入，不能使用默认的<C-i>，因为<C-i>等价于<Tab>
     },
   },
   chat = {
@@ -34,7 +35,7 @@ chatgpt.setup({
         },
       },
       win_options = {
-        winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
       },
     },
     keymaps = {
@@ -78,7 +79,7 @@ chatgpt.setup({
       wrap = true,
       linebreak = true,
       foldcolumn = "1",
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
     },
     buf_options = {
       filetype = "markdown",
@@ -96,7 +97,7 @@ chatgpt.setup({
       wrap = true,
       linebreak = true,
       foldcolumn = "2",
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
     },
   },
   popup_input = {
@@ -110,7 +111,7 @@ chatgpt.setup({
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
     },
     submit = "<C-Enter>",
     submit_n = "<Enter>",
@@ -123,7 +124,7 @@ chatgpt.setup({
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
     },
   },
   openai_params = {

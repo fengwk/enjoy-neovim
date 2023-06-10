@@ -2,9 +2,9 @@
 
 local ok, cmp = pcall(require, "cmp")
 if not ok then
-  vim.notify("cmp can not be required.")
   return
 end
+
 local types = require("cmp.types")
 local lspkind = require("lspkind")
 local utils = require("fengwk.utils")
@@ -14,12 +14,15 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
-local feedkey = function(key, mode)
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
-end
-
 -- 内建的比较器
 local compare = cmp.config.compare
+
+-- 边框样式
+local function win_border()
+  return cmp.config.window.bordered({
+    winhighlight = "Normal:Normal,FloatBorder:MyFloatBorder,CursorLine:Visual,Search:None"
+  })
+end
 
 -- 对Snippet和nvim_lsp使用基于长度权重的比较
 -- k1_w * k1_len - k2_w * k2_len
@@ -32,7 +35,7 @@ local kind_weight_tab = {
   [CompletionItemKind.Variable] = 1,
   [CompletionItemKind.Function] = 1,
   [CompletionItemKind.Method] = 1,
-  [CompletionItemKind.Keyword] = 1,
+  [CompletionItemKind.Keyword] = 1.25,
   [CompletionItemKind.Constructor] = 1.25,
   [CompletionItemKind.Constant] = 1.25,
   [CompletionItemKind.Enum] = 1.5,
@@ -147,12 +150,8 @@ cmp.setup({
   }),
   -- 窗口样式
   window = {
-    -- completion = cmp.config.window.bordered(), -- 补全窗口边框
-    --
-    -- documentation = vim.tbl_deep_extend("force", cmp.config.window.bordered(), { -- 文档窗口边框
-    --   -- max_height = 10,
-    -- }),
-
+    completion = win_border(), -- 补全窗口边框
+    documentation = win_border(), -- 文档窗口边框
   },
   -- 补全项格式
   formatting = utils.is_tty() and {} or {
@@ -176,6 +175,7 @@ cmp.setup({
     {
       name = "nvim_lsp", -- lsp
       entry_filter = function(entry, _)
+        -- 过滤lsp中返回的Text
         return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
       end,
     },
@@ -210,7 +210,7 @@ cmp.setup({
       -- compare.exact,
       -- compare.recently_used, -- 近期使用
       -- compare.locality, -- 当前缓冲区优先
-      -- compare.length, -- 长度
+      compare.length, -- 长度
       compare.order, -- id序，兜底
     },
   },

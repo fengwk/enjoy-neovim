@@ -4,4 +4,8 @@ if not mason_status then
   return
 end
 
-mason.setup()
+mason.setup({
+  ui = {
+    border = "rounded",
+  }
+})

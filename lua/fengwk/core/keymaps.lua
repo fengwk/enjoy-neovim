@@ -12,7 +12,7 @@ keymap.set("n", "<C-s>", "<Cmd>w<CR>", { silent = true, desc = "Save Current Buf
 
 -- 退出
 keymap.set("n", "<C-q>", "<Cmd>q<CR>", { silent = true, desc = "Quit Current Buffer" })
--- keymap.set("n", "<C-Q>", "<Cmd>qa<CR>", { silent = true, desc = "Quit All Buffer" })
+keymap.set("n", "<C-Q>", "<Cmd>q!<CR>", { silent = true, desc = "Force Quit Current Buffer" })
 
 -- 快速移动光标
 -- keymap.set({ "n", "x" }, "<C-j>", "5j", { noremap = true, desc = "Quick Down" })
@@ -56,7 +56,11 @@ keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override re
 -- keymap.set("n", "x", "\"_x", { noremap = true })
 
 -- 在terimal模式下使用jk作为esc，避免和推出命令模式的esc按键冲突
-vim.api.nvim_set_keymap("t", "jk", "<Esc>", {noremap = true})
+keymap.set("t", "jk", "<Esc>", { noremap = true })
+
+-- 鼠标前进后退
+-- keymap.set("n", "<M-8>", "<C-i>", { noremap = true })
+-- keymap.set("n", "<Button9>", "<C-o>", { noremap = true })
 
 -- 这个脚本允许在选中的每行执行宏
 vim.cmd([[
