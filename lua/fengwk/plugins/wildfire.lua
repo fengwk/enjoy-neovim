@@ -1,27 +1,27 @@
 -- https://github.com/gcmt/wildfire.vim
 
 -- all版本
-vim.cmd([[
-cal wildfire#triggers#Add("<leader><Enter>", {
-  \ "*" : [
-    \ "a'",
-    \ 'a"',
-    \ "a)",
-    \ "a]",
-    \ "a}",
-    \ "at",
-    \ "aa",
-    \ "af",
-    \ "ac",
-    \ "aC",
-  \ ],
-  \ "html,xml" : [
-    \ "a'",
-    \ 'a"',
-    \ "at",
-  \ ]
-\ })
-]])
+-- vim.cmd([[
+-- cal wildfire#triggers#Add("<leader><Enter>", {
+--   \ "*" : [
+--     \ "a'",
+--     \ 'a"',
+--     \ "a)",
+--     \ "a]",
+--     \ "a}",
+--     \ "at",
+--     \ "aa",
+--     \ "af",
+--     \ "ac",
+--     \ "aC",
+--   \ ],
+--   \ "html,xml" : [
+--     \ "a'",
+--     \ 'a"',
+--     \ "at",
+--   \ ]
+-- \ })
+-- ]])
 
 -- in版本
 vim.g.wildfire_objects = {
@@ -31,6 +31,8 @@ vim.g.wildfire_objects = {
     "i)",
     "i]",
     "i}",
+    "i>",
+    "i`",
     "it",
     -- "iW",
     -- "ip",

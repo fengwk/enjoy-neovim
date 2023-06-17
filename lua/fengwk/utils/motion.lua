@@ -80,10 +80,109 @@ local function set_trap(handler, m, mode)
   vim.api.nvim_feedkeys("g@" .. (m or ""), mode or "mi", false)
 end
 
+motion.substitute_text = function(bufnr, start, finish, regtype, replacement, replacement_regtype)
+  regtype = get_register_type(regtype)
+
+  if "l" == regtype then
+    vim.api.nvim_buf_set_lines(bufnr, start.row - 1, finish.row, false, replacement)
+
+    local end_mark_col = string.len(replacement[#replacement]) + 1
+    local end_mark_row = start.row + vim.tbl_count(replacement) - 1
+
+    return { { start = { row = start.row, col = 0 }, finish = { row = end_mark_row, col = end_mark_col } } }
+  end
+
+  if is_blockwise(regtype) then
+    if is_blockwise(replacement_regtype) then
+      local marks = {}
+      for row = start.row, finish.row, 1 do
+        if start.col > finish.col then
+          start.col, finish.col = finish.col, start.col
+        end
+        local current_row_len = vim.fn.getline(row):len()
+        local last_replacement = table.remove(replacement, 1) or ""
+        if current_row_len > 0 then
+          vim.api.nvim_buf_set_text(
+            bufnr,
+            row - 1,
+            start.col,
+            row - 1,
+            current_row_len > finish.col and finish.col + 1 or current_row_len,
+            { last_replacement }
+          )
+
+          table.insert(marks, {
+            start = { row = row, col = start.col },
+            finish = { row = row, col = start.col + string.len(last_replacement) },
+          })
+        end
+      end
+
+      return marks
+    end
+
+    local marks = {}
+    for row = finish.row, start.row, -1 do
+      local current_row_len = vim.fn.getline(row):len()
+      if start.col > finish.col then
+        start.col, finish.col = finish.col, start.col
+      end
+
+      if current_row_len > 0 then
+        vim.api.nvim_buf_set_text(
+          bufnr,
+          row - 1,
+          current_row_len > start.col and start.col or current_row_len,
+          row - 1,
+          current_row_len > finish.col and finish.col + 1 or current_row_len,
+          replacement
+        )
+
+        local end_mark_col = string.len(replacement[#replacement])
+        if vim.tbl_count(replacement) == 1 then
+          end_mark_col = end_mark_col + start.col
+        end
+        table.insert(marks, 1, {
+          start = { row = row, col = start.col },
+          finish = { row = row, col = end_mark_col },
+        })
+      end
+    end
+
+    return marks
+  end
+
+  if start.row > finish.row then
+    vim.api.nvim_buf_set_text(bufnr, start.row - 1, start.col, start.row - 1, start.col, replacement)
+  else
+    local current_row_len = vim.fn.getline(finish.row):len()
+    vim.api.nvim_buf_set_text(
+      bufnr,
+      start.row - 1,
+      start.col,
+      finish.row - 1,
+      current_row_len > finish.col and finish.col + 1 or current_row_len,
+      replacement
+    )
+  end
+
+  local end_mark_col = string.len(replacement[#replacement])
+  if vim.tbl_count(replacement) == 1 then
+    end_mark_col = end_mark_col + start.col
+  end
+  local end_mark_row = start.row + vim.tbl_count(replacement) - 1
+
+  return { { start = start, finish = { row = end_mark_row, col = end_mark_col } } }
+end
+
 motion.callback = function(vmode)
   local marks = get_marks(0, vmode)
   local textobject = text(0, marks.start, marks.finish, vmode)
-  motion.handler(textobject)
+  motion.handler({
+    marks = marks,
+    vmode = vmode,
+    textobject = textobject,
+  })
 end
 
 motion.operator = function(handler)

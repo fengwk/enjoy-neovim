@@ -79,11 +79,15 @@ telescope.setup {
         -- 上下移动preview
         -- <C-u>/<C-d>
         ["<C-c>"] = actions.close,
-        ["<C-a>"] = actions.toggle_all,
+        ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
+        ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
+        ["<C-Tab>"] = actions.toggle_all,
       },
       n = {
         ["<C-c>"] = actions.close,
-        ["<C-a>"] = actions.toggle_all,
+        ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
+        ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
+        ["<C-Tab>"] = actions.toggle_all,
       },
     }
   },
