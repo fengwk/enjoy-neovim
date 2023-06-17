@@ -17,7 +17,7 @@ toggleterm.setup({
       return vim.o.columns * 0.3 -- 如果是垂直方向打开，占30%
     end
   end,
-  shell = utils.os_name == "win" and "powershell.exe" or vim.o.shell, -- 在window下指定powershell，否则使用vim默认的shell
+  shell = utils.sys.os == "win" and "powershell.exe" or vim.o.shell, -- 在window下指定powershell，否则使用vim默认的shell
 })
 
 -- 设置键位映射

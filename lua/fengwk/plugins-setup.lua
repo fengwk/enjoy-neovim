@@ -1,10 +1,11 @@
+local utils = require "fengwk.utils"
+
 -- 自动安装packer
 local ensure_packer = function()
-	local fn = vim.fn
-	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-	if fn.empty(fn.glob(install_path)) > 0 then
-		fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-		vim.cmd([[packadd packer.nvim]])
+	local install_path = utils.fs.stdpath("data", "site/pack/packer/start/packer.nvim")
+	if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+		vim.fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path }
+		vim.cmd [[packadd packer.nvim]]
 		return true
 	end
 	return false
@@ -12,12 +13,12 @@ end
 local packer_bootstrap = ensure_packer()
 
 -- 保存当前文件时自动执行PackerSync命令
-vim.cmd([[
+vim.cmd [[
   augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost plugins-setup.lua source <afile> | PackerSync
+  autocmd!
+  autocmd BufWritePost plugins-setup.lua source <afile> | PackerSync
   augroup end
-]])
+]]
 
 -- packer - https://github.com/wbthomason/packer.nvim
 -- awesome-neovim - https://github.com/rockerBOO/awesome-neovim
@@ -39,22 +40,22 @@ return packer.startup(function(use)
 	-- mixed
   use "wbthomason/packer.nvim" -- 管理packer自身
   -- use { "syscall0x80/vimdoccn", ft = "help" } -- 中文版vimdoc
-  use "fengwk/im-switch.nvim" -- 中英文切换
-  use "voldikss/vim-translator" -- 翻译
+  -- use "fengwk/im-switch.nvim" -- 中英文切换
+  -- use "voldikss/vim-translator" -- 翻译
   use "stevearc/stickybuf.nvim" -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口
   use "jghauser/mkdir.nvim" -- 保存文件时自动创建不存在的目录
   -- use "karb94/neoscroll.nvim" -- 支持平滑滚动
-  use "stevearc/dressing.nvim"
+  -- use "stevearc/dressing.nvim" -- 输入框ui
 
   -- themes
   use "catppuccin/nvim"
-  use "ellisonleao/gruvbox.nvim"
-  use "rebelot/kanagawa.nvim"
+  -- use "ellisonleao/gruvbox.nvim"
+  -- use "rebelot/kanagawa.nvim"
   use "Mofiqul/vscode.nvim"
   use "sainnhe/everforest"
   use "projekt0n/github-nvim-theme"
-  use "kdheepak/monochrome.nvim"
-  use "bluz71/vim-nightfly-colors"
+  -- use "kdheepak/monochrome.nvim"
+  -- use "bluz71/vim-nightfly-colors"
   -- use "fengwk/my-darkplus.nvim"
 
 	-- file explorer
@@ -65,15 +66,11 @@ return packer.startup(function(use)
 
   -- git
   use "lewis6991/gitsigns.nvim"
-  -- use "sindrets/diffview.nvim"
+  use "sindrets/diffview.nvim"
 
   -- markdown
   use { "iamcco/markdown-preview.nvim", run = "cd app && yarn install", ft = "markdown" } -- 在浏览器中预览Markdown
   use { "md-img-paste-devs/md-img-paste.vim", ft = "markdown" } -- 黏贴剪切板中的图片到Markdown
-
-  -- workspaces
-  use "natecraddock/workspaces.nvim" -- 简单的工作空间管理
-  use "fengwk/workspaces-enhancer.nvim" -- workspaces.nvim功能增强set
 
 	-- editor enhancer
 	use "kylechui/nvim-surround" -- surround
@@ -94,8 +91,7 @@ return packer.startup(function(use)
   use "lukas-reineke/indent-blankline.nvim" -- 垂直缩进线
 
 	-- autocompletion
-	-- use "hrsh7th/nvim-cmp" -- 自动补全插件
-	use { "fengwk/nvim-cmp", branch = "fix/huge-single-line-performance" }
+	use "hrsh7th/nvim-cmp" -- 自动补全插件
 	use "hrsh7th/cmp-buffer" -- 缓冲区补全源
 	use "hrsh7th/cmp-path" -- 文件系统路径补全源
   -- use "hrsh7th/cmp-cmdline" -- 命令行路径补全源
@@ -114,8 +110,6 @@ return packer.startup(function(use)
   -- use "nvim-telescope/telescope-dap.nvim"
   use "tom-anders/telescope-vim-bookmarks.nvim"
   use "MattesGroeger/vim-bookmarks"
-
-  -- use "folke/which-key.nvim" -- 快捷键管理与提示
 
 	-- managing & installing lsp servers, linters & formatters
 	use "williamboman/mason.nvim"
@@ -156,16 +150,14 @@ return packer.startup(function(use)
 
   -- chatgpt
   use "MunifTanjim/nui.nvim"
-  -- use "jackMort/ChatGPT.nvim"
-  use { "fengwk/ChatGPT.nvim", branch = "dev" }
-
+  use "jackMort/ChatGPT.nvim"
 
   -- libs
   use_rocks { "utf8" }
   require("packer.luarocks").setup_paths()
 
 	if packer_bootstrap then
-		require("packer").sync()
+		require "packer".sync()
 	end
 
 end)

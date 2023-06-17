@@ -25,7 +25,7 @@ return {
   },
 
   root_dir = function()
-    return utils.find_root_dir({
+    return utils.fs.root_dir {
       "lua",
       ".luarc.json",
       ".luarc.jsonc",
@@ -34,6 +34,6 @@ return {
       "stylua.toml",
       "selene.toml",
       "selene.yml",
-    }, 1) or vim.fn.getcwd()
+    }, 1 or vim.fn.getcwd()
   end,
 }

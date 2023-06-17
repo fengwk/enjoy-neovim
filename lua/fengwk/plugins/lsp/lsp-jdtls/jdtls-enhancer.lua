@@ -59,29 +59,27 @@ local function copy_reference()
   end)
 end
 
-local function jump_to_location()
-  vim.ui.input({ prompt = "Jump To Location" }, function(uri)
-    if not uri then
-      return
-    end
+local function jump_to_location(uri)
+  if not uri then
+    return
+  end
 
-    if not utils.is_uri(uri) then
-      uri = vim.uri_from_fname(uri)
-    end
+  if not utils.fs.is_uri(uri) then
+    uri = vim.uri_from_fname(uri)
+  end
 
-    local pos = {
-      character = 0,
-      line = 0
-    }
+  local pos = {
+    character = 0,
+    line = 0
+  }
 
-    vim.lsp.util.jump_to_location({
-      uri = uri,
-      range = {
-        start = pos,
-        ['end'] = pos,
-      },
-    }, "utf-16")
-  end)
+  vim.lsp.util.jump_to_location({
+    uri = uri,
+    range = {
+      start = pos,
+      ['end'] = pos,
+    },
+  }, "utf-16")
 end
 
 return {

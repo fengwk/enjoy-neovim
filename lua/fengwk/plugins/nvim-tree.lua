@@ -198,7 +198,7 @@ local config = {
 }
 
 -- 适配tty
-if utils.is_tty() then
+if utils.sys.is_tty() then
   config.renderer.icons = {
     webdev_colors = false,
     show = { file = false, folder = true, folder_arrow = false, git = false },

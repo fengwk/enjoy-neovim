@@ -127,18 +127,27 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
+    -- ["<C-j>"] = cmp.mapping(function(fallback)
       if cmp.visible() then -- 补全已开启则选择下一项
         cmp.select_next_item()
       -- elseif vim.fn["vsnip#available"](1) == 1 then
       --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
-      elseif has_words_before() then -- 前边有单词则开启补全
-        cmp.complete()
+      -- elseif has_words_before() then -- 前边有单词则开启补全
+      --   cmp.complete()
       else
-        fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`.
+        fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`
       end
     end, { "i", "s" }),
+    -- ["<C-x>"] = cmp.mapping(function(fallback)
+    --   if has_words_before() then -- 前边有单词则开启补全
+    --     cmp.complete()
+    --   else
+    --     fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`
+    --   end
+    -- end, { "i", "s" }),
     -- 上一个补全项
     ["<S-Tab>"] = cmp.mapping(function(fallback)
+    -- ["<C-k>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
       -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
@@ -154,7 +163,7 @@ cmp.setup({
     documentation = win_border(), -- 文档窗口边框
   },
   -- 补全项格式
-  formatting = utils.is_tty() and {} or {
+  formatting = utils.sys.is_tty() and {} or {
     format = lspkind.cmp_format({
       mode = "symbol_text",
       menu = ({
@@ -186,7 +195,7 @@ cmp.setup({
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
           -- 如果缓冲区过大，则禁用
-          if utils.is_large_buffer(0) then
+          if utils.vim.is_large_buf() then
             return {}
           end
 

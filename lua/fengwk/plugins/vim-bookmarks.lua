@@ -7,7 +7,7 @@ if not ok_utils then
 end
 
 vim.g.bookmark_no_default_key_mappings = 1 -- 不使用默认的映射
-vim.g.bookmark_auto_save_file = utils.fs_concat({ vim.fn.stdpath("cache"), "vim-bookmarks" })
+vim.g.bookmark_auto_save_file = utils.fs.stdpath("data", "vim-bookmarks")
 
 local keymap = vim.keymap
 keymap.set("n", "<leader>mm", "<Cmd>BookmarkToggle<CR>", { silent = true, desc = "Bookmark Toggle" })

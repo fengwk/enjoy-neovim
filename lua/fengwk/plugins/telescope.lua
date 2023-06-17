@@ -169,7 +169,7 @@ telescope.setup {
       telescope_themes.get_dropdown {},
     },
 
-    ["my-workspace"] = {
+    ["workspace"] = {
       telescope_themes.get_dropdown {},
     },
 
@@ -226,7 +226,7 @@ telescope.setup {
 
 -- load_extension, somewhere after setup function:
 telescope.load_extension("my-ui-select")
-telescope.load_extension("my-workspace")
+telescope.load_extension("workspace")
 telescope.load_extension("live_grep_args")
 telescope.load_extension("lsp_handlers")
 telescope.load_extension("jdtls")
@@ -353,12 +353,12 @@ keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { desc = "Telesc
 keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { desc = "Telescope Oldfiles" })
 keymap.set("n", "<leader>fh", function() telescope_builtin.help_tags() end, { desc = "Telescope Help Tags" })
 keymap.set("n", "<leader>ft", function() telescope_builtin.filetypes() end, { desc = "Telescope Filetypes" })
-keymap.set("n", "<leader>fc", function() telescope_builtin.colorscheme() end, { desc = "Telescope Colorscheme" })
-vim.api.nvim_create_user_command("GitCommits", function() telescope_builtin.git_commits() end, {})
-vim.api.nvim_create_user_command("GitBranchs", function() telescope_builtin.git_branches() end, {})
+keymap.set("n", "<leader>fs", "<Cmd>Telescope workspace workspaces<CR>", { noremap = true, silent = true, desc = "Open Workspaces" })
 vim.api.nvim_create_user_command("DiffFile", function () telescope.extensions.diff.diff_file() end, {})
-vim.keymap.set("n", "<leader>fq", "<Cmd>Telescope quickfixhistory<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
-vim.keymap.set("n", "<leader>fs", "<Cmd>Telescope my-workspace workspaces<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
+-- vim.keymap.set("n", "<leader>fq", "<Cmd>Telescope quickfixhistory<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
+-- keymap.set("n", "<leader>fc", function() telescope_builtin.colorscheme() end, { desc = "Telescope Colorscheme" })
+-- vim.api.nvim_create_user_command("GitCommits", function() telescope_builtin.git_commits() end, {})
+-- vim.api.nvim_create_user_command("GitBranchs", function() telescope_builtin.git_branches() end, {})
 
 -- vim.keymap.set("n", "<leader>fdb", "<Cmd>Telescope dap list_breakpoints theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Breakpoints" })
 -- vim.keymap.set("n", "<leader>fdv", "<Cmd>Telescope dap variables theme=dropdown<CR>", { noremap = true, silent = true, desc = "Telescope Variables" })

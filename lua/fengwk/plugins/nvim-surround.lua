@@ -24,8 +24,8 @@ nvim_surround.setup({
     -- 自定义两侧环绕，且两侧都可自定义
     ["i"] = {
       add = function()
-        local left_delimiter = utils.input({ prompt = "Enter the left delimiter: " })
-        local right_delimiter = left_delimiter and utils.input({ prompt = "Enter the right delimiter: " })
+        local left_delimiter = vim.fn.input("Enter the left delimiter: ")
+        local right_delimiter = vim.fn.input("Enter the right delimiter: ")
         if right_delimiter then
           return { { left_delimiter }, { right_delimiter } }
         end

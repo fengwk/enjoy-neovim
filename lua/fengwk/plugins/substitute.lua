@@ -7,7 +7,11 @@ end
 
 substitute.setup({})
 
-vim.keymap.set("n", "<leader>r", require("substitute").operator, { noremap = true })
-vim.keymap.set("n", "<leader>rr", require("substitute").line, { noremap = true })
-vim.keymap.set("n", "<leader>R", require("substitute").eol, { noremap = true })
-vim.keymap.set("x", "<leader>r", require("substitute").visual, { noremap = true })
+-- 替换motion区间
+vim.keymap.set("n", "rs", require("substitute").operator, { noremap = true })
+-- 替换整行
+vim.keymap.set("n", "rss", require("substitute").line, { noremap = true })
+-- 替换当前光标到行尾
+vim.keymap.set("n", "rS", require("substitute").eol, { noremap = true })
+-- 替换选中区间
+vim.keymap.set("x", "rs", require("substitute").visual, { noremap = true })

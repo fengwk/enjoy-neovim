@@ -1,3 +1,4 @@
+require("fengwk.core.colorscheme.vscode")
 require("fengwk.core.colorscheme.catppuccin")
 require("fengwk.core.colorscheme.github-nvim-theme")
 
@@ -117,7 +118,7 @@ local function on_changed(colorscheme)
     require("fengwk.core.colorscheme.lualine-kanagawa").setup()
   elseif colorscheme == "catppuccin" then
     require("fengwk.plugins.lualine").setup({ options = { theme = "catppuccin" } })
-  elseif string.find(colorscheme, "^github_dark") then
+  elseif colorscheme == "github_dimmed" or string.find(colorscheme, "^github_dark") then
     require("fengwk.plugins.lualine").setup({ options = { theme = "onedark" } })
   else
     require("fengwk.plugins.lualine").setup({ options = { theme = "auto" } })
@@ -145,13 +146,13 @@ vim.api.nvim_create_autocmd(
 -- vim.cmd("colorscheme my-darkplus")
 -- vim.cmd("colorscheme gruvbox")
 -- vim.cmd("colorscheme kanagawa")
--- vim.cmd("colorscheme vscode")
+vim.cmd("colorscheme vscode")
 -- vim.cmd("colorscheme github_dark_tritanopia")
 -- vim.cmd("colorscheme melange")
 -- vim.cmd("colorscheme nord")
 -- vim.cmd("colorscheme catppuccin")
 -- vim.cmd("colorscheme everforest")
 -- vim.cmd("colorscheme material")
-vim.cmd("colorscheme github_dark_dimmed")
+-- vim.cmd("colorscheme github_dark_dimmed")
 -- vim.cmd("colorscheme github_dark")
 -- vim.cmd("colorscheme nightfly")

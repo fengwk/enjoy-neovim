@@ -9,7 +9,7 @@ end
 local utils = require("fengwk.utils")
 
 -- 适配tty
-if utils.is_tty() then
+if utils.sys.is_tty() then
   return
 end
 -- if utils.is_tty() then

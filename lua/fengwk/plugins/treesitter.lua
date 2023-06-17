@@ -169,7 +169,7 @@ local function disable_ts(lang, buf)
     return true
   end
   -- 如果是缓冲区过大则禁用
-  return utils.is_large_buffer(buf)
+  return utils.vim.is_large_buf(buf)
 end
 
 -- 自动切换折叠模式

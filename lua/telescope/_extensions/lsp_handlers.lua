@@ -48,7 +48,7 @@ local function jump_fn(prompt_bufnr, action, offset_encoding)
 
     -- process to uri if filename is not uri
     local uri = selection.filename
-    if not my_utils.is_uri(uri) then
+    if not my_utils.fs.is_uri(uri) then
       uri = vim.uri_from_fname(selection.filename)
     end
 

@@ -23,7 +23,7 @@ illuminate.configure({
   -- 允许的模式列表
   modes_allowlist = { 'n' },
   -- 当文件行数大于阈值时关闭该功能
-  large_file_cutoff = utils.get_large_file_lines_threshold(),
+  large_file_cutoff = utils.vim.large_flines,
 })
 
 vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { silent = true, desc = "Next Symbol" })

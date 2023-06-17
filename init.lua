@@ -1,5 +1,5 @@
-require("fengwk.plugins-setup")
-require("fengwk.core.options")
-require("fengwk.core.keymaps")
-require("fengwk.plugins")
-require("fengwk.core.colorscheme")
+require "fengwk.plugins-setup"
+require "fengwk.core.options"
+require "fengwk.core.keymaps"
+require "fengwk.plugins"
+require "fengwk.core.colorscheme"

@@ -16,7 +16,7 @@ M.map_select_many = function(map, on_select)
   M.map_select_one(map, on_select)
   map({ "n", "i" }, "<Tab>", actions.toggle_selection + actions.move_selection_worse)
   map({ "n", "i" }, "<S-Tab>", actions.toggle_selection + actions.move_selection_better)
-  map({ "n", "i" }, "<C-a>", actions.toggle_all)
+  map({ "n", "i" }, "<C-Tab>", actions.toggle_all)
 end
 
 return M

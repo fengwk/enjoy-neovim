@@ -44,8 +44,8 @@ aerial.setup({
     width = 0.25,
   },
 
-  disable_max_lines = utils.get_large_file_lines_threshold(), -- 超过行阈值关闭该功能
-  disable_max_size = utils.get_large_file_size_threshold(), -- 超过文件大小阈值关闭该功能
+  disable_max_lines = utils.vim.large_flines, -- 超过行阈值关闭该功能
+  disable_max_size = utils.vim.large_fsize, -- 超过文件大小阈值关闭该功能
 
   -- A list of all symbols to display. Set to false to display all symbols.
   -- This can be a filetype map (see :help aerial-filetype-map)

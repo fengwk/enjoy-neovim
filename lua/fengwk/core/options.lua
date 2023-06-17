@@ -1,10 +1,12 @@
-local utils = require("fengwk.utils")
+local utils = require "fengwk.utils"
+
 -- 设置非文件类型
-utils.set_not_file_ft({ "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes", "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "diff" })
+utils.vim.setup_special_ft { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes",
+  "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "diff" }
 -- 设置大文件行数阈值，1W行
-utils.set_large_file_lines_threshold(10000)
+utils.vim.setup_large_flines(10000)
 -- 设置大文件占用内存阈值，256K
-utils.set_large_file_size_threshold(1024 * 128)
+utils.vim.setup_large_fsize(1024 * 128)
 
 -- 历史命令记录条数
 vim.g.history = 200
@@ -19,28 +21,31 @@ vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winbl
 vim.api.nvim_create_augroup("nvim_title", { clear = true })
 vim.api.nvim_create_autocmd(
   { "BufEnter" },
-  { group = "nvim_title", callback = function()
-    local title
-    if utils.is_not_file_ft() then
-      title = vim.bo.filetype
-    else
-      title = vim.fn.expand('%:t')
+  {
+    group = "nvim_title",
+    callback = function()
+      local title
+      if utils.vim.is_sepcial_ft() then
+        title = vim.bo.filetype
+      else
+        title = vim.fn.expand('%:t')
+      end
+      if title and string.len(title) > 0 then
+        title = " " .. title
+      else
+        title = " "
+      end
+      -- 发送title到终端标题
+      io.write("\27]0;" .. title .. "\7")
     end
-    if title and string.len(title) > 0 then
-      title = "nvim$" .. title
-    else
-      title = "nvim"
-    end
-    -- 发送title到终端标题
-    io.write("\27]0;" .. title .. "\7")
-  end}
+  }
 )
 
 -- 搜索配置
-vim.o.hlsearch = true -- 搜索高亮
-vim.o.incsearch = true -- 搜索时定位到目标位置
+vim.o.hlsearch = true   -- 搜索高亮
+vim.o.incsearch = true  -- 搜索时定位到目标位置
 vim.o.ignorecase = true -- 忽略大小写敏感匹配
-vim.o.smartcase = true -- 如果同时输入大小写则进行大小写敏感匹配
+vim.o.smartcase = true  -- 如果同时输入大小写则进行大小写敏感匹配
 
 -- 背景色：dark、light
 vim.o.bg = "dark"
@@ -72,11 +77,11 @@ vim.o.scrolloff = 5
 -- vim.o.wrap = false
 
 -- 制表符与缩进
-vim.o.tabstop = 4 -- 指定vim中显示的制表符宽度
-vim.o.softtabstop = 4 -- 指定tab键宽度
-vim.o.shiftwidth = 4 -- 设置 >> << == 时的缩进宽度
-vim.o.expandtab = true -- 使用空格进行缩进
-vim.o.autoindent = true -- 在这种缩进形式中，新增加的行和前一行使用相同的缩进形式
+vim.o.tabstop = 4        -- 指定vim中显示的制表符宽度
+vim.o.softtabstop = 4    -- 指定tab键宽度
+vim.o.shiftwidth = 4     -- 设置 >> << == 时的缩进宽度
+vim.o.expandtab = true   -- 使用空格进行缩进
+vim.o.autoindent = true  -- 在这种缩进形式中，新增加的行和前一行使用相同的缩进形式
 vim.o.smartindent = true -- 在这种缩进模式中，每一行都和前一行有相同的缩进量，同时这种缩进模式能正确地识别出花括号，当前一行为开花括号“{”时，下一新行将自动增加缩进；当前一行为闭花括号“}”时，则下一新行将取消缩进
 
 -- 使用treesitter进行折叠
@@ -98,7 +103,7 @@ vim.o.list = true
 -- trail    行末空格
 -- precedes 左则超出屏幕范围部分
 -- extends  右侧超出屏幕范围部分
-vim.o.listchars= "tab:>-,trail:·,precedes:«,extends:»,"
+vim.o.listchars = "tab:>-,trail:·,precedes:«,extends:»,"
 
 -- 使用系统剪切板作为无名寄存器
 -- vim.o.clipboard = 'unnamed'
@@ -109,7 +114,7 @@ vim.cmd("set clipboard^=unnamed,unnamedplus")
 vim.o.undofile = true
 
 -- 编码格式
-vim.o.encoding = "utf-8" -- vim内部字符表示编码
+vim.o.encoding = "utf-8"     -- vim内部字符表示编码
 vim.o.fileencoding = "utf-8" -- 文件编码
 
 -- 窗口拆分
@@ -122,15 +127,8 @@ vim.o.fileencoding = "utf-8" -- 文件编码
 -- 更快的代码高亮
 -- vim.o.updatetime = 1000
 
--- 重新打开时光标定位到退出时的位置
-vim.cmd([[
-  if has("autocmd")
-    au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"zz" | endif
-  endif
-]])
-
 -- 非tty环境下更改诊断提示样式
-if not utils.is_tty() then
+if not utils.sys.is_tty() then
   vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
   vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
   vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })

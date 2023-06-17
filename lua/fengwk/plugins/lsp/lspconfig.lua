@@ -4,6 +4,8 @@ if not ok_lspconfig then
   return
 end
 
+-- vim.lsp.set_log_level("debug")
+
 local Path = require("plenary.path")
 local utils = require("fengwk.utils")
 
@@ -19,30 +21,14 @@ local function cd_lsp_root(buffer, auto_add_ws)
       root = root_path:parent():expand()
       is_single_file = true
     end
-    vim.api.nvim_command("cd " .. root) -- 切换根目录
 
-    local t_ok, nvim_tree_api = pcall(require, "nvim-tree.api")
-    if t_ok then
-      nvim_tree_api.tree.change_root(root) -- 主动修改nvim-tree root，否则切换会出现问题
-    end
+    utils.vim.cd(root, vim.api.nvim_buf_get_name(buffer))
 
     -- 如非单文件服务则自动添加workspace
     if auto_add_ws and not is_single_file then
-      local ws_ok, ws = pcall(require, "workspaces")
+      local ws_ok, ws = pcall(require, "fengwk.plugins.workspaces.workspaces")
       if ws_ok then
-        local ws_name = vim.fn.fnamemodify(root, ":t")
-        local exists_ws_name = false
-        local ws_list = ws.get()
-        if ws_list ~= nil then
-          for _, item in pairs(ws_list) do
-            if ws_name == item.name then
-              exists_ws_name = true
-            end
-          end
-        end
-        if not exists_ws_name then
-          ws.add(root)
-        end
+        ws.add(root, true)
       end
     end
   end
@@ -164,7 +150,7 @@ local lsp_configs = {
   "groovyls",                                                 -- { "groovy" }
   "html",                                                     -- { "html" }
   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-sumneko_lua"), -- { "lua" }
-  utils.os_name == "win" and "powershell_es" or nil,          -- { "ps1" }
+  utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
   "pylsp",                                                    -- { "python" }
   ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),  -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "vimls",                                                    -- { "vim" }

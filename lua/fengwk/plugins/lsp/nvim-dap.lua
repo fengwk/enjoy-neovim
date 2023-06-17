@@ -66,7 +66,9 @@ end
 vim.keymap.set("n", "<leader>db", "<Cmd>lua require('dap').toggle_breakpoint()<CR>", { noremap = true, silent = true, desc = "Dap Breakpoint" })
 vim.keymap.set("n", "<leader>dB", function()
   vim.ui.input({ prompt = "Condition: " }, function(cond)
-    dap.set_breakpoint(cond)
+    if cond then
+      dap.set_breakpoint(cond)
+    end
   end)
 end, { noremap = true, silent = true, desc = "Dap Breanpoint With Condition" })
 vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('dap').clear_breakpoints()<CR>", { noremap = true, silent = true, desc = "Dap Clear Breakpoints" })
