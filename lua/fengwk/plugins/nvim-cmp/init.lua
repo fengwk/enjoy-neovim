@@ -5,9 +5,9 @@ if not ok then
   return
 end
 
-local types = require("cmp.types")
-local lspkind = require("lspkind")
-local utils = require("fengwk.utils")
+local types = require "cmp.types"
+local lspkind = require "fengwk.plugins.nvim-cmp.lspkind"
+local utils = require "fengwk.utils"
 
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -52,8 +52,8 @@ local kind_weight_tab = {
   [CompletionItemKind.File] = 1.75,
   [CompletionItemKind.Folder] = 1.75,
   [CompletionItemKind.Color] = 1.75,
-  [CompletionItemKind.Text] = 1.75,
-  [CompletionItemKind.Value] = 1.75,
+  [CompletionItemKind.Text] = 2,
+  [CompletionItemKind.Value] = 2,
 }
 
 local function get_weight(e)
@@ -61,6 +61,8 @@ local function get_weight(e)
     return kind_weight_tab[e:get_kind()]
   elseif e.source.name == "vsnip" then
     return kind_weight_tab[CompletionItemKind.Snippet]
+  else
+    return kind_weight_tab[CompletionItemKind.Text]
   end
 end
 
@@ -165,6 +167,7 @@ cmp.setup({
   -- 补全项格式
   formatting = utils.sys.is_tty() and {} or {
     format = lspkind.cmp_format({
+      maxwidth = 50,
       mode = "symbol_text",
       menu = ({
         nvim_lsp = "[Lsp]",
@@ -194,7 +197,7 @@ cmp.setup({
       name = "buffer",     -- 缓冲区
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
-          -- 如果缓冲区过大，则禁用
+          -- -- 如果缓冲区过大，则禁用
           if utils.vim.is_large_buf() then
             return {}
           end
@@ -215,9 +218,9 @@ cmp.setup({
   sorting = {
     comparators = {
       weight_sort, -- 基于权重排序
-      compare.offset, -- lsp给出的顺序
+      -- compare.offset, -- lsp给出的顺序
       -- compare.exact,
-      -- compare.recently_used, -- 近期使用
+      compare.recently_used, -- 近期使用
       -- compare.locality, -- 当前缓冲区优先
       compare.length, -- 长度
       compare.order, -- id序，兜底
@@ -254,10 +257,10 @@ require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
 -- })
 
 -- Use cmdline & path source for ":" (if you enabled `native_menu`, this won"t work anymore).
--- cmp.setup.cmdline(":", {
---   mapping = cmp.mapping.preset.cmdline(),
---   sources = {
---     { name = "cmdline" },
---     { name = "path" },
---   },
--- })
+cmp.setup.cmdline(":", {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = "cmdline" },
+    { name = "path" },
+  },
+})

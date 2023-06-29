@@ -39,22 +39,26 @@ return packer.startup(function(use)
 
 	-- mixed
   use "wbthomason/packer.nvim" -- 管理packer自身
-  use "stevearc/stickybuf.nvim" -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口
+  use { "stevearc/stickybuf.nvim", commit = "fc75dc22d12e5446c72a0d5f067cd7a16b3d921a" } -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口，fc75dc22d12e5446c72a0d5f067cd7a16b3d921a之后的commit引入了bug导致nvim-tree异常
   use "jghauser/mkdir.nvim" -- 保存文件时自动创建不存在的目录
   -- use "karb94/neoscroll.nvim" -- 支持平滑滚动
 
   -- themes
   -- use "catppuccin/nvim"
-  -- use "ellisonleao/gruvbox.nvim"
-  -- use "rebelot/kanagawa.nvim"
+  use "Mofiqul/dracula.nvim"
+  use "ellisonleao/gruvbox.nvim"
+  -- use "eddyekofo94/gruvbox-flat.nvim"
+  use "rebelot/kanagawa.nvim"
   use "Mofiqul/vscode.nvim"
   -- use "sainnhe/everforest"
   use "projekt0n/github-nvim-theme"
   -- use "fengwk/my-darkplus.nvim"
+  -- use "Carcuis/darcula.nvim"
+  use "doums/darcula"
 
 	-- file explorer
-  use { "kyazdani42/nvim-web-devicons" }
-  use { "kyazdani42/nvim-tree.lua" } -- require kyazdani42/nvim-web-devicons
+  use "kyazdani42/nvim-web-devicons"
+  use "kyazdani42/nvim-tree.lua" -- require kyazdani42/nvim-web-devicons
 
   -- terminal
   use { "akinsho/toggleterm.nvim", tag = "*" }
@@ -89,7 +93,7 @@ return packer.startup(function(use)
 	use "hrsh7th/nvim-cmp" -- 自动补全插件
 	use "hrsh7th/cmp-buffer" -- 缓冲区补全源
 	use "hrsh7th/cmp-path" -- 文件系统路径补全源
-  -- use "hrsh7th/cmp-cmdline" -- 命令行路径补全源
+  use "hrsh7th/cmp-cmdline" -- 命令行路径补全源
 	use "hrsh7th/cmp-nvim-lsp" -- lsp补全源
   use "rcarriga/cmp-dap" -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
 	-- snippets
@@ -104,6 +108,8 @@ return packer.startup(function(use)
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" } -- 模糊搜索增强
   use "tom-anders/telescope-vim-bookmarks.nvim"
   use "MattesGroeger/vim-bookmarks"
+  use "kkharji/sqlite.lua"
+  use "nvim-telescope/telescope-smart-history.nvim" -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
 
 	-- managing & installing lsp servers, linters & formatters
 	use "williamboman/mason.nvim"
@@ -111,7 +117,6 @@ return packer.startup(function(use)
   -- lsp
 	use "williamboman/mason-lspconfig.nvim"
 	use "neovim/nvim-lspconfig" -- lsp配置
-	use "onsails/lspkind.nvim" -- lsp补全源美化
   -- use "https://git.sr.ht/~whynothugo/lsp_lines.nvim" -- 提供多行lsp提示信息展示能力，目前看这个插件会导致性能下降
 	use "stevearc/aerial.nvim" -- outline
   use "RRethy/vim-illuminate" -- 代码符号高亮，并支持在符号之间跳跃
@@ -125,7 +130,7 @@ return packer.startup(function(use)
 	use "jayp0521/mason-nvim-dap.nvim"
 	use "mfussenegger/nvim-dap"
 	use "theHamsta/nvim-dap-virtual-text"
-	use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
+	-- use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {
@@ -140,10 +145,11 @@ return packer.startup(function(use)
 
   -- chatgpt
   use "MunifTanjim/nui.nvim"
-  use "jackMort/ChatGPT.nvim"
+  -- use "jackMort/ChatGPT.nvim"
+  use { "fengwk/ChatGPT.nvim", branch = "fix/unmodifiable-err" }
 
   -- libs
-  use_rocks { "utf8" }
+  use_rocks "utf8"
   -- set luarocks path
   require("packer.luarocks").setup_paths()
 

@@ -6,7 +6,6 @@ end
 
 -- vim.lsp.set_log_level("debug")
 
-local Path = require("plenary.path")
 local utils = require("fengwk.utils")
 
 -- 将cwd设置为lsp根目录
@@ -14,11 +13,11 @@ local function cd_lsp_root(buffer, auto_add_ws)
   local root = vim.lsp.buf.list_workspace_folders()
   local is_single_file = false
   if root ~= nil and #root > 0 then
-    local root_path = Path:new(root[1])
-    if root_path:is_dir() then
-      root = root[1]
+    local rp = root[1]
+    if utils.fs.is_dir(rp) then
+      root = rp
     else
-      root = root_path:parent():expand()
+      root = utils.fs.parent(rp)
       is_single_file = true
     end
 
@@ -53,9 +52,43 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   }
 )
 
+-- 设置lsp关闭钩子
+vim.api.nvim_create_augroup("lsp_destruction", { clear = true })
+vim.api.nvim_create_autocmd(
+  { "BufDelete" },
+  { group = "lsp_destruction", callback = function(args)
+    if args and args.buf and args.buf > 0 then
+      local cb = args.buf
+      local clients = vim.lsp.get_active_clients({ bufnr = cb })
+      local buffers = vim.api.nvim_list_bufs()
+      for _, c in pairs(clients) do
+        if c and c.id then
+          for _, b in pairs(buffers) do
+            if b and b ~= cb then
+              local b_clients = vim.lsp.get_active_clients({ bufnr = b })
+              for _, bc in pairs(b_clients) do
+                if bc and bc.id and bc.id == c.id then
+                  goto bk
+                end
+              end
+            end
+          end
+          -- 如果执行到这里说明c没有任何关联的b了
+          vim.lsp.stop_client(c.id)
+          vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
+        end
+        ::bk::
+      end
+    end
+  end}
+)
+
 -- 默认的lsp on_attach
 local function on_attach(client, bufnr)
+  -- dap
+  require("fengwk.plugins.lsp.nvim-dap").setup_keymap(bufnr)
 
+  -- lsp
   local keymap = vim.keymap
 
   keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Add Workspace Folder" })

@@ -141,6 +141,22 @@ fs.exists = function(filename)
   return file ~= nil
 end
 
+fs.is_dir = function(path)
+  if not fs.exists(path) then
+    return false
+  end
+  local stat = vim.loop.fs_stat(path)
+  if stat and stat.type == "directory" then
+    return true
+  end
+  return false
+end
+
+fs.parent = function(path)
+  local p = vim.fn.fnamemodify(path, ":t")
+  return vim.fn.expand(p)
+end
+
 fs.ensure_dir = function(dir)
   if fs.exists(dir) then
     return

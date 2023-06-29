@@ -3,18 +3,59 @@ local utils = require("fengwk.utils")
 local config_path = utils.fs.stdpath("data", "workspaces.json")
 
 local ws = {}
+local conf_cache = nil
+local conf_cache_preload = 0
+local conf_cache_timeout = 0 -- 禁用缓存
+
+local function find_ws_and_do(do_func, from)
+  if not do_func or utils.lang.empty_str(from) then
+    return
+  end
+  local conf = ws.read_conf()
+  if not conf then
+    return
+  end
+  utils.fs.iter_path_to_root(from, function(cur_path)
+    if conf[cur_path] then
+      do_func(cur_path, from)
+      return false
+    end
+    return true
+  end)
+end
+
+local function regularize_ws_name(ws_name)
+  if ws_name then
+    ws_name = vim.fn.expand(ws_name)
+    if ws_name and #ws_name > 0 and ws_name:sub(-1) == utils.fs.sp then
+      ws_name = ws_name:sub(1, -2)
+    end
+  end
+  return ws_name
+end
 
 ws.write_conf = function(conf)
+  conf_cache = conf
   return utils.fs.write_conf(config_path, conf)
 end
 
 ws.read_conf = function()
-  return utils.fs.read_conf(config_path)
+  local curs = os.time()
+  if curs < conf_cache_preload + conf_cache_timeout and conf_cache then
+    return conf_cache
+  end
+  conf_cache = utils.fs.read_conf(config_path)
+  conf_cache_preload = curs
+  return conf_cache
 end
 
 ws.add = function(ws_name, ignore_exists)
   ws_name = ws_name or vim.fn.getcwd()
-  ws_name = vim.fn.expand(ws_name)
+  ws_name = regularize_ws_name(ws_name)
+  if not utils.fs.is_dir(ws_name) then
+    vim.notify(ws_name .. " is not dir")
+    return
+  end
   local conf = ws.read_conf()
   if conf and conf[ws_name] then
     if not ignore_exists then
@@ -36,7 +77,7 @@ end
 
 ws.remove = function(ws_name)
   ws_name = ws_name or vim.fn.getcwd()
-  ws_name = vim.fn.expand(ws_name)
+  ws_name = regularize_ws_name(ws_name)
   local conf = ws.read_conf()
   if not conf or not conf[ws_name] then
     vim.notify(ws_name .. " cannot found")
@@ -67,7 +108,7 @@ ws.record_file = function(ws_name, filename)
   if not ws_name or not filename then
     return
   end
-  ws_name = vim.fn.expand(ws_name)
+  ws_name = regularize_ws_name(ws_name)
   local conf = ws.read_conf()
   if not conf or not conf[ws_name] then
     return
@@ -90,15 +131,18 @@ ws.open = function(ws_name)
   if not ws_name then
     return
   end
-  ws_name = vim.fn.expand(ws_name)
+  ws_name = regularize_ws_name(ws_name)
   local conf = ws.read_conf()
   if conf and conf[ws_name] then
     local filename = conf[ws_name].filename
-    if filename then
+    if filename and utils.fs.exists(filename) then
+      -- 必须在vim.schedule中执行，否则VimEnter事件触发时可能还未设置到autocmd
       vim.schedule(function()
         pcall(function()
           -- 如果缓冲区冲突此处会出现异常，使用pcall忽略
           vim.api.nvim_command("edit " .. filename)
+          -- 强制刷新filetype，在切换filtype时需要这么做
+          vim.api.nvim_command("filetype detect")
           vim.notify(ws_name .. " has been opened")
         end)
       end)
@@ -107,38 +151,26 @@ ws.open = function(ws_name)
   end
 end
 
-local function find_ws_and_do(do_func, from)
-  if not do_func or utils.lang.empty_str(from) then
-    return
-  end
-  local conf = ws.read_conf()
-  if not conf then
-    return
-  end
-  utils.fs.iter_path_to_root(from, function(cur_path)
-    if conf[cur_path] then
-      do_func(cur_path, from)
-      return false
-    end
-    return true
-  end)
-end
-
 ws.auto_record_file = function()
-  find_ws_and_do(function(ws_name, filename)
-    ws.record_file(ws_name, filename)
-    utils.vim.cd(ws_name, filename)
-  end, vim.fn.expand("%:p"))
+  if not utils.vim.is_sepcial_ft() and vim.bo.buftype ~= "nofile" then
+    find_ws_and_do(function(ws_name, filename)
+      ws.record_file(ws_name, filename)
+      utils.vim.cd(ws_name, filename)
+    end, vim.fn.expand("%:p"))
+  end
 end
 
 ws.auto_load = function()
   local filename = vim.fn.expand("%:p")
   if filename == nil or filename == "" then -- 只在无名缓冲区自动加载
     local line_count = vim.api.nvim_buf_line_count(0)
-    if line_count == 1 and vim.cmd("echo getline(1)") == "" then -- 仅在无内容时加载
-      find_ws_and_do(function(ws_name, _)
-        ws.open(ws_name)
-      end, vim.fn.getcwd())
+    if line_count == 1 then -- 仅在无内容时加载
+      local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+      if not line or line == "" then
+        find_ws_and_do(function(ws_name, _)
+          ws.open(ws_name)
+        end, vim.fn.getcwd())
+      end
     end
   end
 end
@@ -186,14 +218,14 @@ ws.setup = function()
       ws_name = args.fargs[1]
     end
     ws.add(ws_name)
-  end, { nargs = "?" })
+  end, { nargs = "?", complete = "file" })
   vim.api.nvim_create_user_command("WorkspaceRemove", function(args)
     local ws_name = nil
     if args and args.fargs and #args.fargs > 0 then
       ws_name = args.fargs[1]
     end
     ws.auto_remove(ws_name)
-  end, { nargs = "?" })
+  end, { nargs = "?", complete = "file" })
 end
 
 return ws

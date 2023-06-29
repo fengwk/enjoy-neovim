@@ -1,6 +1,7 @@
-require("fengwk.core.colorscheme.vscode")
-require("fengwk.core.colorscheme.catppuccin")
 require("fengwk.core.colorscheme.github-nvim-theme")
+require("fengwk.core.colorscheme.gruvbox")
+require("fengwk.core.colorscheme.catppuccin")
+require("fengwk.core.colorscheme.vscode")
 
 local function set_hi(name, fg, bg)
   local cmd = ""
@@ -56,7 +57,6 @@ local function on_changed(colorscheme)
 
   -- 设置所有定义色统一样式
   local normal_hl = vim.api.nvim_get_hl_by_name('Normal', true)
-  local normal_fg = normal_hl.foreground
   local normal_bg = normal_hl.background
 
   local sign_colum_fg = vim.api.nvim_get_hl_by_name('SignColumn', true).foreground
@@ -77,31 +77,58 @@ local function on_changed(colorscheme)
   ]]
 
   if has_highlight_group("TelescopeBorder") then
-    vim.cmd[[
+    vim.cmd [[
       hi clear FloatBorder
       hi link FloatBorder TelescopeBorder
     ]]
+  elseif has_highlight_group("TelescopePreviewBorder") then
+    vim.cmd [[
+      hi clear TelescopeBorder
+      hi link TelescopeBorder TelescopePreviewBorder
+      hi clear FloatBorder
+      hi link FloatBorder TelescopePreviewBorder
+    ]]
+  elseif has_highlight_group("TelescopeNormal") then
+    vim.cmd [[
+      hi clear TelescopeBorder
+      hi link TelescopeBorder TelescopeNormal
+      hi clear FloatBorder
+      hi link FloatBorder TelescopeNormal
+    ]]
   else
-    vim.cmd "hi clear FloatBorder"
-    set_hi("FloatBorder", nil, normal_bg)
-    vim.cmd "hi clear TelescopeBorder"
-    set_hi("TelescopeBorder", nil, normal_bg)
+    vim.cmd [[
+      hi clear TelescopeBorder
+      hi link TelescopeBorder Normal
+      hi clear FloatBorder
+      hi link FloatBorder Normal
+    ]]
   end
 
   if has_highlight_group("TelescopeTitle") then
-    vim.cmd[[
+    vim.cmd [[
       hi clear Title
       hi link Title TelescopeTitle
       hi clear FloatTitle
       hi link FloatTitle TelescopeTitle
     ]]
+  elseif has_highlight_group("TelescopeNormal") then
+    vim.cmd [[
+      hi clear TelescopeTitle
+      hi link TelescopeTitle TelescopeNormal
+      hi clear Title
+      hi link Title TelescopeNormal
+      hi clear FloatTitle
+      hi link FloatTitle TelescopeNormal
+    ]]
   else
-    vim.cmd "hi clear Title"
-    set_hi("Title", normal_fg, normal_bg)
-    vim.cmd "hi clear FloatTitle"
-    set_hi("FloatTitle", normal_fg, normal_bg)
-    vim.cmd "hi clear TelescopeTitle"
-    set_hi("TelescopeTitle", normal_fg, normal_bg)
+    vim.cmd [[
+      hi clear TelescopeTitle
+      hi link TelescopeTitle Normal
+      hi clear Title
+      hi link Title Normal
+      hi clear FloatTitle
+      hi link FloatTitle Normal
+    ]]
   end
 
   if colorscheme == "gruvbox" then
@@ -119,7 +146,7 @@ local function on_changed(colorscheme)
   elseif colorscheme == "catppuccin" then
     require("fengwk.plugins.lualine").setup({ options = { theme = "catppuccin" } })
   elseif colorscheme == "github_dimmed" or string.find(colorscheme, "^github_dark") then
-    require("fengwk.plugins.lualine").setup({ options = { theme = "onedark" } })
+    require("fengwk.plugins.lualine").setup({ options = { theme = "material" } })
   else
     require("fengwk.plugins.lualine").setup({ options = { theme = "auto" } })
   end
@@ -146,7 +173,7 @@ vim.api.nvim_create_autocmd(
 -- vim.cmd("colorscheme my-darkplus")
 -- vim.cmd("colorscheme gruvbox")
 -- vim.cmd("colorscheme kanagawa")
-vim.cmd("colorscheme vscode")
+-- vim.cmd("colorscheme vscode")
 -- vim.cmd("colorscheme github_dark_tritanopia")
 -- vim.cmd("colorscheme melange")
 -- vim.cmd("colorscheme nord")
@@ -154,5 +181,5 @@ vim.cmd("colorscheme vscode")
 -- vim.cmd("colorscheme everforest")
 -- vim.cmd("colorscheme material")
 -- vim.cmd("colorscheme github_dark_dimmed")
--- vim.cmd("colorscheme github_dark")
+vim.cmd("colorscheme github_dark")
 -- vim.cmd("colorscheme nightfly")

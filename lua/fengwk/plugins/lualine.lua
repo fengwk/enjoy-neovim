@@ -60,7 +60,7 @@ M.setup = function(opts)
     options = {
       icons_enabled = true,
       -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
-      theme = "nightfly",
+      theme = "auto",
       -- theme = "onedark",
       -- theme = "gruvbox",
       component_separators = { left = "", right = "" },

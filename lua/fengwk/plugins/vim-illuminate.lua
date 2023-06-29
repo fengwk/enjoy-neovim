@@ -28,3 +28,5 @@ illuminate.configure({
 
 vim.keymap.set("n", "<C-j>", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { silent = true, desc = "Next Symbol" })
 vim.keymap.set("n", "<C-k>", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { silent = true, desc = "Prev Symbol" })
+-- vim.keymap.set("n", "gj", "<Cmd>lua require('illuminate').goto_next_reference()<CR>", { silent = true, desc = "Next Symbol" })
+-- vim.keymap.set("n", "gk", "<Cmd>lua require('illuminate').goto_prev_reference()<CR>", { silent = true, desc = "Prev Symbol" })

@@ -171,6 +171,9 @@ local function location_handler(prompt_title, opts)
 
     if #res == 1 then
       jump_to_location(res[1], client.offset_encoding)
+      if res[1] and res[1].uri then
+        print("auto jump to " .. res[1].uri)
+      end
       return
     end
 

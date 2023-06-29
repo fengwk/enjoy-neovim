@@ -26,9 +26,14 @@ local telescope_themes = require "telescope.themes"
 local telescope_builtin = require "telescope.builtin"
 local actions = require "telescope.actions"
 local Path = require "plenary.path"
+local utils = require "fengwk.utils"
 
 telescope.setup {
   defaults = {
+    history = { -- 支持telescope历史与cwd绑定
+      path = utils.fs.stdpath("data", "telescope_history.sqlite3"),
+      limit = 500,
+    },
     winblend = vim.o.winblend, -- 提供窗口透明，使用全局的winblend
     -- Determines how file paths are displayed
     -- path_display = {
@@ -247,6 +252,7 @@ telescope.load_extension("fzf")
 -- telescope.load_extension("dap")
 telescope.load_extension("diff")
 telescope.load_extension("vim_bookmarks")
+telescope.load_extension("smart_history")
 
 -- :h telescope.builtin.buffers()
 local function telescope_builtin_buffers(show_all)
