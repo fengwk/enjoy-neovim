@@ -66,17 +66,31 @@
         ],
         "description": "Empty map"
     },
-    "isempty": {
-        "prefix": "isempty",
+    "isempty_collection": {
+        "prefix": "isempty_collection",
         "body": [
             "CollectionUtils.isEmpty($1)$0"
         ],
         "description": "Check is empty"
     },
-    "isnotempty": {
-        "prefix": "isnotempty",
+    "isnotempty_collection": {
+        "prefix": "isnotempty_collection",
         "body": [
             "CollectionUtils.isNotEmpty($1)$0"
+        ],
+        "description": "Check is not empty"
+    },
+    "isempty_str": {
+        "prefix": "isempty_str",
+        "body": [
+            "StringUtils.isEmpty($1)$0"
+        ],
+        "description": "Check is empty"
+    },
+    "isnotempty_str": {
+        "prefix": "isnotempty_str",
+        "body": [
+            "StringUtils.isNotEmpty($1)$0"
         ],
         "description": "Check is not empty"
     },

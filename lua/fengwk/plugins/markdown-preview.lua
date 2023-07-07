@@ -94,5 +94,5 @@ vim.cmd([[
   let g:mkdp_filetypes = ['markdown']
 
   " markdown-preview
-  nnoremap <silent> <leader>mk :MarkdownPreviewToggle<CR>
+  nnoremap <silent> <leader>om :MarkdownPreviewToggle<CR>
 ]])

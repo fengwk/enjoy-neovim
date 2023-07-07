@@ -22,7 +22,7 @@ aerial.setup({
     local keymap = vim.keymap
     local opts = { silent = true, buffer = bufnr }
     -- Toggle the aerial window with <leader>a
-    keymap.set("n", "<leader>o", "<cmd>AerialToggle!<CR>", opts)
+    keymap.set("n", "<leader>oo", "<cmd>AerialToggle!<CR>", opts)
     -- Jump forwards/backwards with "{" and "}"
     -- keymap.set("n", "{", with_jump_flag(function() aerial.prev() end), opts)
     -- keymap.set("n", "}", with_jump_flag(function() aerial.next() end), opts)

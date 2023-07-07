@@ -39,26 +39,22 @@ return packer.startup(function(use)
 
 	-- mixed
   use "wbthomason/packer.nvim" -- 管理packer自身
-  use { "stevearc/stickybuf.nvim", commit = "fc75dc22d12e5446c72a0d5f067cd7a16b3d921a" } -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口，fc75dc22d12e5446c72a0d5f067cd7a16b3d921a之后的commit引入了bug导致nvim-tree异常
+  use "stevearc/stickybuf.nvim"
   use "jghauser/mkdir.nvim" -- 保存文件时自动创建不存在的目录
   -- use "karb94/neoscroll.nvim" -- 支持平滑滚动
 
   -- themes
-  -- use "catppuccin/nvim"
-  use "Mofiqul/dracula.nvim"
-  use "ellisonleao/gruvbox.nvim"
-  -- use "eddyekofo94/gruvbox-flat.nvim"
+  use "WIttyJudge/gruvbox-material.nvim"
+  -- use { "fengwk/gruvbox-material.nvim", branch = "dev" }
   use "rebelot/kanagawa.nvim"
   use "Mofiqul/vscode.nvim"
   -- use "sainnhe/everforest"
   use "projekt0n/github-nvim-theme"
   -- use "fengwk/my-darkplus.nvim"
-  -- use "Carcuis/darcula.nvim"
-  use "doums/darcula"
 
 	-- file explorer
   use "kyazdani42/nvim-web-devicons"
-  use "kyazdani42/nvim-tree.lua" -- require kyazdani42/nvim-web-devicons
+  use { "kyazdani42/nvim-tree.lua", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
 
   -- terminal
   use { "akinsho/toggleterm.nvim", tag = "*" }
@@ -83,6 +79,7 @@ return packer.startup(function(use)
   use "godlygeek/tabular" -- 自定义对齐格式化
   use "jbyuki/venn.nvim" -- 绘制ASCII图
   -- use "kana/vim-textobj-user" -- 支持用户自定义textobj
+  -- use "LeonB/vim-textobj-url" -- 支持url textobj
 
 	-- ui enhancer
   use "nvim-lualine/lualine.nvim"  -- 状态栏增强，require kyazdani42/nvim-web-devicons
@@ -146,7 +143,7 @@ return packer.startup(function(use)
   -- chatgpt
   use "MunifTanjim/nui.nvim"
   -- use "jackMort/ChatGPT.nvim"
-  use { "fengwk/ChatGPT.nvim", branch = "fix/unmodifiable-err" }
+  use { "fengwk/ChatGPT.nvim", branch = "dev" }
 
   -- libs
   use_rocks "utf8"

@@ -1,3 +1,5 @@
+local utils = require "fengwk.utils"
+
 -- 使用空格作为leader键
 vim.g.mapleader = " "
 
@@ -6,11 +8,15 @@ local keymap = vim.keymap
 -- 拖拽行，已在st上完成键位映射
 keymap.set("n", "<C-S-J>", function()
   if vim.fn.getpos(".")[2] ~= vim.fn.getpos("$")[2] then
+    -- vim.api.nvim_command("move +1")
+    -- vim.api.nvim_feedkeys("==", "n", true)
     vim.api.nvim_feedkeys(":move +1\n==", "n", true)
   end
 end, { silent = true })
 keymap.set("n", "<C-S-K>", function()
   if vim.fn.getpos(".")[2] ~= 1 then
+    -- vim.api.nvim_command("move -2")
+    -- vim.api.nvim_feedkeys("==", "n", true)
     vim.api.nvim_feedkeys(":move -2\n==", "n", true)
   end
 end, { silent = true })
@@ -62,23 +68,33 @@ keymap.set({ "i", "s" }, "jk", "<Esc>", { noremap = true })
 keymap.set("t", "JK", "<Esc>", { noremap = true })
 
 -- 黏贴后自动格式化黏贴区域
+local auto_dormat_fts = { "java", "lua", "sh", "bash", "go",
+"javascript", "groovy", "html", "css", "less", "sass" }
 keymap.set("n", "p", function()
-  vim.api.nvim_feedkeys("\"" .. vim.v.register .. "p", "n", true)
-  local current_win = vim.api.nvim_get_current_win()
-  local cursor = vim.api.nvim_win_get_cursor(current_win)
-  local line = cursor[1]
-  local col = cursor[2]
-  vim.api.nvim_feedkeys("`[v`]=", "n", true) -- 这个命令可以选中最近插入的文本然后进行格式化
-  vim.api.nvim_win_set_cursor(current_win, {line, col})
+  local count = vim.v.count
+  count = count and count > 1 and count or ""
+  vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
+  if vim.tbl_contains(auto_dormat_fts, utils.vim.ft()) then
+    local current_win = vim.api.nvim_get_current_win()
+    local cursor = vim.api.nvim_win_get_cursor(current_win)
+    local line = cursor[1]
+    local col = cursor[2]
+    vim.api.nvim_feedkeys("`[v`]=", "n", true) -- 这个命令可以选中最近插入的文本然后进行格式化
+    vim.api.nvim_win_set_cursor(current_win, {line, col})
+  end
 end)
 keymap.set("x", "p", function()
-  vim.api.nvim_feedkeys("\"" .. vim.v.register .. "p", "n", true)
-  local current_win = vim.api.nvim_get_current_win()
-  local cursor = vim.api.nvim_win_get_cursor(current_win)
-  local line = cursor[1]
-  local col = cursor[2]
-  vim.api.nvim_feedkeys("gv=", "n", true)
-  vim.api.nvim_win_set_cursor(current_win, {line, col})
+  local count = vim.v.count
+  count = count and count > 1 and count or ""
+  vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
+  if utils.vim.ft() ~= "markdown" then
+    local current_win = vim.api.nvim_get_current_win()
+    local cursor = vim.api.nvim_win_get_cursor(current_win)
+    local line = cursor[1]
+    local col = cursor[2]
+    vim.api.nvim_feedkeys("gv=", "n", true)
+    vim.api.nvim_win_set_cursor(current_win, {line, col})
+  end
 end)
 
 -- 在选中的每行执行宏
@@ -150,42 +166,42 @@ vim.cmd [[
 
 -- 打开临时缓冲区
 vim.cmd [[
-  function! s:TempNew()
-    let filetype=&ft
+  function! s:NewTemp()
+    " let filetype=&ft
     new
-    exe "set filetype=" . filetype
+    " exe "set filetype=" . filetype
     diffthis
     exe "file [temp]"
     exe "setlocal bt=nofile bh=wipe nobl noswf"
     set wrap
   endfunction
-  com! TempNew call s:TempNew()
+  com! NewTemp call s:NewTemp()
 ]]
 
 -- 打开垂直的临时缓冲区
 vim.cmd [[
-  function! s:TempVnew()
-    let filetype=&ft
+  function! s:VnewTemp()
+    " let filetype=&ft
     vnew
-    exe "set filetype=" . filetype
+    " exe "set filetype=" . filetype
     diffthis
     exe "file [temp]"
     exe "setlocal bt=nofile bh=wipe nobl noswf"
     set wrap
   endfunction
-  com! TempVnew call s:TempVnew()
+  com! VnewTemp call s:VnewTemp()
 ]]
 
 -- 打开临时缓冲区覆盖当前缓冲区
 vim.cmd [[
-  function! s:TempEnew()
-    let filetype=&ft
+  function! s:EnewTemp()
+    " let filetype=&ft
     enew
-    exe "set filetype=" . filetype
+    " exe "set filetype=" . filetype
     diffthis
     exe "file [temp]"
     exe "setlocal bt=nofile bh=wipe nobl noswf"
     set wrap
   endfunction
-  com! TempEnew call s:TempEnew()
+  com! EnewTemp call s:EnewTemp()
 ]]

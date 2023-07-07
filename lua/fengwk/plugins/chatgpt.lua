@@ -7,6 +7,12 @@ end
 local utils = require("fengwk.utils")
 local chatgt_actions_json = utils.fs.stdpath("config", "lib/chatgpt_actoins.json")
 
+-- api key forward
+local api = require "chatgpt.api"
+api.COMPLETIONS_URL = "https://api.ai-yyds.com/v1/completions"
+api.CHAT_COMPLETIONS_URL = "https://api.ai-yyds.com/v1/chat/completions"
+api.EDITS_URL = "https://api.ai-yyds.com/v1/edits"
+
 chatgpt.setup {
   yank_register = "+",
   edit_with_instructions = {
@@ -132,6 +138,7 @@ chatgpt.setup {
   },
   openai_params = {
     model = "gpt-3.5-turbo",
+    -- model = "gpt-4-0613",
     frequency_penalty = 0,
     presence_penalty = 0,
     max_tokens = 512,

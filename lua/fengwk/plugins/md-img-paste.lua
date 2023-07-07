@@ -18,4 +18,4 @@ vim.api.nvim_create_autocmd(
 )
 
 -- 注册复制图片快捷键
-vim.keymap.set("n", "<leader>p", "<Cmd>call mdip#MarkdownClipboardImage()<CR>", { silent = true, desc = "Pates Image To Markdown" })
+vim.keymap.set("n", "<leader>pi", "<Cmd>call mdip#MarkdownClipboardImage()<CR>", { silent = true, desc = "Pates Image To Markdown" })

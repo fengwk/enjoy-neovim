@@ -52,8 +52,8 @@ local kind_weight_tab = {
   [CompletionItemKind.File] = 1.75,
   [CompletionItemKind.Folder] = 1.75,
   [CompletionItemKind.Color] = 1.75,
-  [CompletionItemKind.Text] = 2,
   [CompletionItemKind.Value] = 2,
+  [CompletionItemKind.Text] = 2.25,
 }
 
 local function get_weight(e)
@@ -129,7 +129,6 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
-    -- ["<C-j>"] = cmp.mapping(function(fallback)
       if cmp.visible() then -- 补全已开启则选择下一项
         cmp.select_next_item()
       -- elseif vim.fn["vsnip#available"](1) == 1 then

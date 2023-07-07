@@ -22,12 +22,21 @@ local function on_change_pre(colorscheme)
   -- vim.o.winblend = 15
   -- 默认使用dark效果
   vim.o.bg = "dark"
+  -- 先清理所有高亮样式
+  vim.cmd [[
+    hi clear
+    if exists("syntax_on")
+      syntax reset
+    endif
+  ]]
 
   if colorscheme == "gruvbox" then
     -- vim.o.bg = "light"
   elseif colorscheme == "everforest" then
     -- everforest透明背景
     vim.g.everforest_transparent_background = 1
+  elseif colorscheme == "gruvbox-material" then
+    vim.g.loaded_gruvbox_material = 0 -- 修复gruvbox-material无法重复加载的问题
   elseif colorscheme == "catppuccin" then
     -- 透明背景无法混合
     -- vim.o.winblend = 0
@@ -133,13 +142,29 @@ local function on_changed(colorscheme)
 
   if colorscheme == "gruvbox" then
     require("fengwk.plugins.lualine").setup({ options = { theme = "gruvbox" } })
+  elseif colorscheme == "gruvbox-material" then
+    -- 添加当前搜索区域背景样式
+    vim.cmd [[
+      hi clear CurSearch
+      hi link CurSearch IncSearch
+    ]]
+    -- 支持GitSign
+    vim.cmd [[
+      hi clear GitSignsAdd
+      hi link GitSignsAdd GitGutterAdd
+      hi clear GitSignsChange
+      hi link GitSignsChange GitGutterChange
+      hi clear GitSignsDelete
+      hi link GitSignsDelete GitGutterDelete
+    ]]
   elseif colorscheme == "my-darkplus" or colorscheme == "darkplus" or colorscheme == "vscode" then
-    vim.cmd([[ highlight NvimTreeIndentMarker guifg=#569BD5 ]])
+    vim.cmd "highlight NvimTreeIndentMarker guifg=#569BD5"
+    vim.cmd "hi link CurSearch IncSearch"
     require "fengwk.plugins.lualine".setup({ options = { theme = "onedark" } })
   elseif colorscheme == "everforest" then
     require("fengwk.plugins.lualine").setup({ options = { theme = "everforest" } })
   elseif colorscheme == "nightfly" then
-    vim.cmd([[ highlight NvimTreeIndentMarker guifg=#3FC5FF ]])
+    vim.cmd "highlight NvimTreeIndentMarker guifg=#3FC5FF"
     require("fengwk.core.colorscheme.lualine-nightfly").setup()
   elseif colorscheme == "kanagawa" then
     require("fengwk.core.colorscheme.lualine-kanagawa").setup()
@@ -181,5 +206,6 @@ vim.api.nvim_create_autocmd(
 -- vim.cmd("colorscheme everforest")
 -- vim.cmd("colorscheme material")
 -- vim.cmd("colorscheme github_dark_dimmed")
-vim.cmd("colorscheme github_dark")
+-- vim.cmd("colorscheme github_dark")
+vim.cmd("colorscheme gruvbox-material")
 -- vim.cmd("colorscheme nightfly")
