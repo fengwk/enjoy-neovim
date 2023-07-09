@@ -15,7 +15,6 @@ local function openurl(url)
     jdtls_enhancer.jump_to_location(url)
   elseif url:match("^http[s]?") then
     utils.sys.system("xdg-open '" .. url .. "'")
-    print("xdg-open '" .. url)
   end
 end
 

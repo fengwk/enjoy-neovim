@@ -61,41 +61,41 @@ keymap.set("n", "]Q", "<Cmd>cnewer<CR>", { silent = true, desc = "Quickfix Next"
 -- 复制整个缓冲区内容
 keymap.set("n", "<leader>y", "mpggVGy`p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
 -- 放置visual mode下p覆盖"寄存器
-keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override register" })
+-- keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override register" })
 
 keymap.set({ "i", "s" }, "jk", "<Esc>", { noremap = true })
 -- 在terimal模式下使用JK作为esc，避免和推出命令模式的esc按键冲突
 keymap.set("t", "JK", "<Esc>", { noremap = true })
 
 -- 黏贴后自动格式化黏贴区域
-local auto_dormat_fts = { "java", "lua", "sh", "bash", "go",
-"javascript", "groovy", "html", "css", "less", "sass" }
-keymap.set("n", "p", function()
-  local count = vim.v.count
-  count = count and count > 1 and count or ""
-  vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
-  if vim.tbl_contains(auto_dormat_fts, utils.vim.ft()) then
-    local current_win = vim.api.nvim_get_current_win()
-    local cursor = vim.api.nvim_win_get_cursor(current_win)
-    local line = cursor[1]
-    local col = cursor[2]
-    vim.api.nvim_feedkeys("`[v`]=", "n", true) -- 这个命令可以选中最近插入的文本然后进行格式化
-    vim.api.nvim_win_set_cursor(current_win, {line, col})
-  end
-end)
-keymap.set("x", "p", function()
-  local count = vim.v.count
-  count = count and count > 1 and count or ""
-  vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
-  if utils.vim.ft() ~= "markdown" then
-    local current_win = vim.api.nvim_get_current_win()
-    local cursor = vim.api.nvim_win_get_cursor(current_win)
-    local line = cursor[1]
-    local col = cursor[2]
-    vim.api.nvim_feedkeys("gv=", "n", true)
-    vim.api.nvim_win_set_cursor(current_win, {line, col})
-  end
-end)
+-- local auto_dormat_fts = { "java", "lua", "sh", "bash", "go",
+-- "javascript", "groovy", "html", "css", "less", "sass" }
+-- keymap.set("n", "p", function()
+--   local count = vim.v.count
+--   count = count and count > 1 and count or ""
+--   vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
+--   if vim.tbl_contains(auto_dormat_fts, utils.vim.ft()) then
+--     local current_win = vim.api.nvim_get_current_win()
+--     local cursor = vim.api.nvim_win_get_cursor(current_win)
+--     local line = cursor[1]
+--     local col = cursor[2]
+--     vim.api.nvim_feedkeys("`[v`]=", "n", true) -- 这个命令可以选中最近插入的文本然后进行格式化
+--     vim.api.nvim_win_set_cursor(current_win, {line, col})
+--   end
+-- end)
+-- keymap.set("x", "p", function()
+--   local count = vim.v.count
+--   count = count and count > 1 and count or ""
+--   vim.api.nvim_feedkeys(count .. "\"" .. vim.v.register .. "p", "n", true)
+--   if utils.vim.ft() ~= "markdown" then
+--     local current_win = vim.api.nvim_get_current_win()
+--     local cursor = vim.api.nvim_win_get_cursor(current_win)
+--     local line = cursor[1]
+--     local col = cursor[2]
+--     vim.api.nvim_feedkeys("gv=", "n", true)
+--     vim.api.nvim_win_set_cursor(current_win, {line, col})
+--   end
+-- end)
 
 -- 在选中的每行执行宏
 vim.cmd([[
@@ -109,17 +109,17 @@ endfunction
 
 -- 如果当前行为空，使用A时将遵循上一行的缩进
 keymap.set("n", "A", function ()
-  local cur_line = vim.fn.line('.')
-  local last_line = vim.fn.line('$')
-  if cur_line > 1 and vim.fn.trim(vim.fn.getline('.')) == '' then
+  local cur_line = vim.fn.line(".")
+  local last_line = vim.fn.line("$")
+  if cur_line > 1 and vim.fn.trim(vim.fn.getline(".")) == "" then
     vim.api.nvim_del_current_line()
     if cur_line == last_line then
-      vim.api.nvim_feedkeys("o", 'n', true)
+      vim.api.nvim_feedkeys("o", "n", true)
     else
-      vim.api.nvim_feedkeys("O", 'n', true)
+      vim.api.nvim_feedkeys("O", "n", true)
     end
   else
-    vim.api.nvim_feedkeys("A", 'n', true)
+    vim.api.nvim_feedkeys("A", "n", true)
   end
 end, { desc = "Auto Indent" })
 

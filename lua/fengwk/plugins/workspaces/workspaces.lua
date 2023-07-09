@@ -1,22 +1,24 @@
 local utils = require("fengwk.utils")
 
-local config_path = utils.fs.stdpath("data", "workspaces.json")
+local data_path = utils.fs.stdpath("data", "workspaces.json")
 
 local ws = {}
-local conf_cache = nil
-local conf_cache_preload = 0
-local conf_cache_timeout = 0 -- 禁用缓存
 
+local data_cache = nil
+local data_cache_pre_read = 0
+local data_cache_read_timeout = 1e6 * 500 -- 500毫秒，配置读取超时
+
+-- 从from开始找到任一最近的workspce执行do_func
 local function find_ws_and_do(do_func, from)
   if not do_func or utils.lang.empty_str(from) then
     return
   end
-  local conf = ws.read_conf()
-  if not conf then
+  local data = ws.read_data()
+  if not data then
     return
   end
   utils.fs.iter_path_to_root(from, function(cur_path)
-    if conf[cur_path] then
+    if data[cur_path] then
       do_func(cur_path, from)
       return false
     end
@@ -24,6 +26,7 @@ local function find_ws_and_do(do_func, from)
   end)
 end
 
+-- 统一workspace name，可以避免处理/a和/a/存在两个工作空间的问题
 local function regularize_ws_name(ws_name)
   if ws_name then
     ws_name = vim.fn.expand(ws_name)
@@ -34,21 +37,22 @@ local function regularize_ws_name(ws_name)
   return ws_name
 end
 
-ws.write_conf = function(conf)
-  conf_cache = conf
-  return utils.fs.write_conf(config_path, conf)
+ws.write_data = function(data)
+  data_cache = data
+  utils.fs.write_data(data_path, data_cache)
 end
 
-ws.read_conf = function()
-  local curs = os.time()
-  if curs < conf_cache_preload + conf_cache_timeout and conf_cache then
-    return conf_cache
+ws.read_data = function()
+  local cur_nanos = vim.loop.hrtime()
+  if cur_nanos < data_cache_pre_read + data_cache_read_timeout and data_cache then
+    return data_cache
   end
-  conf_cache = utils.fs.read_conf(config_path)
-  conf_cache_preload = curs
-  return conf_cache
+  data_cache = utils.fs.read_data(data_path)
+  data_cache_pre_read = cur_nanos
+  return data_cache
 end
 
+-- 添加一个工作空间
 ws.add = function(ws_name, ignore_exists)
   ws_name = ws_name or vim.fn.getcwd()
   ws_name = regularize_ws_name(ws_name)
@@ -56,61 +60,64 @@ ws.add = function(ws_name, ignore_exists)
     vim.notify(ws_name .. " is not dir")
     return
   end
-  local conf = ws.read_conf()
-  if conf and conf[ws_name] then
+  local data = ws.read_data()
+  if data and data[ws_name] then
     if not ignore_exists then
       vim.notify(ws_name .. " already exists")
     end
     return
   end
-  if not conf then
-    conf = {}
+  if not data then
+    data = {}
   end
-  conf[ws_name] = {}
+  data[ws_name] = {}
   local filename = vim.fn.expand("%:p")
   if filename and filename ~= "" then
-    conf[ws_name].filename = filename
+    data[ws_name].filename = filename
   end
   vim.notify(ws_name .. " has been added to workspaces")
-  ws.write_conf(conf)
+  ws.write_data(data)
 end
 
+-- 移除一个工作空间
 ws.remove = function(ws_name)
   ws_name = ws_name or vim.fn.getcwd()
   ws_name = regularize_ws_name(ws_name)
-  local conf = ws.read_conf()
-  if not conf or not conf[ws_name] then
+  local data = ws.read_data()
+  if not data or not data[ws_name] then
     vim.notify(ws_name .. " cannot found")
     return
   end
-  local new_conf = {}
-  for k, v in pairs(conf) do
+  local new_data = {}
+  for k, v in pairs(data) do
     if k ~= ws_name then
-      new_conf[k] = v
+      new_data[k] = v
     end
   end
-  ws.write_conf(new_conf)
+  ws.write_data(new_data)
   vim.notify(ws_name .. " has been removed from workspaces")
 end
 
+-- 列出所有工作空间
 ws.list = function()
-  local conf = ws.read_conf()
+  local data = ws.read_data()
   local ws_list = {}
-  if conf then
-    for k, _ in pairs(conf) do
+  if data then
+    for k, _ in pairs(data) do
       table.insert(ws_list, k)
     end
   end
   return ws_list
 end
 
+-- 记录当前缓冲区对应的文件
 ws.record_file = function(ws_name, filename)
   if not ws_name or not filename then
     return
   end
   ws_name = regularize_ws_name(ws_name)
-  local conf = ws.read_conf()
-  if not conf or not conf[ws_name] then
+  local data = ws.read_data()
+  if not data or not data[ws_name] then
     return
   end
   if not filename or utils.fs.is_uri(filename) then
@@ -118,23 +125,24 @@ ws.record_file = function(ws_name, filename)
   end
   utils.fs.iter_path_to_root(filename, function(cur_path)
     if cur_path == ws_name then
-      local ws_conf = conf[ws_name]
-      ws_conf.filename = filename
-      ws.write_conf(conf)
+      local ws_data = data[ws_name]
+      ws_data.filename = filename
+      ws.write_data(data)
       return false
     end
     return true
   end)
 end
 
+-- 打开指定的工作空间
 ws.open = function(ws_name)
   if not ws_name then
     return
   end
   ws_name = regularize_ws_name(ws_name)
-  local conf = ws.read_conf()
-  if conf and conf[ws_name] then
-    local filename = conf[ws_name].filename
+  local data = ws.read_data()
+  if data and data[ws_name] then
+    local filename = data[ws_name].filename
     if filename and utils.fs.exists(filename) then
       -- 必须在vim.schedule中执行，否则VimEnter事件触发时可能还未设置到autocmd
       vim.schedule(function()
@@ -151,6 +159,7 @@ ws.open = function(ws_name)
   end
 end
 
+-- 自动记录当前缓冲区对应的文件
 ws.auto_record_file = function()
   if not utils.vim.is_sepcial_ft() and vim.bo.buftype ~= "nofile" then
     find_ws_and_do(function(ws_name, filename)
@@ -160,6 +169,7 @@ ws.auto_record_file = function()
   end
 end
 
+-- 自动加载
 ws.auto_load = function()
   local filename = vim.fn.expand("%:p")
   if filename == nil or filename == "" then -- 只在无名缓冲区自动加载
@@ -175,18 +185,15 @@ ws.auto_load = function()
   end
 end
 
-ws.auto_remove = function(ws_name)
-  if ws_name then
-    ws.remove(ws_name)
-  else
-    local from = vim.fn.expand("%:p")
-    if utils.lang.empty_str(from) then
-      from = vim.fn.getcwd()
-    end
-    find_ws_and_do(function(ws_name, _)
-      ws.remove(ws_name)
-    end, from)
+-- 自动移除
+ws.auto_remove = function()
+  local from = vim.fn.expand("%:p")
+  if utils.lang.empty_str(from) then
+    from = vim.fn.getcwd()
   end
+  find_ws_and_do(function(ws_name, _)
+    ws.remove(ws_name)
+  end, from)
 end
 
 ws.setup = function()
@@ -224,7 +231,11 @@ ws.setup = function()
     if args and args.fargs and #args.fargs > 0 then
       ws_name = args.fargs[1]
     end
-    ws.auto_remove(ws_name)
+    if ws_name then
+      ws.remove(ws_name)
+    else
+      ws.auto_remove()
+    end
   end, { nargs = "?", complete = "file" })
 end
 

@@ -40,6 +40,14 @@ vim.api.nvim_create_autocmd(
     end
   }
 )
+-- 当离开nvim时重新设置标题为当前路径
+vim.api.nvim_create_autocmd(
+  { "VimLeave" },
+  { group = "nvim_title", callback = function()
+    io.write("\27]0; " .. string.match(os.getenv('PWD'), '.*/(.*)') .. "\7")
+  end}
+)
+vim.cmd [[autocmd VimLeave * silent !echo -ne "\033]0; ${PWD##*/}\007"]]
 
 -- 搜索配置
 vim.o.hlsearch = true   -- 搜索高亮

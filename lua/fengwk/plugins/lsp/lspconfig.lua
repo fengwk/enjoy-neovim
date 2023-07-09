@@ -144,7 +144,9 @@ local function on_attach(client, bufnr)
   -- keymap.set("n", "<leader>gi", "<Cmd>lua require('telescope.builtin').lsp_incoming_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
   -- keymap.set("n", "<leader>go", "<Cmd>lua require('telescope.builtin').lsp_outgoing_calls()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
   keymap.set("n", "gw", function ()
-    require("telescope").extensions.lsp_handlers.dynamic_workspace_symbols(require("telescope.themes").get_dropdown())
+    require("telescope").extensions.lsp_handlers.dynamic_workspace_symbols(require("telescope.themes").get_dropdown({
+      sorters_highlight = false,
+    }))
   end, { buffer = bufnr, desc = "Lsp Workspace Symbol" })
 
   -- lsp

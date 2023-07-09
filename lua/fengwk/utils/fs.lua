@@ -173,12 +173,12 @@ fs.escape_filename = function(filename)
   return name
 end
 
-fs.write_conf = function(filename, conf)
-  local json = vim.fn.json_encode(conf)
+fs.write_data = function(filename, data)
+  local json = vim.fn.json_encode(data)
   fs.write_file(filename, json)
 end
 
-fs.read_conf = function(filename)
+fs.read_data = function(filename)
   local json = fs.read_file(filename)
   if not json then
     return nil

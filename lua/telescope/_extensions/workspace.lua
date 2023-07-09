@@ -26,6 +26,14 @@ local open_ws = function(prompt_bufnr, before_open)
   end
 end
 
+local remove_ws = function(prompt_bufnr)
+  local current_picker = action_state.get_current_picker(prompt_bufnr)
+    current_picker:delete_selection(function(selection)
+    workspaces.remove(selection.value)
+    return true
+  end)
+end
+
 local workspaces_picker = function(opts)
   local ws_list = workspaces.list()
 
@@ -49,6 +57,7 @@ local workspaces_picker = function(opts)
 
     attach_mappings = function(_, map)
       ext_common.map_select_one(map, open_ws)
+      map({ "n" }, "dd", remove_ws)
       map({ "n", "i" }, "<C-x>", function(prompt_bufnr)
         open_ws(prompt_bufnr, function()
           vim.cmd("sp")

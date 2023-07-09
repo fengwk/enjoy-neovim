@@ -36,34 +36,33 @@ telescope.setup {
     },
     winblend = vim.o.winblend, -- 提供窗口透明，使用全局的winblend
     -- Determines how file paths are displayed
-    -- path_display = {
-    --   -- truncate = 3,
-    --   -- smart = true,
-    --   shorten = 1,
-    -- },
-    path_display = function(_, path)
-      -- 处理path为相对路径
-      local cwd = vim.fn.getcwd()
-      if Path:new(cwd):is_dir() then
-        path = Path:new(path):make_relative(cwd)
-      end
-
-      local limit = 70
-
-      if string.len(path) < limit then
-        return path
-      end
-
-      -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
-      -- return Path:new(path):shorten(1, { 1, 2, -1 })
-      -- return Path:new(path):shorten(1, { 1, -1 })
-      path = Path:new(path):shorten(1, { 1, -1 })
-      if string.len(path) < limit then
-        return path
-      end
-
-      return Path:new(path):shorten(1, { -1 })
-    end,
+    path_display = {
+      tail = true,
+      -- truncate = 1, -- 从前边进行截断，这通常符合预期，因为需要看到文件名称，1代表截断前的路径只展示一个字符
+    },
+    -- path_display = function(_, path)
+    --   -- 处理path为相对路径
+    --   local cwd = vim.fn.getcwd()
+    --   if Path:new(cwd):is_dir() then
+    --     path = Path:new(path):make_relative(cwd)
+    --   end
+    --
+    --   local limit = 70
+    --
+    --   if string.len(path) < limit then
+    --     return path
+    --   end
+    --
+    --   -- shorten 简短路径只展示1个字符，第1、2、-1部分不缩短
+    --   -- return Path:new(path):shorten(1, { 1, 2, -1 })
+    --   -- return Path:new(path):shorten(1, { 1, -1 })
+    --   path = Path:new(path):shorten(1, { 1, -1 })
+    --   if string.len(path) < limit then
+    --     return path
+    --   end
+    --
+    --   return Path:new(path):shorten(1, { -1 })
+    -- end,
 
     -- Default configuration for telescope goes here:
     -- config_key = value,
@@ -113,6 +112,11 @@ telescope.setup {
     },
     buffers = {
       theme = "dropdown",
+      mappings = {
+        n = {
+          ["dd"] = "delete_buffer",
+        }
+      }
       -- previewer = false,
     },
     oldfiles = {
@@ -186,6 +190,14 @@ telescope.setup {
       telescope_themes.get_dropdown {},
     },
 
+    ["bookmarks"] = {
+      telescope_themes.get_dropdown {},
+    },
+
+    ["diff"] = {
+      telescope_themes.get_dropdown {},
+    },
+
     ["live_grep_args"] = {
       auto_quoting = true, -- enable/disable auto-quoting
       -- override default mappings
@@ -210,6 +222,14 @@ telescope.setup {
       },
       code_action = {
         telescope = require('telescope.themes').get_dropdown({}),
+      },
+      dynamic_workspace_symbols = {
+        telescope = require('telescope.themes').get_dropdown({
+          path_display = {
+            tail = true,
+            -- truncate = 3,
+          }
+        }),
       },
     },
 
@@ -251,7 +271,7 @@ telescope.load_extension("fzf")
 -- telescope.load_extension("aerial")
 -- telescope.load_extension("dap")
 telescope.load_extension("diff")
-telescope.load_extension("vim_bookmarks")
+telescope.load_extension("bookmarks")
 telescope.load_extension("smart_history")
 
 -- :h telescope.builtin.buffers()
@@ -363,7 +383,8 @@ keymap.set("n", "<leader>fg", telescope_builtin_live_grep_args, { desc = "Telesc
 keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { desc = "Telescope Oldfiles" })
 keymap.set("n", "<leader>fh", function() telescope_builtin.help_tags() end, { desc = "Telescope Help Tags" })
 keymap.set("n", "<leader>ft", function() telescope_builtin.filetypes() end, { desc = "Telescope Filetypes" })
-keymap.set("n", "<leader>fs", "<Cmd>Telescope workspace workspaces<CR>", { noremap = true, silent = true, desc = "Open Workspaces" })
+keymap.set("n", "<leader>fs", "<Cmd>Telescope workspace workspaces<CR>", { silent = true, desc = "Open Workspaces" })
+keymap.set("n", "<leader>mm", "<Cmd>Telescope bookmarks bookmarks<CR>", { silent = true, desc = "Open Workspaces" })
 vim.api.nvim_create_user_command("DiffFile", function () telescope.extensions.diff.diff_file() end, {})
 -- vim.keymap.set("n", "<leader>fq", "<Cmd>Telescope quickfixhistory<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
 -- keymap.set("n", "<leader>fc", function() telescope_builtin.colorscheme() end, { desc = "Telescope Colorscheme" })

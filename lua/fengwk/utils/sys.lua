@@ -27,4 +27,9 @@ sys.is_tty = function()
   return tty and string.match(tty, "^/dev/tty") ~= nil
 end
 
+sys.now_ms = function()
+  local nanos = sys.system("date +%s%N")
+  return math.floor(nanos / 1e6)
+end
+
 return sys

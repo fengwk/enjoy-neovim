@@ -2,6 +2,8 @@ local action_state = require("telescope.actions.state")
 local actions = require("telescope.actions")
 local builtin = require("telescope.builtin")
 
+local setup_opts = {}
+
 local function diffspliit(prompt_bufnr, vert, pre_func)
   actions.close(prompt_bufnr)
   if pre_func then
@@ -18,7 +20,7 @@ end
 
 local function diff_file(opts)
   local bufnr = vim.api.nvim_get_current_buf()
-  opts = vim.tbl_deep_extend("force", opts or {}, {
+  opts = vim.tbl_deep_extend("force", setup_opts, opts or {}, {
     prompt_title = "Pick file to diff",
     attach_mappings = function(_, map)
       map({ "n", "i" }, "<CR>", function(prompt_bufnr)
@@ -46,6 +48,11 @@ local function diff_file(opts)
 end
 
 return require("telescope").register_extension({
+  setup = function (opts)
+    if opts and #opts >= 1 then
+      setup_opts = opts[1]
+    end
+  end,
   exports = {
     diff_file = diff_file,
   },

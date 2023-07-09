@@ -2,6 +2,11 @@ local actions = require("telescope.actions")
 
 local M = {}
 
+M.map_preview = function(map)
+  map({ "n", "i" }, "<C-u>", actions.preview_scrolling_up)
+  map({ "n", "i" }, "<C-d>", actions.preview_scrolling_down)
+end
+
 M.map_select_one = function(map, on_select)
   map({ "i" }, "<C-w>", { "<c-s-w>", type = "command" })
   map({ "i" }, "<C-n>", actions.cycle_history_next)

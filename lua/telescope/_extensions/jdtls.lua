@@ -11,7 +11,7 @@ local actions = require "telescope.actions"
 local action_state = require "telescope.actions.state"
 local make_entry = require('telescope.make_entry')
 
-local base_opts = {}
+local setup_opts = {}
 
 local function enhance_pick_one(fallback)
   return function(items, prompt, label_fn)
@@ -31,7 +31,7 @@ local function enhance_pick_one(fallback)
       choice_to_item[choice] = item
     end
 
-    local opts = vim.tbl_deep_extend("keep", base_opts, { bufnr = vim.api.nvim_get_current_buf() })
+    local opts = vim.tbl_deep_extend("keep", setup_opts, { bufnr = vim.api.nvim_get_current_buf() })
 
     pickers.new(opts, {
       prompt_title = prompt,
@@ -79,7 +79,7 @@ local function enhance_pick_many(fallback)
       choice_to_item[choice] = item
     end
 
-    local opts = vim.tbl_deep_extend("keep", base_opts, { bufnr = vim.api.nvim_get_current_buf() })
+    local opts = vim.tbl_deep_extend("keep", setup_opts, { bufnr = vim.api.nvim_get_current_buf() })
 
     pickers.new(opts, {
       prompt_title = prompt,
@@ -229,7 +229,7 @@ local function jump_location(offset_encoding)
 end
 
 local function inherited_members(opts)
-  opts = vim.tbl_deep_extend("keep", opts or {}, base_opts, {
+  opts = vim.tbl_deep_extend("keep", opts or {}, setup_opts, {
     path_display = "hidden", -- 隐藏文件路径显示
     bufnr = vim.api.nvim_get_current_buf(),
   })
@@ -287,7 +287,7 @@ end
 return require("telescope").register_extension({
   setup = function(opts)
     if opts and #opts >= 1 then
-      base_opts = opts[1]
+      setup_opts = opts[1]
     end
     setup_ui()
     -- setup_auto_organize_imports()

@@ -157,6 +157,7 @@ local function on_changed(colorscheme)
       hi clear GitSignsDelete
       hi link GitSignsDelete GitGutterDelete
     ]]
+    require("fengwk.plugins.lualine").setup({ options = { theme = "auto" } })
   elseif colorscheme == "my-darkplus" or colorscheme == "darkplus" or colorscheme == "vscode" then
     vim.cmd "highlight NvimTreeIndentMarker guifg=#569BD5"
     vim.cmd "hi link CurSearch IncSearch"

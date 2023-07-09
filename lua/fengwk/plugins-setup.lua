@@ -45,12 +45,8 @@ return packer.startup(function(use)
 
   -- themes
   use "WIttyJudge/gruvbox-material.nvim"
-  -- use { "fengwk/gruvbox-material.nvim", branch = "dev" }
-  use "rebelot/kanagawa.nvim"
   use "Mofiqul/vscode.nvim"
-  -- use "sainnhe/everforest"
   use "projekt0n/github-nvim-theme"
-  -- use "fengwk/my-darkplus.nvim"
 
 	-- file explorer
   use "kyazdani42/nvim-web-devicons"
@@ -103,8 +99,6 @@ return packer.startup(function(use)
   use { "nvim-telescope/telescope.nvim", tag = "0.1.1" } -- 模糊搜索插件，require nvim-lua/plenary
   use "nvim-telescope/telescope-live-grep-args.nvim" -- live grep增强
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" } -- 模糊搜索增强
-  use "tom-anders/telescope-vim-bookmarks.nvim"
-  use "MattesGroeger/vim-bookmarks"
   use "kkharji/sqlite.lua"
   use "nvim-telescope/telescope-smart-history.nvim" -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
 
