@@ -61,7 +61,7 @@ end
 local function on_changed(colorscheme)
   -- 统一nui样式
   vim.cmd([[
-    set winhighlight=Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr
+    set winhighlight=Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn
   ]])
 
   -- 设置所有定义色统一样式
@@ -75,10 +75,6 @@ local function on_changed(colorscheme)
   local fold_column_fg = vim.api.nvim_get_hl_by_name('FoldColumn', true).foreground
   vim.cmd "hi clear MyFoldColumn"
   set_hi("MyFoldColumn", fold_column_fg, normal_bg)
-
-  local line_nr_fg = vim.api.nvim_get_hl_by_name('LineNr', true).foreground
-  vim.cmd "hi clear MyLineNr"
-  set_hi("MyLineNr", line_nr_fg, normal_bg)
 
   vim.cmd[[
     hi clear NormalFloat

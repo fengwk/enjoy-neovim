@@ -23,7 +23,6 @@ M.map_select_one = function(map, on_select)
   map({ "n", "i" }, "<C-k>", actions.move_selection_previous)
   map({ "n", "i" }, "<CR>", on_select)
   map({ "n", "i" }, "<C-c>", actions.close)
-  map({ "n", "i" }, "<C-q>", actions.close)
 end
 
 M.map_select_many = function(map, on_select)

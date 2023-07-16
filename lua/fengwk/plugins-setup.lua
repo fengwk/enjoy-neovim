@@ -39,7 +39,7 @@ return packer.startup(function(use)
 
 	-- mixed
   use "wbthomason/packer.nvim" -- 管理packer自身
-  use "stevearc/stickybuf.nvim"
+  use { "stevearc/stickybuf.nvim", commit = "fc75dc22d12e5446c72a0d5f067cd7a16b3d921a" } -- 锁定buffer，避免误操作在非预期的位置打开窗口，比如在qf里打开了窗口，fc75dc22d12e5446c72a0d5f067cd7a16b3d921a之后的commit引入了bug导致nvim-tree异常
   use "jghauser/mkdir.nvim" -- 保存文件时自动创建不存在的目录
   -- use "karb94/neoscroll.nvim" -- 支持平滑滚动
 

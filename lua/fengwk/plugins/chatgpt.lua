@@ -40,7 +40,7 @@ chatgpt.setup {
         },
       },
       win_options = {
-        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
+        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
       },
     },
     keymaps = {
@@ -88,7 +88,7 @@ chatgpt.setup {
       wrap = true,
       linebreak = true,
       foldcolumn = "1",
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
     },
     buf_options = {
       filetype = "markdown",
@@ -106,7 +106,7 @@ chatgpt.setup {
       wrap = true,
       linebreak = true,
       foldcolumn = "2",
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
     },
   },
   popup_input = {
@@ -120,7 +120,7 @@ chatgpt.setup {
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
     },
     submit = "<C-Enter>",
     submit_n = "<Enter>",
@@ -133,7 +133,7 @@ chatgpt.setup {
       },
     },
     win_options = {
-      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn,LineNr:MyLineNr",
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
     },
   },
   openai_params = {

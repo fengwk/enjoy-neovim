@@ -342,14 +342,6 @@ vim.api.nvim_create_autocmd(
       setup()
     end
   end})
-vim.api.nvim_create_autocmd(
-  { "FileType" },
-  { group = "user_jdtls_setup", pattern = "xml", callback = function()
-    local name = vim.fn.expand("%:t")
-    if name == "pom.xml" then
-      setup()
-    end
-  end})
 -- vim.api.nvim_create_autocmd(
 --   { "FileType" },
 --   { group = "user_jdtls_setup", pattern = "groovy", callback = function()

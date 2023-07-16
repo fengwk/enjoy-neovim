@@ -180,13 +180,24 @@ local function parent_type_hierarchy(client, bufnr, uri)
   return resp
 end
 
-local function collect_types(types, client, bufnr, uri)
-  local resp = parent_type_hierarchy(client, bufnr, uri)
-  if resp then
-    table.insert(types, resp.uri);
-    if resp.parents and #resp.parents > 0 then
-      for _, p in ipairs(resp.parents) do
-        collect_types(types, client, bufnr, p.uri)
+local function collect_types(types, client, bufnr)
+  -- 层序遍历types
+  local qt = { uri=false }
+  local qh = { next=qt }
+  while qh.next do
+    local uri = qh.next.uri
+    qh.next = qh.next.next
+    if not qh.next then
+      qt = qh
+    end
+    local resp = parent_type_hierarchy(client, bufnr, uri)
+    if resp then
+      table.insert(types, resp.uri)
+      if resp.parents and #resp.parents > 0 then
+        for _, p in ipairs(resp.parents) do
+          qt.next = { uri = p.uri }
+          qt = qt.next
+        end
       end
     end
   end
@@ -242,7 +253,7 @@ local function inherited_members(opts)
   coroutine.wrap(function()
     -- 收集数据
     local types = {}
-    collect_types(types, client, bufnr, nil)
+    collect_types(types, client, bufnr)
     local inherited_members = {}
     local flags = {}
     for _, turi in ipairs(types) do

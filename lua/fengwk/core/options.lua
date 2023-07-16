@@ -2,7 +2,7 @@ local utils = require "fengwk.utils"
 
 -- 设置非文件类型
 utils.vim.setup_special_ft { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes",
-  "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "diff" }
+  "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "gitrebase", "diff" }
 -- 设置大文件行数阈值，1W行
 utils.vim.setup_large_flines(10000)
 -- 设置大文件占用内存阈值，256K
@@ -44,10 +44,12 @@ vim.api.nvim_create_autocmd(
 vim.api.nvim_create_autocmd(
   { "VimLeave" },
   { group = "nvim_title", callback = function()
-    io.write("\27]0; " .. string.match(os.getenv('PWD'), '.*/(.*)') .. "\7")
+      vim.schedule(function()
+        local pwd = os.getenv('PWD')
+        io.write("\27]0; " .. string.match(pwd .. "", '.*/(.*)') .. "\7")
+      end)
   end}
 )
-vim.cmd [[autocmd VimLeave * silent !echo -ne "\033]0; ${PWD##*/}\007"]]
 
 -- 搜索配置
 vim.o.hlsearch = true   -- 搜索高亮
