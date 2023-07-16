@@ -19,6 +19,7 @@ chatgpt.setup {
     diff = false,
     keymaps = {
       close = { "<C-c>", "<C-q>" },
+      close_n = { "<Esc>", "q" },
       accept = "<C-y>", -- 将修改内容替换到文本中
       toggle_diff = "<C-d>", -- 对比内容
       toggle_settings = "<C-o>",
@@ -45,6 +46,7 @@ chatgpt.setup {
     },
     keymaps = {
       close = { "<C-c>", "<C-q>" },
+      close_n = { "<Esc>", "q" },
       yank_last = "<C-y>",
       yank_last_code = "<C-k>",
       scroll_up = "<C-u>",

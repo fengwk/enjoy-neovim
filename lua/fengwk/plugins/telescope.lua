@@ -69,6 +69,7 @@ telescope.setup {
       },
       n = {
         ["<C-c>"] = actions.close,
+        ["q"] = actions.close,
         ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
         ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
         ["<C-Tab>"] = actions.toggle_all,
