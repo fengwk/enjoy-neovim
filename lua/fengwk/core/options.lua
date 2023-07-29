@@ -26,17 +26,15 @@ vim.api.nvim_create_autocmd(
     callback = function()
       local title
       if utils.vim.is_sepcial_ft() then
-        title = vim.bo.filetype
+        title = utils.vim.ft()
       else
         title = vim.fn.expand('%:t')
       end
       if title and string.len(title) > 0 then
         title = " " .. title
-      else
-        title = " "
+        -- 发送title到终端标题
+        io.write("\27]0;" .. title .. "\7")
       end
-      -- 发送title到终端标题
-      io.write("\27]0;" .. title .. "\7")
     end
   }
 )
@@ -144,3 +142,4 @@ if not utils.sys.is_tty() then
   vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
   vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 end
+

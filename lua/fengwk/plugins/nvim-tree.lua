@@ -66,8 +66,8 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'O',     api.node.open.no_window_picker,        opts('Open: No Window Picker'))
   vim.keymap.set('n', 'p',     api.fs.paste,                          opts('Paste'))
   vim.keymap.set('n', 'P',     api.node.navigate.parent,              opts('Parent Directory'))
-  -- vim.keymap.set('n', 'q',     api.tree.close,                        opts('Close'))
   vim.keymap.set('n', '<C-q>', api.tree.close,                        opts('Close'))
+  vim.keymap.set('n', 'q',     api.tree.close,                        opts('Close'))
   vim.keymap.set('n', 'r',     api.fs.rename,                         opts('Rename'))
   vim.keymap.set('n', 'R',     api.tree.reload,                       opts('Refresh'))
   vim.keymap.set('n', 's',     api.node.run.system,                   opts('Run System'))
@@ -123,7 +123,7 @@ local config = {
   view = {
     adaptive_size = true, -- 根据文件名自适应宽度
     width = {
-      max = 40, -- 设置最大宽度
+      max = 45, -- 设置最大宽度
     },
     -- number = true, -- 等效于 set nu
     -- relativenumber = true, -- 等效于 set rnu
@@ -214,11 +214,11 @@ vim.keymap.set("n", "<leader>e", function()
     focus = true,
     find_file = true,
   })
-end, { desc = "NvimTree Find File Toggle" })
+end, { desc = "Toggle NvimTree" })
 
 -- 如果没有打开则打开NvimTree，然后定位到相应文件的位置
 vim.keymap.set("n", "<leader>E", function()
   nvim_tree_api.tree.open({
     find_file = true,
   })
-end, { desc = "NvimTree Find File Toggle" })
+end, { desc = "Open NvimTree" })

@@ -112,20 +112,6 @@ local function attach_code_action_mappings(offset_encoding)
   end
 end
 
-local function lsp_path(_, path)
-  local cwd = vim.fn.getcwd()
-
-  if Path:new(cwd):is_dir() then
-    path = Path:new(path):make_relative(cwd)
-  end
-
-  if string.len(path) < 30 then
-    return path
-  end
-
-  return Path:new(path):shorten(1, { -1 })
-end
-
 local function find(prompt_title, items, find_opts, offset_encoding)
   local opts = find_opts.opts or {}
 
@@ -171,19 +157,19 @@ local function location_handler(prompt_title, opts)
       return
     end
 
-    if #res == 1 then
+    if #res == 1 and res[1] then
       jump_to_location(res[1], client.offset_encoding)
-      if res[1] and res[1].uri then
+      if res[1].uri then
         print("auto jump to " .. res[1].uri)
       end
       return
     end
 
     local items = lsp_util.locations_to_items(res, client.offset_encoding)
-    local find_opts = opts.telescope
-    find_opts = vim.tbl_deep_extend("force", find_opts, {
-        path_display = lsp_path,
-    })
+    local find_opts = opts["telescope_" .. client.name]
+      and opts["telescope_" .. client.name]
+      or opts.telescope
+      or {}
     find(prompt_title, items, { opts = find_opts }, client.offset_encoding)
   end
 end
@@ -203,7 +189,10 @@ local function symbol_handler(prompt_name, opts)
     local client = vim.lsp.get_client_by_id(context.client_id)
     find(prompt_name, items,
     {
-      opts = opts.telescope,
+      opts = opts["telescope_" .. client.name]
+        and opts["telescope_" .. client.name]
+        or opts.telescope
+        or {},
       entry_maker = make_entry.gen_from_lsp_symbols(opts),
       sorter = conf.prefilter_sorter { tag = "symbol_type", sorter = conf.generic_sorter(opts), }
     }, client.offset_encoding)
@@ -233,7 +222,10 @@ local function call_hierarchy_handler(prompt_name, direction, opts)
       end
     end
     local client = vim.lsp.get_client_by_id(context.client_id)
-    find(prompt_name, items, { opts = opts.telescope }, client.offset_encoding)
+    find(prompt_name, items, { opts = opts["telescope_" .. client.name]
+      and opts["telescope_" .. client.name]
+      or opts.telescope
+      or {} }, client.offset_encoding)
   end
 end
 
@@ -252,7 +244,10 @@ local function code_action_handler(prompt_title, opts)
 
     local client = vim.lsp.get_client_by_id(context.client_id)
     local find_opts = {
-      opts = opts.telescope,
+      opts = opts["telescope_" .. client.name]
+        and opts["telescope_" .. client.name]
+        or opts.telescope
+        or {},
       entry_maker = function(line)
         return {
           valid = line ~= nil,
@@ -268,10 +263,19 @@ local function code_action_handler(prompt_title, opts)
   end
 end
 
+-- 过滤一些不包含lsp方法的客户端
+local lsp_blacklist = {
+  "copilot",
+}
+
 local function select_client(bufnr)
   local candidates = vim.lsp.get_active_clients({ bufnr = bufnr })
   if candidates and #candidates > 0 then
-    return candidates[1]
+    for _, candidate in ipairs(candidates) do
+      if not vim.tbl_contains(lsp_blacklist, candidate.name) then
+        return candidate
+      end
+    end
   end
   return nil
 end
@@ -405,13 +409,19 @@ local function get_workspace_symbols_requester(client, bufnr, opts)
 end
 
 local function dynamic_workspace_symbols(opts)
-  opts = opts or {}
-  opts = vim.tbl_deep_extend("force", opts, setup_opts.dynamic_workspace_symbols.telescope or {})
-  opts.bufnr = opts.bufnr and opts.bufnr or vim.api.nvim_get_current_buf()
-  local client = select_client(opts.bufnr)
+  local client = select_client(vim.api.nvim_get_current_buf())
   if not client then
+    print("dynamic_workspace_symbols: No LSP clients found")
     return
   end
+  opts = opts or {}
+  opts = vim.tbl_deep_extend("force", opts,
+    setup_opts.dynamic_workspace_symbols["telescope_" .. client.name]
+    and setup_opts.dynamic_workspace_symbols["telescope_" .. client.name]
+    or setup_opts.dynamic_workspace_symbols.telescope
+    or {})
+  opts.bufnr = opts.bufnr and opts.bufnr or vim.api.nvim_get_current_buf()
+
   pickers
     .new(opts, {
       prompt_title = "LSP Dynamic Workspace Symbols",

@@ -33,7 +33,6 @@ local function auto_switch_fcitx5(mode)
     local state = read_fcitx5_state()
     state_out = state
     if state ~= "1" then
-      print(state, state ~= "1")
       utils.sys.system { "fcitx5-remote", "-c" }
     end
   end

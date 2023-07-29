@@ -21,4 +21,3 @@ vim.api.nvim_create_autocmd(
       vim.keymap.set("x", "<leader>fm", gen_format_json_cmd("v"), { silent = true, buffer = 0 })
     end
   })
-

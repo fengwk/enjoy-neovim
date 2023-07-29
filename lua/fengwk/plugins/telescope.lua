@@ -7,6 +7,17 @@ local actions = require "telescope.actions"
 local Path = require "plenary.path"
 local utils = require "fengwk.utils"
 
+local function jdtls_exclude_prompt(prompt)
+  -- 过滤掉空字符提升检索效率
+  return prompt == ""
+end
+
+local function jdtls_sort_prompt_pre_process(prompt)
+  -- jdtls中可能会使用*进行模糊匹配查询，这与最后fzf时的sort冲突，因此在进行fzf搜索前先将*过滤掉
+  prompt = string.gsub(prompt, "*", "")
+  return prompt
+end
+
 telescope.setup {
   defaults = {
     history = { -- 支持telescope历史与cwd绑定
@@ -194,13 +205,26 @@ telescope.setup {
 
     ["lsp_handlers"] = {
       location = {
-        telescope = require('telescope.themes').get_dropdown({}),
+        telescope = require('telescope.themes').get_dropdown({
+          path_display = {
+            truncate = 1,
+          },
+        }),
+        telescope_jdtls = require('telescope.themes').get_dropdown({
+          path_display = {
+            tail = true,
+          },
+        }),
       },
       symbol = {
         telescope = require('telescope.themes').get_dropdown({}),
       },
       call_hierarchy = {
-        telescope = require('telescope.themes').get_dropdown({}),
+        telescope = require('telescope.themes').get_dropdown({
+          path_display = {
+            truncate = 1,
+          },
+        }),
       },
       code_action = {
         telescope = require('telescope.themes').get_dropdown({}),
@@ -208,9 +232,10 @@ telescope.setup {
       dynamic_workspace_symbols = {
         telescope = require('telescope.themes').get_dropdown({
           path_display = {
-            -- tail = true,
             truncate = 1,
-          }
+          },
+          exclude_prompt = jdtls_exclude_prompt,
+          sort_prompt_pre_process = jdtls_sort_prompt_pre_process,
         }),
       },
     },
@@ -366,7 +391,7 @@ keymap.set("n", "<leader>fo", telescope_builtin_oldfiles, { desc = "Telescope Ol
 keymap.set("n", "<leader>fh", function() telescope_builtin.help_tags() end, { desc = "Telescope Help Tags" })
 keymap.set("n", "<leader>ft", function() telescope_builtin.filetypes() end, { desc = "Telescope Filetypes" })
 keymap.set("n", "<leader>fs", "<Cmd>Telescope workspace workspaces<CR>", { silent = true, desc = "Open Workspaces" })
-keymap.set("n", "<leader>mm", "<Cmd>Telescope bookmarks bookmarks<CR>", { silent = true, desc = "Open Workspaces" })
+keymap.set("n", "<leader>ma", "<Cmd>Telescope bookmarks bookmarks<CR>", { silent = true, desc = "Open Workspaces" })
 vim.api.nvim_create_user_command("DiffFile", function () telescope.extensions.diff.diff_file() end, {})
 -- vim.keymap.set("n", "<leader>fq", "<Cmd>Telescope quickfixhistory<CR>", { noremap = true, silent = true, desc = "Load Workspaces" })
 -- keymap.set("n", "<leader>fc", function() telescope_builtin.colorscheme() end, { desc = "Telescope Colorscheme" })

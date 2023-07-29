@@ -13,7 +13,7 @@ end
 local function openurl(url)
   if url:match("^jdt") then
     jdtls_enhancer.jump_to_location(url)
-  elseif url:match("^http[s]?") then
+  elseif url:match("^https?://[^%s]+$") then
     utils.sys.system("xdg-open '" .. url .. "'", true)
   end
 end
@@ -55,3 +55,7 @@ vim.keymap.set("n", "<leader>ou", function()
   local url = geturl()
   openurl(url)
 end)
+-- vim.keymap.set("n", "<S-LeftMouse>", function ()
+--   local url = geturl()
+--   openurl(url)
+-- end)

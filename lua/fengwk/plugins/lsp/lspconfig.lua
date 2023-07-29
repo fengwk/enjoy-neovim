@@ -4,7 +4,8 @@ if not ok_lspconfig then
   return
 end
 
--- vim.lsp.set_log_level("debug")
+-- Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
+vim.lsp.set_log_level("WARN")
 
 local utils = require("fengwk.utils")
 
@@ -58,26 +59,16 @@ vim.api.nvim_create_autocmd(
   { "BufDelete" },
   { group = "lsp_destruction", callback = function(args)
     if args and args.buf and args.buf > 0 then
-      local cb = args.buf
-      local clients = vim.lsp.get_active_clients({ bufnr = cb })
-      local buffers = vim.api.nvim_list_bufs()
+      local clients = vim.lsp.get_active_clients()
       for _, c in pairs(clients) do
-        if c and c.id then
-          for _, b in pairs(buffers) do
-            if b and b ~= cb then
-              local b_clients = vim.lsp.get_active_clients({ bufnr = b })
-              for _, bc in pairs(b_clients) do
-                if bc and bc.id and bc.id == c.id then
-                  goto bk
-                end
-              end
-            end
+        if c and c.id and c.name ~= "copilot" then
+          local lsp_bufs = vim.lsp.get_buffers_by_client_id(c.id)
+          if not lsp_bufs or #lsp_bufs == 0
+            or (#lsp_bufs == 1 and lsp_bufs[1] == args.buf) then
+            vim.lsp.stop_client(c.id)
+            vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
           end
-          -- 如果执行到这里说明c没有任何关联的b了
-          vim.lsp.stop_client(c.id)
-          vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
         end
-        ::bk::
       end
     end
   end}
@@ -164,6 +155,9 @@ local function on_attach(client, bufnr)
   cd_lsp_root(bufnr, vim.tbl_contains(auto_add_ws_clients, client.name))
   -- 在workspace增强逻辑中完成cwd自动切换
   -- vim.api.nvim_create_autocmd({ "BufEnter" }, { buffer = bufnr, callback = cd_lsp_root })
+
+  -- 去除newline自动生成注释前缀
+  vim.cmd("set formatoptions-=cro")
 end
 
 -- 添加补全能力支持
@@ -179,7 +173,7 @@ end
 -- lsp配置表
 local lsp_configs = {
   "bashls",                                                   -- { "sh" }
-  "clangd",                                                   -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+  ["clangd"] = require("fengwk.plugins.lsp.lsp-clangd"),      -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
   "cssls",                                                    -- { "css", "scss", "less" }
   ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),        -- { "go", "gomod", "gowork", "gotmpl" }
   "groovyls",                                                 -- { "groovy" }

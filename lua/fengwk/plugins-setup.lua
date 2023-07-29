@@ -69,7 +69,7 @@ return packer.startup(function(use)
 	use "numToStr/Comment.nvim" -- 注释
 	use "mg979/vim-visual-multi" -- 多光标，:h vm-*
   use "kevinhwang91/nvim-bqf" -- quickfix增强
-  use { "phaazon/hop.nvim", branch = "v2" } -- like easymotion
+  use "folke/flash.nvim"
   -- use { "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" } -- textobjects选择器，使用tree-sitter incremental_selection代替
   use "windwp/nvim-autopairs" -- 自动补充成对符号
   use "godlygeek/tabular" -- 自定义对齐格式化
@@ -82,25 +82,27 @@ return packer.startup(function(use)
   use "NvChad/nvim-colorizer.lua" -- 颜色提示
   use "lukas-reineke/indent-blankline.nvim" -- 垂直缩进线
 
-	-- autocompletion
-	use "hrsh7th/nvim-cmp" -- 自动补全插件
-	use "hrsh7th/cmp-buffer" -- 缓冲区补全源
-	use "hrsh7th/cmp-path" -- 文件系统路径补全源
+  -- autocompletion
+  use "hrsh7th/nvim-cmp" -- 自动补全插件
+  use "hrsh7th/cmp-buffer" -- 缓冲区补全源
+  use "hrsh7th/cmp-path" -- 文件系统路径补全源
   use "hrsh7th/cmp-cmdline" -- 命令行路径补全源
-	use "hrsh7th/cmp-nvim-lsp" -- lsp补全源
+  use "hrsh7th/cmp-nvim-lsp" -- lsp补全源
   use "rcarriga/cmp-dap" -- nvim-cmp source for nvim-dap REPL and nvim-dap-ui buffers
-	-- snippets
-	use "hrsh7th/cmp-vsnip" -- 将vim-vsnip桥接到nvim-cmp上
-	use "hrsh7th/vim-vsnip" -- vscode规范的snippets补全
-	-- use "rafamadriz/friendly-snippets" -- 现成的snippets
+  -- snippets
+  use "hrsh7th/cmp-vsnip" -- 将vim-vsnip桥接到nvim-cmp上
+  use "hrsh7th/vim-vsnip" -- vscode规范的snippets补全
+  -- use "rafamadriz/friendly-snippets" -- 现成的snippets
+  -- copilot
+  use "github/copilot.vim"
+  use "hrsh7th/cmp-copilot"
 
 	-- fuzzy finding
   use "nvim-lua/plenary.nvim"
   use { "nvim-telescope/telescope.nvim", tag = "0.1.1" } -- 模糊搜索插件，require nvim-lua/plenary
   use "nvim-telescope/telescope-live-grep-args.nvim" -- live grep增强
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" } -- 模糊搜索增强
-  use "kkharji/sqlite.lua"
-  use "nvim-telescope/telescope-smart-history.nvim" -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
+  use { "nvim-telescope/telescope-smart-history.nvim", requires = "kkharji/sqlite.lua" } -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
 
 	-- managing & installing lsp servers, linters & formatters
 	use "williamboman/mason.nvim"

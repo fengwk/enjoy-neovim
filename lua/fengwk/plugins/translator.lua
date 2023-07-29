@@ -119,6 +119,8 @@ local function translate(textobject, op)
         if op == "fwin" then
           open_float_win(vim.split(res_text, "\n"))
         elseif op == "print" then
+          vim.fn.setreg('+', res_text)
+          vim.fn.setreg('"', res_text)
           print(res_text)
         elseif op == "write" then
           vim.fn.setreg('+', res_text)

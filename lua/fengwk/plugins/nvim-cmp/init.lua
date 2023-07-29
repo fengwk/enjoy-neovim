@@ -28,7 +28,16 @@ end
 -- k1_w * k1_len - k2_w * k2_len
 local CompletionItemKind = types.lsp.CompletionItemKind
 
-local kind_weight_tab = {
+local source_weight = {
+  copilot = 0.1,
+  nvim_lsp = 1,
+  vsnip = 1,
+  buffer = 1.5,
+  path = 1.5,
+  cmdline = 1.5,
+}
+
+local kind_weight = {
   [CompletionItemKind.Snippet] = 1,
   [CompletionItemKind.Field] = 1,
   [CompletionItemKind.Property] = 1,
@@ -56,13 +65,17 @@ local kind_weight_tab = {
   [CompletionItemKind.Text] = 3,
 }
 
-local function get_weight(e)
+local function get_source_weight(e)
+  return source_weight[e.source.name] or 1
+end
+
+local function get_kind_weight(e)
   if e.source.name == "nvim_lsp" then
-    return kind_weight_tab[e:get_kind()]
+    return kind_weight[e:get_kind()]
   elseif e.source.name == "vsnip" then
-    return kind_weight_tab[CompletionItemKind.Snippet]
+    return kind_weight[CompletionItemKind.Snippet]
   else
-    return kind_weight_tab[CompletionItemKind.Text]
+    return kind_weight[CompletionItemKind.Text]
   end
 end
 
@@ -74,8 +87,8 @@ local function get_detail(e)
 end
 
 local function weight_sort(e1, e2)
-  local w1 = get_weight(e1)
-  local w2 = get_weight(e2)
+  local w1 = get_kind_weight(e1) * get_source_weight(e1)
+  local w2 = get_kind_weight(e2) * get_source_weight(e2)
   if w1 and w2 then
     -- 应用权重与长度
     local diff = w1 * #e1.completion_item.label - w2 * #e2.completion_item.label
@@ -169,6 +182,7 @@ cmp.setup({
       maxwidth = 50,
       mode = "symbol_text",
       menu = ({
+        copilot = "[Copilot]",
         nvim_lsp = "[Lsp]",
         vsnip = "[Vsnip]",
         buffer = "[Buffer]",
@@ -183,6 +197,7 @@ cmp.setup({
   },
   -- 补全来源
   sources = {
+    { name = "copilot" },
     {
       name = "nvim_lsp", -- lsp
       entry_filter = function(entry, _)
