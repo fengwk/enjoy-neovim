@@ -44,12 +44,12 @@ local diagnostics = {
 }
 
 -- https://github.com/stevearc/aerial.nvim#lualine
-local aerial = {
-  "aerial",
-  dense = true,
-  dense_sep = " > ",
-  colored = false,
-}
+-- local aerial = {
+--   "aerial",
+--   dense = true,
+--   dense_sep = " > ",
+--   colored = false,
+-- }
 
 local M = {}
 
@@ -61,8 +61,6 @@ M.setup = function(opts)
       icons_enabled = true,
       -- https://github.com/nvim-lualine/lualine.nvim/blob/master/THEMES.md
       theme = "auto",
-      -- theme = "onedark",
-      -- theme = "gruvbox",
       component_separators = { left = "", right = "" },
       section_separators = { left = "", right = "" },
       disabled_filetypes = {
@@ -82,7 +80,7 @@ M.setup = function(opts)
     sections = {
       lualine_a = { "mode" },
       lualine_b = { "filename", "branch", diagnostics },
-      lualine_c = { aerial, "require('dap').status()", "_G._lualine_lsp_progress()" },
+      lualine_c = { "require('lspsaga.symbol.winbar').get_bar()", "require('dap').status()", "_G._lualine_lsp_progress()" },
       lualine_x = { "encoding" },
       lualine_y = { "progress" },
       lualine_z = { "location" }

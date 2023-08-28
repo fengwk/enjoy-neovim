@@ -12,33 +12,31 @@ utils.vim.setup_large_fsize(1024 * 128)
 vim.g.history = 200
 
 -- 为悬浮窗口提供透明度，[0..100]，0为不透明，在colorscheme中动态设置
--- vim.o.winblend = 15
-vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winblend，为了自由切换主题时不产生问题先禁用混合
+vim.o.winblend = 20
+-- vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winblend，为了自由切换主题时不产生问题先禁用混合
+-- 弹出窗口的透明度，例如补全窗口
+vim.o.pumblend = vim.o.winblend
 
 -- 设置终端名称为文件名
 -- vim.o.title=true
--- 使用cwd作为名称
-vim.api.nvim_create_augroup("nvim_title", { clear = true })
-vim.api.nvim_create_autocmd(
-  { "BufEnter" },
-  {
-    group = "nvim_title",
-    callback = function()
-      local title
-      if utils.vim.is_sepcial_ft() then
-        title = utils.vim.ft()
-      else
-        title = vim.fn.expand('%:t')
-      end
-      if title and string.len(title) > 0 then
-        title = " " .. title
-        -- 发送title到终端标题
-        io.write("\27]0;" .. title .. "\7")
-      end
-    end
-  }
-)
+-- 自动刷新标题
+local function refresh_title()
+  local title
+  local cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+  if utils.vim.is_sepcial_ft() then
+    title = utils.vim.ft()
+  else
+    title = vim.fn.expand('%:t')
+  end
+  if title and string.len(title) > 0 then
+    title = " " .. cwd .. " - " .. title
+    -- 发送title到终端标题
+    io.write("\27]0;" .. title .. "\7")
+  end
+end
+utils.vim.register_postcd("refresh_title", refresh_title)
 -- 当离开nvim时重新设置标题为当前路径
+vim.api.nvim_create_augroup("nvim_title", { clear = true })
 vim.api.nvim_create_autocmd(
   { "VimLeave" },
   { group = "nvim_title", callback = function()

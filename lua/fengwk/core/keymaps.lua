@@ -59,13 +59,12 @@ keymap.set("n", "[Q", "<Cmd>colder<CR>", { silent = true, desc = "Quickfix Prev"
 keymap.set("n", "]Q", "<Cmd>cnewer<CR>", { silent = true, desc = "Quickfix Next" })
 
 -- 复制整个缓冲区内容
-keymap.set("n", "<leader>y", "mpggVGy`p", { noremap = true, silent = true, desc = "Yank Entire Buffer" })
--- 放置visual mode下p覆盖"寄存器
--- keymap.set("x", "p", "pgvy", { noremap = true, desc = "Paste without override register" })
+keymap.set("n", "<leader>y", "mpggVGy`p", { noremap = true, desc = "Yank Entire Buffer" })
+-- 兼容复制黏贴
+keymap.set("x", "<C-c>", "y", { desc = "Yank" })
 
-keymap.set({ "i", "s" }, "jk", "<Esc>", { noremap = true })
--- 在terimal模式下使用JK作为esc，避免和推出命令模式的esc按键冲突
-keymap.set("t", "JK", "<Esc>", { noremap = true })
+keymap.set({ "i" }, "jk", "<Esc>", { noremap = true })
+keymap.set({ "v", "c", "t" }, "<C-j><C-k>", "<Esc>", { noremap = true })
 
 -- 黏贴后自动格式化黏贴区域
 -- local auto_dormat_fts = { "java", "lua", "sh", "bash", "go",

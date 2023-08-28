@@ -1,7 +1,7 @@
 require("fengwk.core.colorscheme.github-nvim-theme")
-require("fengwk.core.colorscheme.gruvbox")
 require("fengwk.core.colorscheme.catppuccin")
 require("fengwk.core.colorscheme.vscode")
+local gruvbox_flat = require("fengwk.core.colorscheme.gruvbox-flat")
 
 local function set_hi(name, fg, bg)
   local cmd = ""
@@ -167,6 +167,27 @@ local function on_changed(colorscheme)
     require("fengwk.core.colorscheme.lualine-kanagawa").setup()
   elseif colorscheme == "catppuccin" then
     require("fengwk.plugins.lualine").setup({ options = { theme = "catppuccin" } })
+  elseif colorscheme == "gruvbox-flat" then
+    vim.cmd [[
+      hi clear TelescopePromptPrefix
+      hi link TelescopePromptPrefix TelescopeNormal
+      hi clear TelescopePromptNormal
+      hi link TelescopePromptNormal TelescopeNormal
+      hi clear TelescopePreviewTitle
+      hi link TelescopePreviewTitle TelescopeNormal
+      hi clear TelescopePromptTitle
+      hi link TelescopePromptTitle TelescopeNormal
+      hi clear TelescopeResultsTitle
+      hi link TelescopeResultsTitle TelescopeNormal
+      hi clear TelescopePreviewBorder
+      hi link TelescopeBorder TelescopeBorder
+      hi clear TelescopePromptBorder
+      hi link TelescopePromptBorder TelescopeBorder
+      hi clear TelescopeResultsBorder
+      hi link TelescopeResultsBorder TelescopeBorder
+      hi link CurSearch IncSearch
+    ]]
+    gruvbox_flat.setup()
   elseif colorscheme == "github_dimmed" or string.find(colorscheme, "^github_dark") then
     require("fengwk.plugins.lualine").setup({ options = { theme = "material" } })
   else
@@ -204,5 +225,6 @@ vim.api.nvim_create_autocmd(
 -- vim.cmd("colorscheme material")
 -- vim.cmd("colorscheme github_dark_dimmed")
 -- vim.cmd("colorscheme github_dark")
-vim.cmd("colorscheme gruvbox-material")
+-- vim.cmd("colorscheme gruvbox-material")
+vim.cmd("colorscheme gruvbox-flat")
 -- vim.cmd("colorscheme nightfly")

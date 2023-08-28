@@ -2,6 +2,12 @@
 
 local utils = require("fengwk.utils")
 
+-- https://github.com/folke/neodev.nvim
+local ok, neodev = pcall(require, "neodev")
+if ok then
+  neodev.setup()
+end
+
 return {
   settings = {
     Lua = {
@@ -20,6 +26,10 @@ return {
       -- Do not send telemetry data containing a randomized but unique identifier
       telemetry = {
         enable = false,
+      },
+      -- neodev
+      completion = {
+        callSnippet = "Replace"
       },
     },
   },

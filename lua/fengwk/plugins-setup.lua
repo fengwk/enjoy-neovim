@@ -44,16 +44,13 @@ return packer.startup(function(use)
   -- use "karb94/neoscroll.nvim" -- 支持平滑滚动
 
   -- themes
-  use "WIttyJudge/gruvbox-material.nvim"
+  use "eddyekofo94/gruvbox-flat.nvim"
   use "Mofiqul/vscode.nvim"
   use "projekt0n/github-nvim-theme"
 
 	-- file explorer
-  use "kyazdani42/nvim-web-devicons"
-  use { "kyazdani42/nvim-tree.lua", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
-
-  -- terminal
-  use { "akinsho/toggleterm.nvim", tag = "*" }
+  -- use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
+  use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons" } -- require kyazdani42/nvim-web-devicons
 
   -- git
   use "lewis6991/gitsigns.nvim"
@@ -70,15 +67,21 @@ return packer.startup(function(use)
 	use "mg979/vim-visual-multi" -- 多光标，:h vm-*
   use "kevinhwang91/nvim-bqf" -- quickfix增强
   use "folke/flash.nvim"
-  -- use { "fengwk/wildfire.vim", branch = "feat/skip-same-size-textobj" } -- textobjects选择器，使用tree-sitter incremental_selection代替
+  -- use "gcmt/wildfire.vim" -- textobjects选择器，使用tree-sitter incremental_selection代替
   use "windwp/nvim-autopairs" -- 自动补充成对符号
-  use "godlygeek/tabular" -- 自定义对齐格式化
-  use "jbyuki/venn.nvim" -- 绘制ASCII图
+  use { "godlygeek/tabular", cmd = "Tabularize" } -- 自定义对齐格式化
+  use {
+    "jbyuki/venn.nvim", -- 绘制ASCII图
+    cmd = "VennToggle",
+    config = function()
+      require("fengwk.plugins.venn")
+    end
+  }
   -- use "kana/vim-textobj-user" -- 支持用户自定义textobj
   -- use "LeonB/vim-textobj-url" -- 支持url textobj
 
 	-- ui enhancer
-  use "nvim-lualine/lualine.nvim"  -- 状态栏增强，require kyazdani42/nvim-web-devicons
+  use { "nvim-lualine/lualine.nvim", requires = "kyazdani42/nvim-web-devicons" }  -- 状态栏增强，require kyazdani42/nvim-web-devicons
   use "NvChad/nvim-colorizer.lua" -- 颜色提示
   use "lukas-reineke/indent-blankline.nvim" -- 垂直缩进线
 
@@ -96,10 +99,14 @@ return packer.startup(function(use)
   -- copilot
   use "github/copilot.vim"
   use "hrsh7th/cmp-copilot"
+  use "folke/neodev.nvim" -- neovim补全，需要配置lua_ls
 
 	-- fuzzy finding
-  use "nvim-lua/plenary.nvim"
-  use { "nvim-telescope/telescope.nvim", tag = "0.1.1" } -- 模糊搜索插件，require nvim-lua/plenary
+  use {
+    "nvim-telescope/telescope.nvim",  -- 模糊搜索插件，require nvim-lua/plenary
+    tag = "0.1.2",
+    requires = "nvim-lua/plenary.nvim",
+  }
   use "nvim-telescope/telescope-live-grep-args.nvim" -- live grep增强
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" } -- 模糊搜索增强
   use { "nvim-telescope/telescope-smart-history.nvim", requires = "kkharji/sqlite.lua" } -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
@@ -111,10 +118,10 @@ return packer.startup(function(use)
 	use "williamboman/mason-lspconfig.nvim"
 	use "neovim/nvim-lspconfig" -- lsp配置
   -- use "https://git.sr.ht/~whynothugo/lsp_lines.nvim" -- 提供多行lsp提示信息展示能力，目前看这个插件会导致性能下降
-	use "stevearc/aerial.nvim" -- outline
   use "RRethy/vim-illuminate" -- 代码符号高亮，并支持在符号之间跳跃
 	-- use "mfussenegger/nvim-jdtls" -- java lsp增强
   use { "fengwk/nvim-jdtls", branch = "fix/altbuf" }
+  use "nvimdev/lspsaga.nvim"
 
 	-- formatting & linting
 	use "gpanders/editorconfig.nvim" -- editorconfig规范实现
@@ -128,6 +135,7 @@ return packer.startup(function(use)
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {
     "nvim-treesitter/nvim-treesitter",
+    commit = "7c27beddda182a178eafd978a96cc35738d6be98", -- 下一个版本导致luadoc解析缓慢
     run = function()
       local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
       ts_update()
@@ -137,14 +145,21 @@ return packer.startup(function(use)
   use "nvim-treesitter/nvim-treesitter-textobjects"
 
   -- chatgpt
-  use "MunifTanjim/nui.nvim"
   -- use "jackMort/ChatGPT.nvim"
-  use { "fengwk/ChatGPT.nvim", branch = "dev" }
+  use {
+    "fengwk/ChatGPT.nvim",
+    branch = "dev",
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim"
+    },
+  }
 
   -- libs
-  use_rocks "utf8"
+  -- use_rocks "utf8"
   -- set luarocks path
-  require("packer.luarocks").setup_paths()
+  -- require("packer.luarocks").setup_paths()
 
 	if packer_bootstrap then
 		require "packer".sync()

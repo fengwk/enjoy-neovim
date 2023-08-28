@@ -14,6 +14,18 @@ local has_words_before = function()
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
+local cmp_fts = {
+  "bash", "sh",
+  "c", "cpp", "objc", "objcpp", "cuda", "proto",
+  "css", "scss", "less", "go", "gomod", "gowork", "gotmpl",
+  "groovy", "html", "lua", "ps1", "python",
+  "javascript", "javascriptreact", "javascript.jsx",
+  "typescript", "typescriptreact", "typescript.tsx",
+  "vim", "yaml", "yaml.docker-compose",
+  "xml", "xsd", "xsl", "xslt", "svg",
+  "dockerfile", "markdown",
+}
+
 -- 内建的比较器
 local compare = cmp.config.compare
 
@@ -211,6 +223,10 @@ cmp.setup({
       name = "buffer",     -- 缓冲区
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
+          if utils.vim.ft() == "json" then
+            return false
+          end
+
           -- -- 如果缓冲区过大，则禁用
           if utils.vim.is_large_buf() then
             return {}

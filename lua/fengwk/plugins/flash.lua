@@ -80,9 +80,9 @@ flash.setup({
     -- you can always jump to the first match with `<CR>`
     current = true,
     -- show the label after the match
-    after = false, ---@type boolean|number[]
+    after = true, ---@type boolean|number[]
     -- show the label before the match
-    before = true, ---@type boolean|number[]
+    before = false, ---@type boolean|number[]
     -- position of the label extmark
     style = "overlay", ---@type "eol" | "overlay" | "right_align" | "inline"
     -- flash tries to re-use labels that were already assigned to a position,

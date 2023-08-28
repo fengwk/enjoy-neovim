@@ -127,9 +127,6 @@ local config = {
     },
     -- number = true, -- 等效于 set nu
     -- relativenumber = true, -- 等效于 set rnu
-    mappings = {
-      custom_only = true, -- 仅使用自定义快捷键映射
-    },
   },
   system_open = {
 	  cmd = "xdg-open",
@@ -209,7 +206,7 @@ end
 nvim_tree.setup(config)
 
 -- 展开或关闭NvimTree，如果是展开将定位到文件对应的NvimTree位置
-vim.keymap.set("n", "<leader>e", function()
+vim.keymap.set("n", "<leader>E", function()
   nvim_tree_api.tree.toggle({
     focus = true,
     find_file = true,
@@ -217,7 +214,7 @@ vim.keymap.set("n", "<leader>e", function()
 end, { desc = "Toggle NvimTree" })
 
 -- 如果没有打开则打开NvimTree，然后定位到相应文件的位置
-vim.keymap.set("n", "<leader>E", function()
+vim.keymap.set("n", "<leader>e", function()
   nvim_tree_api.tree.open({
     find_file = true,
   })

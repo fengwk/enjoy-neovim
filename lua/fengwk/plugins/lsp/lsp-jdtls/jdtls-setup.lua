@@ -150,8 +150,8 @@ local function setup()
     "gradlew", -- Gradle
   }
   local is_single_file = root_dir == nil
-  local workspace_dir = root_dir or vim.fn.expand("%:p")
--- 转义工作目录作为名称
+  local workspace_dir = root_dir or vim.fn.getcwd()
+    -- 转义工作目录作为名称
   local workspace_name = utils.fs.escape_filename(workspace_dir)
   -- 数据目录
   local data_dir = utils.fs.stdpath("cache", "lsp/jdtls", workspace_name )
@@ -184,7 +184,10 @@ local function setup()
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
   config.on_attach = function(client, bufnr)
-    lspconfig.on_attach(client, bufnr)
+    lspconfig.build_on_attach({
+      root = workspace_dir,
+      is_single_file = is_single_file,
+    })(client, bufnr)
 
     -- jdtls特性
     jdtls.setup_dap({ hotcodereplace = "auto" })

@@ -1,5 +1,19 @@
 local lang = require "fengwk.utils.lang"
 local fs = require "fengwk.utils.fs"
+local utf8 = require "fengwk.utils.utf8"
+
+-- 给定一个col，这个方法将返回col所在字符的的结束col，注意col从0开始
+-- col vim.api.nvim_buf_get_mark(bufnr, ">") 直接获取到的col，当前字符的开始
+local function utf8_char_end_col(s, col)
+  local cs = utf8.parse(s)
+  local idx = 1 -- cs的索引
+  local pos = 0 -- 下次要检查的字符开始
+  while pos <= col and idx <= #cs do
+    pos = pos + cs[idx].n
+    idx = idx + 1
+  end
+  return pos - 1
+end
 
 local v = {}
 
@@ -39,25 +53,30 @@ v.is_large_buf = function(bufnr)
   return false
 end
 
--- 获取选中的内容
-v.selection_lines = function()
-  local start_pos = vim.fn.getpos("'<")
-  local end_pos = vim.fn.getpos("'>")
-  local start_line = start_pos[2]
-  local end_line = end_pos[2]
-  local start_col = start_pos[3]
-  local end_col = end_pos[3]
-  local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-  local selection = {}
-  for i, line in ipairs(lines) do
-    if i == 1 then
-      line = line:sub(start_col)
-    elseif i == #lines then
-      line = line:sub(1, end_col - 1)
-    end
-    table.insert(selection, line)
+-- 支持utf8的获取选中的内容
+v.selection_lines = function(bufnr)
+  bufnr = bufnr or 0
+  local start_row, start_col = unpack(vim.api.nvim_buf_get_mark(bufnr, "<"))
+  local end_row, end_col = unpack(vim.api.nvim_buf_get_mark(bufnr, ">"))
+  -- 获取所有行内容
+  local lines = vim.api.nvim_buf_get_lines(bufnr, start_row - 1, end_row, false)
+  -- 获取指定缓冲区编码
+  local encoding = vim.api.nvim_buf_get_option(bufnr, 'fileencoding')
+  -- 转为lua索引
+  local start_col_idx = start_col + 1
+  local end_col_idx = end_col + 1
+  if encoding == "utf-8" then
+    -- 如果是utf-8编码则修正end_col位置
+    end_col_idx = utf8_char_end_col(lines[#lines], end_col) + 1
   end
-  return selection
+  -- 截取内容
+  if start_row == end_row then
+    lines[1] = lines[1]:sub(start_col_idx, end_col_idx)
+  else
+    lines[1] = lines[1]:sub(start_col_idx)
+    lines[#lines] = lines[#lines]:sub(1, end_col_idx)
+  end
+  return lines, start_row, start_col, end_row, end_col
 end
 
 v.cd = function(root, filename)
@@ -77,7 +96,39 @@ v.cd = function(root, filename)
     if ok_finders_find_file then
       finders_find_file.fn(filename)
     end
+    -- 执行cd后处理函数
+    if v.postcd then
+      for _, fn in pairs(v.postcd) do
+        fn()
+      end
+    end
   end
 end
+
+v.register_postcd = function(name, fn)
+  if not v.postcd then
+    v.postcd = {}
+  end
+  v.postcd[name] = fn
+end
+
+vim.cmd [[
+function! GetSelectedText()
+  if visualmode() ==# 'v'
+    return @"  " . getline("'<", "'>")
+  elseif visualmode() ==# 'V'
+    return @" . "\n" . getline("'<", "'>")
+  elseif visualmode() ==# "\<C-v>"
+    let selected_lines = getline("'<", "'>")
+    let selected_text = ''
+    for line in selected_lines
+      let selected_text .= line . "\n"
+    endfor
+    return selected_text
+  else
+    return ''
+  endif
+endfunction
+]]
 
 return v

@@ -4,14 +4,13 @@
 -- google翻译太慢，使用deepl
 -- yay -S python-deepl
 
--- normal ts{motion} 翻译{motion}区间
--- normal tss{motion} 翻译整行
--- normal tS{motion} 翻译当前光标到行末
--- visual ts{motion} 翻译选择区间
+-- normal <leader>t{motion} 翻译{motion}区间
+-- normal <leader>tt{motion} 翻译整行
+-- normal <leader>t{motion} 翻译当前光标到行末
+-- visual <leader>t{motion} 翻译选择区间
 -- Translate命令 翻译输入单词
 
 local utils = require("fengwk.utils")
-local utf8 = require("utf8")
 local keymap = vim.keymap
 local api = vim.api
 local trans_engine = 'google'
@@ -91,14 +90,11 @@ end
 local function isChinese(str)
   local totalCount = 0
   local chineseCount = 0
-  local p, c = utf8.next(str, 1)
-  while p do
-    local char = utf8.char(c)
-    if string.match(char, "[%z\1-\127\194-\244][\128-\191]") then
+  local chars = utils.utf8.parse(str)
+  for _, c in ipairs(chars) do
+    if c.s and string.match(c.s, "[%z\1-\127\194-\244][\128-\191]") then
       chineseCount = chineseCount + 1
     end
-    totalCount = totalCount + 1
-    p, c = utf8.next(str, p)
   end
   return (chineseCount / totalCount) > 0.6
 end
@@ -119,6 +115,8 @@ local function translate(textobject, op)
         if op == "fwin" then
           open_float_win(vim.split(res_text, "\n"))
         elseif op == "print" then
+          print(res_text)
+        elseif op == "printcopy" then
           vim.fn.setreg('+', res_text)
           vim.fn.setreg('"', res_text)
           print(res_text)
@@ -134,22 +132,22 @@ local function translate(textobject, op)
   })
 end
 
-keymap.set("n", "ts", function()
+keymap.set("n", "<leader>t", function()
   utils.motion.operator(function(args)
     translate(args.textobject, "fwin")
   end)
 end)
-keymap.set("n", "tss", function()
+keymap.set("n", "<leader>tt", function()
   utils.motion.line(function(args)
     translate(args.textobject, "fwin")
   end)
 end)
-keymap.set("n", "tS", function()
+keymap.set("n", "<leader>T", function()
   utils.motion.eol(function(args)
     translate(args.textobject, "fwin")
   end)
 end)
-keymap.set("v", "ts", function()
+keymap.set("v", "<leader>t", function()
   utils.motion.visual(function(args)
     translate(args.textobject, "fwin")
   end)
@@ -158,6 +156,12 @@ api.nvim_create_user_command("Translate", function(args)
     if args and args.fargs and #args.fargs > 0 then
       local input = args.fargs[1]
       translate(vim.split(input, "\n"), "print")
+    end
+end, { nargs = 1 })
+api.nvim_create_user_command("TranslateC", function(args)
+    if args and args.fargs and #args.fargs > 0 then
+      local input = args.fargs[1]
+      translate(vim.split(input, "\n"), "printcopy")
     end
 end, { nargs = 1 })
 api.nvim_create_user_command("TranslateW", function(args)

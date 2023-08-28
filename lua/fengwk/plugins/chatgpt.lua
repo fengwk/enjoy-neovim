@@ -139,8 +139,8 @@ chatgpt.setup {
     },
   },
   openai_params = {
-    model = "gpt-3.5-turbo",
-    -- model = "gpt-4-0613",
+    -- model = "gpt-3.5-turbo",
+    model = "gpt-4-0613",
     frequency_penalty = 0,
     presence_penalty = 0,
     max_tokens = 512,
@@ -161,7 +161,27 @@ chatgpt.setup {
   predefined_chat_gpt_prompts = "https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
 }
 
+local function run_list(x)
+  if x then
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<ESC>", true, false, true), "x", true)
+  end
+  local actions = require "chatgpt.flows.actions"
+  local run_actions = {}
+  for k, _ in pairs(actions.read_actions()) do
+    table.insert(run_actions, k)
+  end
+  table.sort(run_actions)
+  vim.ui.select(run_actions, {}, function(a)
+    if x then
+      vim.api.nvim_feedkeys("gv", "n", false)
+    end
+    vim.cmd("ChatGPTRun " .. a)
+  end)
+end
+
 vim.keymap.set("n", "<leader>ct", "<Cmd>ChatGPT<CR>", { silent = true, desc = "GPT Chat" })
 vim.keymap.set("n", "<leader>cc", "<Cmd>ChatGPTRun complete_code<CR>", { silent = true, desc = "GPT Complete Code" })
 vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>", { silent = true, desc = "GPT Edit With Instructions" })
 vim.keymap.set("x", "<leader>ck", "<Cmd>ChatGPTRun explain_code_cn<CR>", { silent = true, desc = "GPT Explain Code CN" })
+vim.keymap.set("n", "<leader>cr", run_list, { desc = "ChatGPTRun" })
+vim.keymap.set("x", "<leader>cr", function() run_list(true) end, { desc = "ChatGPTRun" })

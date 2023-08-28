@@ -17,7 +17,7 @@ illuminate.configure({
     -- 'regex',
   },
   -- 延迟的毫秒数
-  delay = 0,
+  delay = 10,
   -- 文件类型黑名单
   filetypes_denylist = { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial" },
   -- 允许的模式列表

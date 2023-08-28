@@ -54,5 +54,19 @@
                 ]
             }
         }
+    },
+    "generate_variable_name": {
+        "type": "chat",
+        "opts": {
+            "template": "Generate a high-quality ```{{filetype}}``` english variable name with the following input text:\n```{{input}}\n```\n\nHere are the generated variable name:\n```",
+            "strategy": "replace",
+            "params": {
+                "model": "gpt-3.5-turbo",
+                "max_tokens": 256,
+                "stop": [
+                    "```"
+                ]
+            }
+        }
     }
 }
