@@ -82,7 +82,7 @@ return packer.startup(function(use)
 
 	-- ui enhancer
   use { "nvim-lualine/lualine.nvim", requires = "kyazdani42/nvim-web-devicons" }  -- 状态栏增强，require kyazdani42/nvim-web-devicons
-  use "NvChad/nvim-colorizer.lua" -- 颜色提示
+  use "brenoprata10/nvim-highlight-colors" -- 颜色高亮显示
   use "lukas-reineke/indent-blankline.nvim" -- 垂直缩进线
 
   -- autocompletion
@@ -97,8 +97,11 @@ return packer.startup(function(use)
   use "hrsh7th/vim-vsnip" -- vscode规范的snippets补全
   -- use "rafamadriz/friendly-snippets" -- 现成的snippets
   -- copilot
-  use "github/copilot.vim"
-  use "hrsh7th/cmp-copilot"
+  -- use "github/copilot.vim"
+  -- use "hrsh7th/cmp-copilot"
+  use "zbirenbaum/copilot.lua"
+  -- use "zbirenbaum/copilot-cmp"
+  use { "fengwk/copilot-cmp", branch = "fix/cmp-confirm" }
   use "folke/neodev.nvim" -- neovim补全，需要配置lua_ls
 
 	-- fuzzy finding
@@ -119,9 +122,9 @@ return packer.startup(function(use)
 	use "neovim/nvim-lspconfig" -- lsp配置
   -- use "https://git.sr.ht/~whynothugo/lsp_lines.nvim" -- 提供多行lsp提示信息展示能力，目前看这个插件会导致性能下降
   use "RRethy/vim-illuminate" -- 代码符号高亮，并支持在符号之间跳跃
-	-- use "mfussenegger/nvim-jdtls" -- java lsp增强
+  -- use "mfussenegger/nvim-jdtls" -- java lsp增强
   use { "fengwk/nvim-jdtls", branch = "fix/altbuf" }
-  use "nvimdev/lspsaga.nvim"
+  use { "nvimdev/lspsaga.nvim", requires = "kyazdani42/nvim-web-devicons" }
 
 	-- formatting & linting
 	use "gpanders/editorconfig.nvim" -- editorconfig规范实现
@@ -135,7 +138,6 @@ return packer.startup(function(use)
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {
     "nvim-treesitter/nvim-treesitter",
-    commit = "7c27beddda182a178eafd978a96cc35738d6be98", -- 下一个版本导致luadoc解析缓慢
     run = function()
       local ts_update = require("nvim-treesitter.install").update({ with_sync = true })
       ts_update()

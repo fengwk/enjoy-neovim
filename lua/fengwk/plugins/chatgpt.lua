@@ -8,10 +8,10 @@ local utils = require("fengwk.utils")
 local chatgt_actions_json = utils.fs.stdpath("config", "lib/chatgpt_actoins.json")
 
 -- api key forward
-local api = require "chatgpt.api"
-api.COMPLETIONS_URL = "https://api.ai-yyds.com/v1/completions"
-api.CHAT_COMPLETIONS_URL = "https://api.ai-yyds.com/v1/chat/completions"
-api.EDITS_URL = "https://api.ai-yyds.com/v1/edits"
+-- local api = require "chatgpt.api"
+-- api.COMPLETIONS_URL = "https://api.ai-yyds.com/v1/completions"
+-- api.CHAT_COMPLETIONS_URL = "https://api.ai-yyds.com/v1/chat/completions"
+-- api.EDITS_URL = "https://api.ai-yyds.com/v1/edits"
 
 chatgpt.setup {
   yank_register = "+",
@@ -51,7 +51,7 @@ chatgpt.setup {
       yank_last_code = "<C-k>",
       scroll_up = "<C-u>",
       scroll_down = "<C-d>",
-      new_session = "<C-l>",
+      new_session = "<C-n>",
       cycle_windows = "<Tab>",
       cycle_modes = "<C-f>",
       next_message = "<C-j>",
@@ -139,21 +139,26 @@ chatgpt.setup {
     },
   },
   openai_params = {
-    -- model = "gpt-3.5-turbo",
-    model = "gpt-4-0613",
+    -- model = "gpt-4-0613",
+    model = "gpt-3.5-turbo-0613",
     frequency_penalty = 0,
     presence_penalty = 0,
-    max_tokens = 512,
-    temperature = 0.5,
+    max_tokens = 1024,
+    temperature = 0.7,
     top_p = 1,
     n = 1,
   },
   openai_edit_params = {
-    model = "code-davinci-edit-001",
-    temperature = 0,
+    -- model = "gpt-4-0613",
+    model = "gpt-3.5-turbo-0613",
+    frequency_penalty = 0,
+    presence_penalty = 0,
+    max_tokens = 1024,
+    temperature = 0.7,
     top_p = 1,
     n = 1,
   },
+  use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
   actions_paths = {
     chatgt_actions_json
   },

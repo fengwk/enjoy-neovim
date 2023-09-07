@@ -53,6 +53,21 @@ local diagnostics = {
 
 local M = {}
 
+M.symbol_bar = function()
+  local ok, wb = pcall(require, "lspsaga.symbol.winbar")
+  if not ok then
+    return ""
+  end
+  local bar = wb.get_bar()
+  if not bar then
+    return ""
+  end
+  -- 去除颜色高亮
+  bar, _ = bar:gsub("%%**%%#[^#]+#", "")
+  bar, _ = bar:gsub("%%#[^#]+#", "")
+  return bar
+end
+
 M.setup = function(opts)
   opts = opts or {}
 
@@ -80,7 +95,7 @@ M.setup = function(opts)
     sections = {
       lualine_a = { "mode" },
       lualine_b = { "filename", "branch", diagnostics },
-      lualine_c = { "require('lspsaga.symbol.winbar').get_bar()", "require('dap').status()", "_G._lualine_lsp_progress()" },
+      lualine_c = { "require('fengwk.plugins.lualine').symbol_bar()", "require('dap').status()", "_G._lualine_lsp_progress()" },
       lualine_x = { "encoding" },
       lualine_y = { "progress" },
       lualine_z = { "location" }

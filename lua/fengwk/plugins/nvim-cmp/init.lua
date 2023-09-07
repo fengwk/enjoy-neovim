@@ -1,5 +1,4 @@
 -- https://github.com/hrsh7th/nvim-cmp
-
 local ok, cmp = pcall(require, "cmp")
 if not ok then
   return
@@ -12,6 +11,10 @@ local utils = require "fengwk.utils"
 local has_words_before = function()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
   return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
 local cmp_fts = {
@@ -41,7 +44,7 @@ end
 local CompletionItemKind = types.lsp.CompletionItemKind
 
 local source_weight = {
-  copilot = 0.1,
+  copilot = 0.05,
   nvim_lsp = 1,
   vsnip = 1,
   buffer = 1.5,
@@ -129,6 +132,44 @@ local function weight_sort(e1, e2)
   end
 end
 
+local function copilot_prioritize(e1, e2)
+  local s1 = e1.source.name == "copilot" and 1 or 0
+  local s2 = e2.source.name == "copilot" and 1 or 0
+  if s1 == s2 then
+    return nil
+  end
+  return s1 > s2
+end
+
+-- https://github.com/zbirenbaum/copilot.lua
+local ok_copilot, copilot = pcall(require, "copilot")
+if ok_copilot then
+  copilot.setup {
+    panel = {
+      enabled = false,
+    },
+    suggestion = {
+      enabled = false, -- 启用这个会影响cmp source
+      auto_trigger = true,
+    },
+  }
+
+  cmp.event:on("menu_opened", function()
+    vim.b.copilot_suggestion_hidden = true
+  end)
+
+  cmp.event:on("menu_closed", function()
+    vim.b.copilot_suggestion_hidden = false
+  end)
+
+  local ok_copilot_cmp, copilot_cmp = pcall(require, "copilot_cmp")
+  if ok_copilot_cmp then
+    copilot_cmp.setup()
+  end
+end
+local types = require('cmp.types')
+
+
 -- 安装cmp
 cmp.setup({
   -- snippets
@@ -138,17 +179,28 @@ cmp.setup({
       vim.fn["vsnip#anonymous"](args.body)
     end,
   },
-  -- completion = {
-  --   autocomplete = false, -- 关闭自动打开补全菜单
-  -- },
+  completion = {
+    autocomplete = { -- 指定自动补全的时机
+      'InsertEnter',
+      'TextChanged',
+    },
+  },
   -- 快捷键映射
-  mapping = cmp.mapping.preset.insert({
+  mapping = {
     -- 向上滚动补全项文档
     ["<C-u>"] = cmp.mapping.scroll_docs(-5),
     -- 向下滚动补全项文档
     ["<C-d>"] = cmp.mapping.scroll_docs(5),
     -- 关闭补全项窗口
-    ["<C-e>"] = cmp.mapping.abort(),
+    ["<C-e>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.mapping.abort()()
+      elseif ok_copilot and require("copilot.suggestion").is_visible() then
+        require("copilot.suggestion").dismiss()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
     -- ["<Esc>"] = cmp.mapping.abort(),
     -- 确认补全项，select如果为true表示没有选项时默认选择第一个，false则不做选择进行换行
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
@@ -156,33 +208,40 @@ cmp.setup({
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then -- 补全已开启则选择下一项
         cmp.select_next_item()
-      -- elseif vim.fn["vsnip#available"](1) == 1 then
-      --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      elseif ok_copilot and require("copilot.suggestion").is_visible() then -- 接受copilot提示
+        require("copilot.suggestion").accept()
+      elseif vim.fn["vsnip#available"](1) == 1 then
+        feedkey("<Plug>(vsnip-expand-or-jump)", "")
       -- elseif has_words_before() then -- 前边有单词则开启补全
       --   cmp.complete()
       else
         fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`
       end
     end, { "i", "s" }),
-    -- ["<C-x>"] = cmp.mapping(function(fallback)
-    --   if has_words_before() then -- 前边有单词则开启补全
-    --     cmp.complete()
-    --   else
-    --     fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`
-    --   end
-    -- end, { "i", "s" }),
-    -- 上一个补全项
+    -- 选择上一个补全项
     ["<S-Tab>"] = cmp.mapping(function(fallback)
-    -- ["<C-k>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-      --   feedkey("<Plug>(vsnip-jump-prev)", "")
+      elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+        feedkey("<Plug>(vsnip-jump-prev)", "")
       else
         fallback()
       end
     end, { "i", "s" }),
-  }),
+    -- 默认inert模式下<C-n>是唤出neovim自带的补全，修改为使用cmp的补全
+    ["<C-n>"] = cmp.mapping(function(fallback)
+      local cmp = require('cmp')
+      if cmp.visible() then
+        cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
+      else
+        if utils.vim.ft() == "chatgpt-input" then
+          fallback()
+        else
+          cmp.complete()
+        end
+      end
+    end, { "i", "s" }),
+  },
   -- 窗口样式
   window = {
     completion = win_border(), -- 补全窗口边框
@@ -205,7 +264,7 @@ cmp.setup({
   },
   -- 实验性参数
   experimental = {
-    ghost_text = false, -- 暗纹展示最有可能补全的文本
+    ghost_text = false, -- 暗纹展示最有可能补全的文本，与copilot冲突
   },
   -- 补全来源
   sources = {
@@ -224,7 +283,7 @@ cmp.setup({
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
           if utils.vim.ft() == "json" then
-            return false
+            return {}
           end
 
           -- -- 如果缓冲区过大，则禁用
@@ -251,9 +310,22 @@ cmp.setup({
       -- compare.offset, -- lsp给出的顺序
       -- compare.exact,
       compare.recently_used, -- 近期使用
-      -- compare.locality, -- 当前缓冲区优先
+      compare.locality, -- 当前缓冲区优先
       compare.length, -- 长度
       compare.order, -- id序，兜底
+
+      -- copilot_prioritize,
+      -- -- Below is the default comparitor list and order for nvim-cmp
+      -- compare.offset,
+      -- -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+      -- compare.exact,
+      -- compare.score,
+      -- compare.recently_used,
+      -- compare.locality,
+      -- compare.kind,
+      -- compare.sort_text,
+      -- compare.length,
+      -- compare.order,
     },
   },
   -- 启用情况
@@ -287,10 +359,10 @@ require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
 -- })
 
 -- Use cmdline & path source for ":" (if you enabled `native_menu`, this won"t work anymore).
-cmp.setup.cmdline(":", {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = {
-    { name = "cmdline" },
-    { name = "path" },
-  },
-})
+-- cmp.setup.cmdline(":", {
+--   mapping = cmp.mapping.preset.cmdline(),
+--   sources = {
+--     { name = "cmdline" },
+--     { name = "path" },
+--   },
+-- })
