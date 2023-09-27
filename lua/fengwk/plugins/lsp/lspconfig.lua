@@ -10,22 +10,22 @@ vim.lsp.set_log_level("WARN")
 local utils = require("fengwk.utils")
 
 -- 将cwd设置为lsp根目录
-local function cd_lsp_root(buffer, auto_add_ws)
-  local root = vim.lsp.buf.list_workspace_folders()
-  local is_single_file = false
-  if root ~= nil and #root > 0 then
-    local rp = root[1]
-    if utils.fs.is_dir(rp) then
-      root = rp
-    else
-      root = utils.fs.parent(rp)
-      is_single_file = true
+local function cd_lsp_root(opts, client, buffer, auto_add_ws)
+  local root = opts.root
+  local single_file = opts.single_file
+  if not root and client.workspace_folders and #client.workspace_folders > 0 then
+    root = client.workspace_folders[1].name
+    single_file = not root or not utils.fs.is_dir(root)
+    if not utils.fs.is_dir(root) then
+      root = utils.fs.parent(root)
     end
-
+  end
+  if root then
+    -- cd
     utils.vim.cd(root, vim.api.nvim_buf_get_name(buffer))
 
     -- 如非单文件服务则自动添加workspace
-    if auto_add_ws and not is_single_file then
+    if auto_add_ws and not single_file then
       local ws_ok, ws = pcall(require, "fengwk.plugins.workspaces.workspaces")
       if ws_ok then
         ws.add(root, true)
@@ -143,26 +143,10 @@ local function build_on_attach(opts)
     -- outline
     keymap.set("n", "<leader>oo", "<Cmd>Lspsaga outline<CR>", { desc = "Outline" })
 
-    -- check root and is_single_file
-    local root = opts.root
-    local is_single_file = opts.is_single_file
-    if not root then
-      root, is_single_file = root_and_single_file()
-    end
-
-    if root then
-      utils.vim.cd(root, vim.api.nvim_buf_get_name(bufnr))
-      -- 检查是否要自动加入workspaces
-      if not is_single_file and vim.tbl_contains(auto_add_ws_clients, client.name) then
-        local ws_ok, ws = pcall(require, "fengwk.plugins.workspaces.workspaces")
-        if ws_ok then
-          ws.add(root, true)
-        end
-      end
-    end
-
     -- 在attatch成功后改变vim的cwd，并且注册跳转
-    cd_lsp_root(bufnr, vim.tbl_contains(auto_add_ws_clients, client.name))
+    if client.name ~= "copilot" then
+      cd_lsp_root(opts, client, bufnr, vim.tbl_contains(auto_add_ws_clients, client.name))
+    end
 
     -- 去除newline自动生成注释前缀
     -- vim.cmd("set formatoptions-=cro")

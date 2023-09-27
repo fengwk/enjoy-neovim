@@ -17,7 +17,6 @@ nvim_autopairs.setup({
   disable_in_macro = false,
   disable_in_visualblock = true,
   fast_wrap = {
-    -- map = "<M-e>", -- alt+e，快速补充右侧符号
     map = "<C-l>", -- ctrl+l，快速补充右侧符号
     chars = { "{", "[", "(", '"', "'", "`" },
     pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),

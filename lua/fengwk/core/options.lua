@@ -119,6 +119,12 @@ vim.cmd("set clipboard^=unnamed,unnamedplus")
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true
 
+-- 本机拼写检查
+-- vim.cmd [[
+-- set spell
+-- set spelllang=en_us
+-- ]]
+
 -- 编码格式
 vim.o.encoding = "utf-8"     -- vim内部字符表示编码
 vim.o.fileencoding = "utf-8" -- 文件编码

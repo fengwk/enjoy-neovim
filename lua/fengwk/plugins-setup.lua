@@ -57,8 +57,8 @@ return packer.startup(function(use)
   use "sindrets/diffview.nvim"
 
   -- markdown
-  use { "iamcco/markdown-preview.nvim", run = "cd app && yarn install", ft = "markdown" } -- 在浏览器中预览Markdown
-  use { "md-img-paste-devs/md-img-paste.vim", ft = "markdown" } -- 黏贴剪切板中的图片到Markdown
+  use { "iamcco/markdown-preview.nvim", run = "cd app && yarn install" } -- 在浏览器中预览Markdown
+  use { "md-img-paste-devs/md-img-paste.vim" } -- 黏贴剪切板中的图片到Markdown
 
 	-- editor enhancer
 	use "kylechui/nvim-surround" -- surround
@@ -100,8 +100,8 @@ return packer.startup(function(use)
   -- use "github/copilot.vim"
   -- use "hrsh7th/cmp-copilot"
   use "zbirenbaum/copilot.lua"
-  -- use "zbirenbaum/copilot-cmp"
-  use { "fengwk/copilot-cmp", branch = "fix/cmp-confirm" }
+  use "zbirenbaum/copilot-cmp"
+  -- use { "fengwk/copilot-cmp", branch = "fix/cmp-confirm" }
   use "folke/neodev.nvim" -- neovim补全，需要配置lua_ls
 
 	-- fuzzy finding

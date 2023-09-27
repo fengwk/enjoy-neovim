@@ -15,7 +15,7 @@ vim.api.nvim_create_autocmd(
   { "FileType" },
   {
     group = "user_json",
-    pattern = "json",
+    pattern = "json,jsonc",
     callback = function()
       vim.keymap.set("n", "<leader>fm", gen_format_json_cmd("n"), { silent = true, buffer = 0 })
       vim.keymap.set("x", "<leader>fm", gen_format_json_cmd("v"), { silent = true, buffer = 0 })

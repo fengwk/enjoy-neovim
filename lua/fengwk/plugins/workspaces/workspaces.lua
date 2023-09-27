@@ -10,7 +10,7 @@ local data_cache_read_timeout = 1e6 * 500 -- 500毫秒，配置读取超时
 
 -- 从from开始找到任一最近的workspce执行do_func
 local function find_ws_and_do(do_func, from)
-  if not do_func or utils.lang.empty_str(from) then
+  if not do_func or utils.lang.str_empty(from) then
     return
   end
   local data = ws.read_data()
@@ -188,7 +188,7 @@ end
 -- 自动移除
 ws.auto_remove = function()
   local from = vim.fn.expand("%:p")
-  if utils.lang.empty_str(from) then
+  if utils.lang.str_empty(from) then
     from = vim.fn.getcwd()
   end
   find_ws_and_do(function(ws_name, _)

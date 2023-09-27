@@ -3,12 +3,7 @@ local jdtls_enhancer = require "fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer"
 
 -- 定义url字符
 local url_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~:/?#[]@!$&'()*+,;=%"
-local url_chars_list = {}
-local i = 1
-while i <= #url_chars do
-  table.insert(url_chars_list, url_chars:sub(i, i))
-  i = i + 1
-end
+local ps_list = { "()", "[]", "{}", "<>", "\"\"", "''", "``" }
 
 local function openurl(url)
   if url:match("^jdt") then
@@ -16,6 +11,21 @@ local function openurl(url)
   elseif url:match("^https?://[^%s]+$") then
     utils.sys.system("xdg-open '" .. url .. "'", true)
   end
+end
+
+local function do_trim_pair(str, ps)
+  if str:sub(1, 1) == ps[1] and str:sub(#str, #str) == ps[2] then
+    str = str:sub(2, #str - 1)
+    return do_trim_pair(str, ps)
+  end
+  return str
+end
+
+local function trim_pair(str)
+  for _, ps in ipairs(ps_list) do
+    str = do_trim_pair(str, ps)
+  end
+  return str
 end
 
 local function geturl()
@@ -29,7 +39,7 @@ local function geturl()
   local start_col = col
   while start_col > 0 do
     local c = string.sub(line, start_col, start_col)
-    if not vim.tbl_contains(url_chars_list, c) then
+    if utils.lang.str_index(url_chars, c) == 0 then
       break
     end
     start_col = start_col - 1
@@ -40,7 +50,7 @@ local function geturl()
   local end_col = col
   while end_col <= #line do
     local c = string.sub(line, end_col, end_col)
-    if not vim.tbl_contains(url_chars_list, c) then
+    if utils.lang.str_index(url_chars, c) == 0 then
       break
     end
     end_col = end_col + 1
@@ -48,14 +58,13 @@ local function geturl()
 
   -- 截取url
   local url = string.sub(line, start_col, end_col - 1)
-  return url
+  url = url:match("https?://[~%w-_%.%?%.:/%+=&]+")
+  return trim_pair(url)
 end
 
 vim.keymap.set("n", "<leader>ou", function()
   local url = geturl()
   openurl(url)
 end)
--- vim.keymap.set("n", "<S-LeftMouse>", function ()
---   local url = geturl()
---   openurl(url)
--- end)
+
+-- TODO 鼠标点击打开url

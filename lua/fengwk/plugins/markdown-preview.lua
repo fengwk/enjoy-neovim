@@ -91,8 +91,11 @@ vim.cmd([[
 
   " recognized filetypes
   " these filetypes will have MarkdownPreview... commands
-  let g:mkdp_filetypes = ['markdown']
+  let g:mkdp_filetypes = ['markdown', 'html', 'xhtml']
 
   " markdown-preview
-  autocmd FileType markdown nnoremap <buffer> <silent> <leader>mk :MarkdownPreviewToggle<CR>
+  augroup user_mkp
+    autocmd!
+    autocmd FileType markdown,html,xhtml nnoremap <buffer> <silent> <leader>mk :MarkdownPreviewToggle<CR>
+  augroup END
 ]])

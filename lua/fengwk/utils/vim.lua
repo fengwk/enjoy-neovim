@@ -81,7 +81,7 @@ end
 
 v.cd = function(root, filename)
   -- 不能使用and vim.fn.getcwd() ~= root条件，有时候切换会有延迟这个判断会失效
-  if not lang.empty_str(root) and fs.is_dir(root) then
+  if not lang.str_empty(root) and fs.is_dir(root) then
     root = vim.fn.expand(root)
     vim.cmd("cd " .. root)
     local t_ok, nvim_tree_api = pcall(require, "nvim-tree.api")
@@ -89,7 +89,7 @@ v.cd = function(root, filename)
       nvim_tree_api.tree.change_root(root) -- 主动修改nvim-tree root，否则切换会出现问题
     end
   end
-  if not lang.empty_str(filename) and fs.exists(filename) then
+  if not lang.str_empty(filename) and fs.exists(filename) then
     filename = vim.fn.expand(filename)
     -- 自动切换到nvim-tree聚焦到打开的文件
     local ok_finders_find_file, finders_find_file = pcall(require, "nvim-tree.actions.finders.find-file")

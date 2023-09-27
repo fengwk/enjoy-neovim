@@ -149,7 +149,7 @@ local function setup()
     "settings.gradle.kts", -- Gradle
     "gradlew", -- Gradle
   }
-  local is_single_file = root_dir == nil
+  local single_file = root_dir == nil
   local workspace_dir = root_dir or vim.fn.getcwd()
     -- 转义工作目录作为名称
   local workspace_name = utils.fs.escape_filename(workspace_dir)
@@ -186,7 +186,7 @@ local function setup()
   config.on_attach = function(client, bufnr)
     lspconfig.build_on_attach({
       root = workspace_dir,
-      is_single_file = is_single_file,
+      single_file = single_file,
     })(client, bufnr)
 
     -- jdtls特性
@@ -195,7 +195,7 @@ local function setup()
 
     -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
     -- 注册用于调试的主类，如果是新增的main方法需要使用:JdtRefreshDebugConfigs命令刷新
-    if not is_single_file then
+    if not single_file then
       require("jdtls.dap").setup_dap_main_class_configs()
     end
 
@@ -251,6 +251,9 @@ local function setup()
     vim.keymap.set("n", "gp", "<Cmd>lua require'jdtls'.super_implementation()<CR>", { silent = true, buffer = bufnr, desc = "Lsp Super Implementation" })
     -- inherited_members扩展
     vim.keymap.set("n", "gS", "<Cmd>Telescope jdtls inherited_members<CR>", { silent = true, buffer = bufnr, desc = "Lsp Inherited Members" })
+
+    -- 刷新配置
+    vim.keymap.set("n", "<leader>rr", "<Cmd>JdtUpdateConfig<CR>", { silent = true, buffer = bufnr, desc = "Lsp Update Config" })
   end
 
   config.capabilities = lspconfig.make_capabilities()
@@ -271,13 +274,15 @@ local function setup()
           "java.util.Objects.requireNonNull",
           "java.util.Objects.requireNonNullElse",
           "org.mockito.Mockito.*"
-        }
+        },
+        -- 推测方法参数进行补全
+        guessMethodArguments = true,
       },
       sources = {
         -- 低于指定阈值，不在import中使用*
         organizeImports = {
-          starThreshold = 999,
-          staticStarThreshold = 999,
+          starThreshold = 5,
+          staticStarThreshold = 5,
         },
       },
       configuration = {
@@ -290,6 +295,20 @@ local function setup()
         -- https://github.com/eclipse/eclipse.jdt.ls/issues/1892#issuecomment-929715918
         -- https://github.com/redhat-developer/vscode-java/wiki/Settings-Global-Preferences
         url = java_settings_url
+      },
+      maven = {
+        downloadSources = true,
+        updateSnapshots = true,
+      },
+      -- https://github.com/redhat-developer/vscode-java/issues/1470
+      -- https://github.com/redhat-developer/vscode-java/wiki/Predefined-Variables-for-Java-Template-Snippets
+      templates = {
+        typeComment = {
+          "/**",
+          " * ${type_name}",
+          " * @author ${user}",
+          " */",
+        },
       },
     },
   }
