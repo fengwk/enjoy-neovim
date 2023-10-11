@@ -8,10 +8,7 @@ local utils = require("fengwk.utils")
 local chatgt_actions_json = utils.fs.stdpath("config", "lib/chatgpt_actoins.json")
 
 -- api key forward
--- local api = require "chatgpt.api"
--- api.COMPLETIONS_URL = "https://api.ai-yyds.com/v1/completions"
--- api.CHAT_COMPLETIONS_URL = "https://api.ai-yyds.com/v1/chat/completions"
--- api.EDITS_URL = "https://api.ai-yyds.com/v1/edits"
+-- export OPENAI_API_HOST=api.chatanywhere.com.cn
 
 chatgpt.setup {
   yank_register = "+",
@@ -35,7 +32,7 @@ chatgpt.setup {
     max_line_length = 120,
     sessions_window = {
       border = {
-        style = "rounded",
+        style = vim.g.__border,
         text = {
           top = " Sessions ",
         },
@@ -81,7 +78,7 @@ chatgpt.setup {
   popup_window = {
     border = {
       highlight = "FloatBorder",
-      style = "rounded",
+      style = vim.g.__border,
       text = {
         top = " ChatGPT ",
       },
@@ -99,7 +96,7 @@ chatgpt.setup {
   system_window = {
     border = {
       highlight = "FloatBorder",
-      style = "rounded",
+      style = vim.g.__border,
       text = {
         top = " SYSTEM ",
       },

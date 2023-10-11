@@ -27,11 +27,14 @@ if not ok then
 	return
 end
 
+-- 全局变量定义
+vim.g.__border = "rounded"
+
 -- 自定义初始化
 packer.init({
 	clone_timeout = 60 * 10, -- git clone超时，秒
   display = {
-    prompt_border = "rounded",
+    prompt_border = vim.g.__border,
   }
 })
 
@@ -107,7 +110,7 @@ return packer.startup(function(use)
 	-- fuzzy finding
   use {
     "nvim-telescope/telescope.nvim",  -- 模糊搜索插件，require nvim-lua/plenary
-    tag = "0.1.2",
+    tag = "0.1.4",
     requires = "nvim-lua/plenary.nvim",
   }
   use "nvim-telescope/telescope-live-grep-args.nvim" -- live grep增强

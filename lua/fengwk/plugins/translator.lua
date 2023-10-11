@@ -77,7 +77,7 @@ local function open_float_win(lines)
     width = fwin_w,
     height = fwin_h,
     style = "minimal",
-    border = "rounded",
+    border = vim.g.__border,
     noautocmd = true,
   }
 

@@ -6,7 +6,7 @@ end
 
 lspsaga.setup({
   ui = {
-    border = 'rounded',
+    border = vim.g.__border,
     devicon = true,
     title = true,
     expand = '⊞',

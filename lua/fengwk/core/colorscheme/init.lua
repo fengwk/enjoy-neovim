@@ -79,6 +79,8 @@ local function on_changed(colorscheme)
   vim.cmd[[
     hi clear NormalFloat
     hi link NormalFloat Normal
+    hi clear LspInfoBorder
+    hi link LspInfoBorder FloatBorder
   ]]
 
   if has_highlight_group("TelescopeBorder") then

@@ -4,6 +4,8 @@ if not ok_lspconfig then
   return
 end
 
+require('lspconfig.ui.windows').default_options.border = vim.g.__border
+
 -- Levels by name: "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "OFF"
 vim.lsp.set_log_level("WARN")
 
@@ -49,7 +51,7 @@ end
 -- 设置hover边框
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   vim.lsp.handlers.hover, {
-    border = "rounded",
+    border = vim.g.__border,
   }
 )
 

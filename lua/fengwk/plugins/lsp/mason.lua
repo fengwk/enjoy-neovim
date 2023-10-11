@@ -6,6 +6,6 @@ end
 
 mason.setup({
   ui = {
-    border = "rounded",
+    border = vim.g.__border,
   }
 })
