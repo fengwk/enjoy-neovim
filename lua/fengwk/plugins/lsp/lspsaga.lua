@@ -20,7 +20,7 @@ lspsaga.setup({
   symbol_in_winbar = {
     enable = false,
     show_file = false,
-    color_mode = false,
+    color_mode = true, -- 在lualine中剔除颜色标记
     dely = 10,
   },
   lightbulb = {

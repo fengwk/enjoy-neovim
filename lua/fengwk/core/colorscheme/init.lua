@@ -188,6 +188,15 @@ local function on_changed(colorscheme)
       hi clear TelescopeResultsBorder
       hi link TelescopeResultsBorder TelescopeBorder
       hi link CurSearch IncSearch
+      " undercurl
+      hi clear DiagnosticUnderlineError
+      hi link DiagnosticUnderlineError LspDiagnosticsUnderlineError
+      hi clear DiagnosticUnderlineWarn
+      hi link DiagnosticUnderlineWarn LspDiagnosticsUnderlineWarning
+      hi clear DiagnosticUnderlineInfo
+      hi link DiagnosticUnderlineInfo LspDiagnosticsUnderlineInformation
+      hi clear DiagnosticUnderlineHint
+      hi link DiagnosticUnderlineHint LspDiagnosticsUnderlineHint
     ]]
     gruvbox_flat.setup()
   elseif colorscheme == "github_dimmed" or string.find(colorscheme, "^github_dark") then

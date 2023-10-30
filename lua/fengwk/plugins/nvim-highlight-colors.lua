@@ -1,7 +1,19 @@
--- https://github.com/brenoprata10/nvim-highlight-colors
-local ok, nvim_highlight_colors = pcall(require, "nvim-highlight-colors")
+-- https://github.com/NvChad/nvim-colorizer.lua
+local ok, colorizer = pcall(require, "colorizer")
 if not ok then
   return
 end
 
-nvim_highlight_colors.setup()
+colorizer.setup {
+  filetypes = {
+    "*",
+    css = { names = true },
+    less = { names = true },
+    sass = { names = true },
+    scss = { names = true },
+    html = { names = true },
+  },
+  user_default_options = {
+    names = false,
+  },
+}
