@@ -76,21 +76,6 @@ vim.api.nvim_create_autocmd(
   end}
 )
 
-local function root_and_single_file()
-  local root = vim.lsp.buf.list_workspace_folders()
-  local is_single_file = false
-  if root ~= nil and #root > 0 then
-    local rp = root[1]
-    if utils.fs.is_dir(rp) then
-      root = rp
-    else
-      root = utils.fs.parent(rp)
-      is_single_file = true
-    end
-  end
-  return root, is_single_file
-end
-
 local function build_on_attach(opts)
   opts = opts or {}
   -- 默认的lsp on_attach

@@ -23,6 +23,7 @@ local open_ws = function(prompt_bufnr, before_open)
       before_open()
     end
     workspaces.open(ws_name)
+    return ws_name
   end
 end
 
@@ -57,6 +58,13 @@ local workspaces_picker = function(opts)
 
     attach_mappings = function(_, map)
       ext_common.map_select_one(map, open_ws)
+      map({ "n", "i" }, "<C-CR>", function(prompt_bufnr)
+        local ws_name = workspaces.current_ws_name()
+        local new_ws_name = open_ws(prompt_bufnr)
+        if ws_name and ws_name ~= new_ws_name then
+          workspaces.close(ws_name)
+        end
+      end)
       map({ "n" }, "dd", remove_ws)
       map({ "n", "i" }, "<C-x>", function(prompt_bufnr)
         open_ws(prompt_bufnr, function()

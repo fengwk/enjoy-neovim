@@ -134,6 +134,45 @@ ws.record_file = function(ws_name, filename)
   end)
 end
 
+-- 获取当前工作空间名称
+ws.current_ws_name = function()
+  local from = vim.fn.expand("%:p")
+  if utils.lang.str_empty(from) then
+    from = vim.fn.getcwd()
+  end
+  local wn = nil
+  find_ws_and_do(function(ws_name, _)
+    wn = ws_name
+  end, from)
+  return wn
+end
+
+-- 关闭指定工作空间
+ws.close = function(ws_name)
+  if not ws_name then
+    return
+  end
+  vim.schedule(function()
+    local full_closed = true
+    for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_valid(buffer) then
+        local filename = vim.api.nvim_buf_get_name(buffer)
+        if filename then
+          local idx = utils.lang.str_index(filename, ws_name)
+          if idx == 1 then
+            -- 如果缓冲区没有未修改内容则进行关闭
+            local ok = pcall(vim.api.nvim_buf_delete, buffer, { force = false })
+            if not ok then
+              full_closed = false
+            end
+          end
+        end
+      end
+    end
+    print(ws_name, full_closed and "has been closed" or "has been part closed")
+  end)
+end
+
 -- 打开指定的工作空间
 ws.open = function(ws_name)
   if not ws_name then
@@ -174,7 +213,7 @@ ws.auto_load = function()
   local filename = vim.fn.expand("%:p")
   if filename == nil or filename == "" then -- 只在无名缓冲区自动加载
     local line_count = vim.api.nvim_buf_line_count(0)
-    if line_count == 1 then -- 仅在无内容时加载
+    if line_count == 1 then                 -- 仅在无内容时加载
       local line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
       if not line or line == "" then
         find_ws_and_do(function(ws_name, _)

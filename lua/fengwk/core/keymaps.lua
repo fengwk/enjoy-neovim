@@ -64,6 +64,8 @@ keymap.set("n", "<leader>y", "mpggVGy`p", { noremap = true, desc = "Yank Entire 
 keymap.set("x", "<C-c>", "y", { desc = "Yank" })
 
 keymap.set({ "i" }, "jk", "<Esc>", { noremap = true })
+keymap.set({ "i" }, "JK", "<Esc>", { noremap = true }) -- 适配Shift延迟的场景
+keymap.set({ "i" }, "Jk", "<Esc>", { noremap = true }) -- 适配Shift延迟的场景
 keymap.set({ "v", "c", "t" }, "<C-j><C-k>", "<Esc>", { noremap = true })
 
 -- 黏贴后自动格式化黏贴区域
