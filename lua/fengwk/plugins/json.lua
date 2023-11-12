@@ -7,7 +7,8 @@ local mode_range_map = {
   n = "%",
 }
 local function gen_format_json_cmd(mode)
-  return ":" .. mode_range_map[mode] .. "!python " .. format_json .. "<CR>"
+  local shiftwidth = vim.api.nvim_buf_get_option(0, "shiftwidth") or 4
+  return mode_range_map[mode] .. "!python " .. format_json .. " -i " .. shiftwidth
 end
 
 vim.api.nvim_create_augroup("user_json", { clear = true })
@@ -17,7 +18,7 @@ vim.api.nvim_create_autocmd(
     group = "user_json",
     pattern = "json,jsonc",
     callback = function()
-      vim.keymap.set("n", "<leader>fm", gen_format_json_cmd("n"), { silent = true, buffer = 0 })
-      vim.keymap.set("x", "<leader>fm", gen_format_json_cmd("v"), { silent = true, buffer = 0 })
+      vim.keymap.set("n", "<leader>fm", function() vim.cmd(gen_format_json_cmd("n")) end, { silent = true, buffer = 0 })
+      vim.keymap.set("x", "<leader>fm", function() vim.cmd(gen_format_json_cmd("v")) end, { silent = true, buffer = 0 })
     end
   })

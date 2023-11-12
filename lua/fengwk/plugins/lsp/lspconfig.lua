@@ -60,15 +60,28 @@ vim.api.nvim_create_augroup("lsp_destruction", { clear = true })
 vim.api.nvim_create_autocmd(
   { "BufDelete" },
   { group = "lsp_destruction", callback = function(args)
+    -- args.buf是当前被销毁的缓冲区
     if args and args.buf and args.buf > 0 then
       local clients = vim.lsp.get_active_clients()
+      -- 遍历所有lsp客户端
       for _, c in pairs(clients) do
+        -- copilot会在所有缓冲区打开因此不做处理
         if c and c.id and c.name ~= "copilot" then
+          -- 遍历指定客户端关联的所有缓冲区
           local lsp_bufs = vim.lsp.get_buffers_by_client_id(c.id)
           if not lsp_bufs or #lsp_bufs == 0
             or (#lsp_bufs == 1 and lsp_bufs[1] == args.buf) then
-            vim.lsp.stop_client(c.id)
-            vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
+            vim.schedule(function()
+              vim.lsp.stop_client(c.id)
+              vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
+                -- 过15秒如果还存在则强制关闭
+              vim.defer_fn(function()
+                local exists = vim.lsp.get_client_by_id(c.id)
+                if exists then
+                  vim.lsp.stop_client(c.id, { force = true })
+                end
+              end, 15000)
+            end)
           end
         end
       end
@@ -162,6 +175,7 @@ local lsp_configs = {
   utils.sys.os == "win" and "powershell_es" or nil,           -- { "ps1" }
   "pylsp",                                                    -- { "python" }
   ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),  -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  "eslint",
   "vimls",                                                    -- { "vim" }
   "yamlls",                                                   -- { "yaml", "yaml.docker-compose" }
   -- "lemminx",                                                  -- { "xml", "xsd", "xsl", "xslt", "svg" }

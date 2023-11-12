@@ -44,6 +44,6 @@ return {
       "stylua.toml",
       "selene.toml",
       "selene.yml",
-    }, 1 or vim.fn.getcwd()
+    } or vim.fn.getcwd()
   end,
 }

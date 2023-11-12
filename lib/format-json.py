@@ -1,6 +1,7 @@
 # 这个脚本读取标准输入流中的json串并将将其格式化
 # 如果发生异常将原样输出标准输入流中的json串
 import sys
+import argparse
 
 
 pairs = {'{': '}', '[': ']'}
@@ -56,8 +57,17 @@ def format_json(json, indent):
     return formated
 
 
-try:
-    input = sys.stdin.read().strip()
-    print(format_json(input, 4))
-except Exception as e:
-    print(e)
+def main():
+    try:
+        parser = argparse.ArgumentParser(description='format json')
+        parser.add_argument('-i', '--indent', type=int, default=4)
+        args = parser.parse_args()
+        indent = args.indent
+        input = sys.stdin.read().strip()
+        print(format_json(input, indent))
+    except Exception as e:
+        print(e)
+
+
+if __name__ == '__main__':
+    main()

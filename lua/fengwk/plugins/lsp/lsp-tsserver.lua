@@ -6,6 +6,6 @@ return {
   root_dir = function()
     return utils.fs.root_dir {
       "package.json", "tsconfig.json", "jsconfig.json", ".git"
-    }, 1 or vim.fn.getcwd()
+    } or vim.fn.getcwd()
   end
 }
