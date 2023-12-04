@@ -60,7 +60,7 @@ def format_json(json, indent):
 def main():
     try:
         parser = argparse.ArgumentParser(description='format json')
-        parser.add_argument('-i', '--indent', type=int, default=4)
+        parser.add_argument('-i', '--indent', type=int, default=2)
         args = parser.parse_args()
         indent = args.indent
         input = sys.stdin.read().strip()

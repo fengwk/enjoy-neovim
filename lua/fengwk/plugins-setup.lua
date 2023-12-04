@@ -130,7 +130,7 @@ return packer.startup(function(use)
   use { "nvimdev/lspsaga.nvim", requires = "kyazdani42/nvim-web-devicons" }
 
   -- formatting & linting
-  use "gpanders/editorconfig.nvim" -- editorconfig规范实现
+  -- use "gpanders/editorconfig.nvim" -- editorconfig规范实现，neovim 0.9已经内置了editorconfig功能
 
   -- dap | Debug Adapter Protocol
   use "jayp0521/mason-nvim-dap.nvim"
