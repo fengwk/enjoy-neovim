@@ -123,7 +123,7 @@ local config = {
   view = {
     adaptive_size = true, -- 根据文件名自适应宽度
     width = {
-      max = 45, -- 设置最大宽度
+      max = 50, -- 设置最大宽度
     },
     -- number = true, -- 等效于 set nu
     -- relativenumber = true, -- 等效于 set rnu

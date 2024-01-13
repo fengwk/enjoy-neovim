@@ -8,6 +8,8 @@ local data_cache = nil
 local data_cache_pre_read = 0
 local data_cache_read_timeout = 1e6 * 500 -- 500毫秒，配置读取超时
 
+local cur_ws = nil                        -- 当前缓冲区
+
 -- 从from开始找到任一最近的workspce执行do_func
 local function find_ws_and_do(do_func, from)
   if not do_func or utils.lang.str_empty(from) then
@@ -154,11 +156,12 @@ ws.close = function(ws_name)
   end
   vim.schedule(function()
     local full_closed = true
+    local match_ws_name = ws_name .. '/';
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
       if vim.api.nvim_buf_is_valid(bufnr) and not utils.vim.is_sepcial_ft(bufnr) then
         local filename = vim.api.nvim_buf_get_name(bufnr)
         if filename then
-          local idx = utils.lang.str_index(filename, ws_name)
+          local idx = utils.lang.str_index(filename, match_ws_name)
           if idx == 1 then
             -- 如果缓冲区没有未修改内容则进行关闭
             local ok = pcall(vim.api.nvim_buf_delete, bufnr, { force = false })
@@ -191,10 +194,11 @@ ws.open = function(ws_name)
           -- 强制刷新filetype，在切换filtype时需要这么做
           vim.api.nvim_command("filetype detect")
           vim.notify(ws_name .. " has been opened")
+          utils.vim.cd(ws_name, filename)
+          cur_ws = ws_name
         end)
       end)
     end
-    utils.vim.cd(ws_name, filename)
   end
 end
 
@@ -203,7 +207,10 @@ ws.auto_record_file = function()
   if not utils.vim.is_sepcial_ft() and vim.bo.buftype ~= "nofile" then
     find_ws_and_do(function(ws_name, filename)
       ws.record_file(ws_name, filename)
-      utils.vim.cd(ws_name, filename)
+      if not cur_ws or ws_name ~= cur_ws then
+        utils.vim.cd(ws_name, filename)
+        cur_ws = ws_name
+      end
     end, vim.fn.expand("%:p"))
   end
 end
@@ -276,6 +283,17 @@ ws.setup = function()
       ws.auto_remove()
     end
   end, { nargs = "?", complete = "file" })
+  vim.api.nvim_create_user_command("WorkspaceClose", function(args)
+    local ws_name = nil
+    if args and args.fargs and #args.fargs > 0 then
+      ws_name = args.fargs[1]
+    else
+      ws_name = ws.current_ws_name()
+    end
+    if ws_name then
+      ws.close(ws_name)
+    end
+  end, { nargs = "?" })
 end
 
 return ws

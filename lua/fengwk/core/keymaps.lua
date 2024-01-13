@@ -1,5 +1,3 @@
-local utils = require "fengwk.utils"
-
 -- 使用空格作为leader键
 vim.g.mapleader = " "
 

@@ -14,7 +14,7 @@ local function openurl(url)
 end
 
 local function do_trim_pair(str, ps)
-  if str:sub(1, 1) == ps[1] and str:sub(#str, #str) == ps[2] then
+  if str and str:sub(1, 1) == ps[1] and str:sub(#str, #str) == ps[2] then
     str = str:sub(2, #str - 1)
     return do_trim_pair(str, ps)
   end

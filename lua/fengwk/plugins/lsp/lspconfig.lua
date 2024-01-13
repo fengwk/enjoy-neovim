@@ -55,38 +55,61 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   }
 )
 
+local function get_closeable_lsp_clients_by_bufnr(bufnr)
+  local closeable_clients = {}
+  if bufnr and bufnr > 0 then
+    local clients = vim.lsp.get_active_clients()
+    -- 遍历所有lsp客户端
+    for _, c in pairs(clients) do
+      -- copilot会在所有缓冲区打开因此不做处理
+      if c and c.id and c.name ~= "copilot" then
+        -- 遍历指定客户端关联的所有缓冲区
+        local lsp_bufs = vim.lsp.get_buffers_by_client_id(c.id)
+        if not lsp_bufs or #lsp_bufs == 0
+            or (#lsp_bufs == 1 and lsp_bufs[1] == bufnr) then
+          table.insert(closeable_clients, c)
+        end
+      end
+    end
+  end
+  return closeable_clients
+end
+
+local function close_client(c)
+  if c then
+    vim.schedule(function()
+      vim.lsp.stop_client(c.id)
+      vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " closed")
+      -- 过30秒如果还存在则强制关闭
+      vim.defer_fn(function()
+        local exists = vim.lsp.get_client_by_id(c.id)
+        if exists then
+          local lsp_bufs = vim.lsp.get_buffers_by_client_id(c.id)
+          if not lsp_bufs or #lsp_bufs == 0 then
+            vim.lsp.stop_client(c.id, { force = true })
+          end
+        end
+      end, 30000)
+    end)
+  end
+end
+
 -- 设置lsp关闭钩子
 vim.api.nvim_create_augroup("lsp_destruction", { clear = true })
 vim.api.nvim_create_autocmd(
   { "BufDelete" },
-  { group = "lsp_destruction", callback = function(args)
-    -- args.buf是当前被销毁的缓冲区
-    if args and args.buf and args.buf > 0 then
-      local clients = vim.lsp.get_active_clients()
-      -- 遍历所有lsp客户端
-      for _, c in pairs(clients) do
-        -- copilot会在所有缓冲区打开因此不做处理
-        if c and c.id and c.name ~= "copilot" then
-          -- 遍历指定客户端关联的所有缓冲区
-          local lsp_bufs = vim.lsp.get_buffers_by_client_id(c.id)
-          if not lsp_bufs or #lsp_bufs == 0
-            or (#lsp_bufs == 1 and lsp_bufs[1] == args.buf) then
-            vim.schedule(function()
-              vim.lsp.stop_client(c.id)
-              vim.notify("lsp client " .. c.name .. "[" .. c.id .. "]" .. " auto closed")
-                -- 过15秒如果还存在则强制关闭
-              vim.defer_fn(function()
-                local exists = vim.lsp.get_client_by_id(c.id)
-                if exists then
-                  vim.lsp.stop_client(c.id, { force = true })
-                end
-              end, 15000)
-            end)
-          end
+  {
+    group = "lsp_destruction",
+    callback = function(args)
+      -- args.buf是当前被销毁的缓冲区
+      if args and args.buf and args.buf > 0 then
+        local closeableClients = get_closeable_lsp_clients_by_bufnr(args.buf)
+        for _, c in ipairs(closeableClients) do
+          close_client(c);
         end
       end
     end
-  end}
+  }
 )
 
 local function build_on_attach(opts)
@@ -99,8 +122,10 @@ local function build_on_attach(opts)
     -- lsp
     local keymap = vim.keymap
 
-    keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Add Workspace Folder" })
-    keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Remove Workspace Folder" })
+    keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder,
+      { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Add Workspace Folder" })
+    keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder,
+      { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Remove Workspace Folder" })
     keymap.set("n", "<leader>wl", function()
       print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
     end, { silent = true, buffer = bufnr, desc = "Lsp List Workspace Folder" })
@@ -109,17 +134,20 @@ local function build_on_attach(opts)
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     -- keymap.set("n", "<C-K>", vim.lsp.buf.signature_help, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Signature Help" })
     keymap.set("n", "K", vim.lsp.buf.hover, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Hover" })
-    keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Rename" })
-    keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Code Action" })
-    keymap.set("v", "<leader>ca", function ()
+    keymap.set("n", "<leader>rn", vim.lsp.buf.rename,
+      { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Rename" })
+    keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,
+      { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Code Action" })
+    keymap.set("v", "<leader>ca", function()
       local range = get_range();
       vim.api.nvim_input("<Esc>")
       vim.lsp.buf.code_action(range)
     end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Code Action" })
 
     if client.name ~= "jsonls" then -- json使用自定义的格式化方式
-      keymap.set("n", "<leader>fm", function() vim.lsp.buf.format({ async = true }) end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
-      keymap.set("v", "<leader>fm", function ()
+      keymap.set("n", "<leader>fm", function() vim.lsp.buf.format({ async = true }) end,
+        { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Formatting" })
+      keymap.set("v", "<leader>fm", function()
         local range = get_range();
         vim.api.nvim_input("<Esc>")
         vim.lsp.buf.format({
@@ -129,16 +157,21 @@ local function build_on_attach(opts)
       end, { noremap = true, silent = true, buffer = bufnr, desc = "Lsp Range Formatting" })
     end
 
-    keymap.set("n", "gs", "<Cmd>Telescope lsp_document_symbols<CR>", { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-    keymap.set("n", "gw", "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols<CR>", { buffer = bufnr, desc = "Lsp Workspace Symbol" })
+    keymap.set("n", "gs", "<Cmd>Telescope lsp_document_symbols<CR>",
+      { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
+    keymap.set("n", "gw", "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols<CR>",
+      { buffer = bufnr, desc = "Lsp Workspace Symbol" })
     keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Lsp References" })
-    keymap.set("n", "g<leader>", vim.lsp.buf.implementation, { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
+    keymap.set("n", "g<leader>", vim.lsp.buf.implementation,
+      { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
     keymap.set("n", "gd", vim.lsp.buf.definition, { silent = true, buffer = bufnr, desc = "Lsp Definition" })
     keymap.set("n", "gD", vim.lsp.buf.declaration, { silent = true, buffer = bufnr, desc = "Lsp Declaration" })
     keymap.set("n", "gt", vim.lsp.buf.type_definition, { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
     keymap.set("n", "gW", vim.lsp.buf.workspace_symbol, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
-    keymap.set("n", "<leader>gi", "<Cmd>Lspsaga incoming_calls<CR>", { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
-    keymap.set("n", "<leader>go", "<Cmd>Lspsaga outgoing_calls<CR>", { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
+    keymap.set("n", "<leader>gi", "<Cmd>Lspsaga incoming_calls<CR>",
+      { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
+    keymap.set("n", "<leader>go", "<Cmd>Lspsaga outgoing_calls<CR>",
+      { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
 
     -- outline
     keymap.set("n", "<leader>oo", "<Cmd>Lspsaga outline<CR>", { desc = "Outline" })
@@ -165,22 +198,22 @@ end
 
 -- lsp配置表
 local lsp_configs = {
-  "bashls",                                                   -- { "sh" }
-  ["clangd"] = require("fengwk.plugins.lsp.lsp-clangd"),      -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
-  "cssls",                                                    -- { "css", "scss", "less" }
-  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),        -- { "go", "gomod", "gowork", "gotmpl" }
-  "groovyls",                                                 -- { "groovy" }
-  "html",                                                     -- { "html" }
-  ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),      -- { "lua" }
-  utils.sys.os == "win" and "powershell_es" or nil,           -- { "ps1" }
-  "pylsp",                                                    -- { "python" }
-  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"),  -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  "bashls",                                                  -- { "sh" }
+  ["clangd"] = require("fengwk.plugins.lsp.lsp-clangd"),     -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+  "cssls",                                                   -- { "css", "scss", "less" }
+  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),       -- { "go", "gomod", "gowork", "gotmpl" }
+  "groovyls",                                                -- { "groovy" }
+  "html",                                                    -- { "html" }
+  ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),     -- { "lua" }
+  utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
+  "pylsp",                                                   -- { "python" }
+  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"), -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "eslint",
-  "vimls",                                                    -- { "vim" }
-  "yamlls",                                                   -- { "yaml", "yaml.docker-compose" }
+  "vimls",                                                   -- { "vim" }
+  "yamlls",                                                  -- { "yaml", "yaml.docker-compose" }
   -- "lemminx",                                                  -- { "xml", "xsd", "xsl", "xslt", "svg" }
-  "dockerls",                                                 -- { "dockerfile" }
-  ["jsonls"] = require("fengwk.plugins.lsp.lsp-jsonls"),      -- { "json", "jsonc" }
+  "dockerls",                                                -- { "dockerfile" }
+  ["jsonls"] = require("fengwk.plugins.lsp.lsp-jsonls"),     -- { "json", "jsonc" }
 }
 
 -- 使用mason安装lsp服务
@@ -234,8 +267,10 @@ end
 vim.keymap.set("n", "[e", vim.diagnostic.goto_prev, { silent = true, desc = "Diagnostic Prev" })
 vim.keymap.set("n", "]e", vim.diagnostic.goto_next, { silent = true, desc = "Diagnostic Next" })
 -- 使用telescope搜索诊断信息
-vim.keymap.set("n", "[E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { silent = true, desc = "Telescope Diagnostics" })
-vim.keymap.set("n", "]E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>", { silent = true, desc = "Telescope Diagnostics" })
+vim.keymap.set("n", "[E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>",
+  { silent = true, desc = "Telescope Diagnostics" })
+vim.keymap.set("n", "]E", "<Cmd>lua require('telescope.builtin').diagnostics()<CR>",
+  { silent = true, desc = "Telescope Diagnostics" })
 -- 打开带有所有诊断信息的quickfix
 -- vim.keymap.set("n", "ge", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostic Quickfix" })
 

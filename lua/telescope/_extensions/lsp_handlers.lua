@@ -12,15 +12,15 @@ local Path = require "plenary.path"
 
 local lsp_util = vim.lsp.util
 local lsp_buf = vim.lsp.buf
-local original_jump_to_location = lsp_util.jump_to_location
+
 -- hack inject
+local do_jump_to_location = lsp_util.jump_to_location
 vim.lsp.util.jump_to_location = function(...)
   -- 跳转前增加jumplist标记
   -- :h m'
   vim.cmd "normal! m'"
-  original_jump_to_location(...)
+  do_jump_to_location(...)
 end
-local jump_to_location = lsp_util.jump_to_location
 
 local setup_opts = {}
 
@@ -54,7 +54,7 @@ local function jump_fn(prompt_bufnr, action, offset_encoding)
       uri = vim.uri_from_fname(selection.filename)
     end
 
-    jump_to_location({
+    lsp_util.jump_to_location({
       uri = uri,
       range = {
         start = pos,
@@ -153,12 +153,12 @@ local function location_handler(prompt_title, opts)
     end
 
     if not vim.tbl_islist(res) then
-      jump_to_location(res, client.offset_encoding)
+      lsp_util.jump_to_location(res, client.offset_encoding)
       return
     end
 
     if #res == 1 and res[1] then
-      jump_to_location(res[1], client.offset_encoding)
+      lsp_util.jump_to_location(res[1], client.offset_encoding)
       if res[1].uri then
         print("auto jump to " .. res[1].uri)
       end

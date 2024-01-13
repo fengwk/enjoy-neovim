@@ -1,5 +1,9 @@
 local utils = require "fengwk.utils"
 
+-- 全局变量定义
+-- "single", "double" or "rounded"
+vim.g.__border = "rounded"
+
 -- 设置非文件类型
 utils.vim.setup_special_ft { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes",
   "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "gitrebase", "diff" }
@@ -12,8 +16,8 @@ utils.vim.setup_large_fsize(1024 * 128)
 vim.g.history = 200
 
 -- 为悬浮窗口提供透明度，[0..100]，0为不透明，在colorscheme中动态设置
-vim.o.winblend = 20
--- vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winblend，为了自由切换主题时不产生问题先禁用混合
+-- vim.o.winblend = 20
+vim.o.winblend = 0 -- TODO 暂未找到方法可以动态切换所有库的winblend，为了自由切换主题时不产生问题先禁用混合
 -- 弹出窗口的透明度，例如补全窗口
 vim.o.pumblend = vim.o.winblend
 
@@ -93,8 +97,8 @@ vim.o.scrolloff = 5
 -- 该设置可以将光标定位到窗口中间位置
 -- vim.o.scrolloff = 999
 
--- 关闭自动换行显示
--- vim.o.wrap = false
+-- 自动换行
+vim.o.wrap = true
 
 -- 制表符与缩进
 vim.o.tabstop = 4        -- 指定vim中显示的制表符宽度

@@ -21,14 +21,10 @@ vim.cmd [[
 ]]
 
 -- packer - https://github.com/wbthomason/packer.nvim
--- awesome-neovim - https://github.com/rockerBOO/awesome-neovim
 local ok, packer = pcall(require, "packer")
 if not ok then
   return
 end
-
--- 全局变量定义
-vim.g.__border = "rounded"
 
 -- 自定义初始化
 packer.init({
@@ -38,6 +34,7 @@ packer.init({
   }
 })
 
+-- awesome-neovim - https://github.com/rockerBOO/awesome-neovim
 return packer.startup(function(use)
   -- mixed
   use "wbthomason/packer.nvim"      -- 管理packer自身
@@ -150,8 +147,8 @@ return packer.startup(function(use)
   use "nvim-treesitter/nvim-treesitter-textobjects"
 
   -- chatgpt
-  -- use "jackMort/ChatGPT.nvim"
   use {
+    -- "jackMort/ChatGPT.nvim",
     "fengwk/ChatGPT.nvim",
     branch = "dev",
     requires = {
