@@ -171,6 +171,14 @@ local function on_changed(colorscheme)
     require("fengwk.plugins.lualine").setup({ options = { theme = "catppuccin" } })
   elseif colorscheme == "gruvbox-flat" then
     vim.cmd [[
+      hi clear NvimTreeNormal
+      hi link NvimTreeNormal Normal
+      hi clear TelescopeNormal
+      hi link TelescopeNormal Normal
+      hi clear TelescopePreviewNormal
+      hi link TelescopePreviewNormal Normal
+      hi clear TelescopeResultsNormal
+      hi link TelescopeResultsNormal Normal
       hi clear TelescopePromptPrefix
       hi link TelescopePromptPrefix TelescopeNormal
       hi clear TelescopePromptNormal
@@ -233,8 +241,8 @@ vim.api.nvim_create_autocmd(
 -- vim.cmd("colorscheme catppuccin")
 -- vim.cmd("colorscheme everforest")
 -- vim.cmd("colorscheme material")
-vim.cmd("colorscheme github_dark_dimmed")
+-- vim.cmd("colorscheme github_dark_dimmed")
 -- vim.cmd("colorscheme github_dark")
 -- vim.cmd("colorscheme github_dark_tritanopia")
--- vim.cmd("colorscheme gruvbox-flat")
+vim.cmd("colorscheme gruvbox-flat")
 -- vim.cmd("colorscheme nightfly")
