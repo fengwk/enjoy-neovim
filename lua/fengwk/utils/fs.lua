@@ -186,4 +186,21 @@ fs.read_data = function(filename)
   return vim.fn.json_decode(json)
 end
 
+-- 规范化路径
+-- 1. 路径将被解析规范的
+-- 2. 如果存在/a/路径将被解析为/a
+fs.regularize_path = function(path)
+  if path then
+    path = vim.fn.expand(path)
+    if path and #path > 0 and path:sub(-1) == fs.sp then
+      path = path:sub(1, -2)
+    end
+  end
+  return path
+end
+
+fs.path_equals = function(path1, path2)
+  return fs.regularize_path(path1) == fs.regularize_path(path2)
+end
+
 return fs

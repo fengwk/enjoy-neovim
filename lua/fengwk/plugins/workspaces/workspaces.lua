@@ -28,17 +28,6 @@ local function find_ws_and_do(do_func, from)
   end)
 end
 
--- 统一workspace name，可以避免处理/a和/a/存在两个工作空间的问题
-local function regularize_ws_name(ws_name)
-  if ws_name then
-    ws_name = vim.fn.expand(ws_name)
-    if ws_name and #ws_name > 0 and ws_name:sub(-1) == utils.fs.sp then
-      ws_name = ws_name:sub(1, -2)
-    end
-  end
-  return ws_name
-end
-
 ws.write_data = function(data)
   data_cache = data
   utils.fs.write_data(data_path, data_cache)
@@ -57,7 +46,7 @@ end
 -- 添加一个工作空间
 ws.add = function(ws_name, ignore_exists)
   ws_name = ws_name or vim.fn.getcwd()
-  ws_name = regularize_ws_name(ws_name)
+  ws_name = utils.fs.regularize_path(ws_name)
   if not utils.fs.is_dir(ws_name) then
     vim.notify(ws_name .. " is not dir")
     return
@@ -84,7 +73,7 @@ end
 -- 移除一个工作空间
 ws.remove = function(ws_name)
   ws_name = ws_name or vim.fn.getcwd()
-  ws_name = regularize_ws_name(ws_name)
+  ws_name = utils.fs.regularize_path(ws_name)
   local data = ws.read_data()
   if not data or not data[ws_name] then
     vim.notify(ws_name .. " cannot found")
@@ -117,7 +106,7 @@ ws.record_file = function(ws_name, filename)
   if not ws_name or not filename then
     return
   end
-  ws_name = regularize_ws_name(ws_name)
+  ws_name = utils.fs.regularize_path(ws_name)
   local data = ws.read_data()
   if not data or not data[ws_name] then
     return
@@ -181,7 +170,7 @@ ws.open = function(ws_name)
   if not ws_name then
     return
   end
-  ws_name = regularize_ws_name(ws_name)
+  ws_name = utils.fs.regularize_path(ws_name)
   local data = ws.read_data()
   if data and data[ws_name] then
     local filename = data[ws_name].filename

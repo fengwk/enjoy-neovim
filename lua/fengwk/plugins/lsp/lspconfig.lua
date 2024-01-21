@@ -11,12 +11,32 @@ vim.lsp.set_log_level("WARN")
 
 local utils = require("fengwk.utils")
 
+local function findRootFromWorkspaceFolders(workspace_folders, buf_name)
+  local root = nil
+  if workspace_folders and #workspace_folders > 0 then
+    for _, folder in ipairs(workspace_folders) do
+      if utils.fs.is_dir(folder.name) then
+        utils.fs.iter_path_to_root(buf_name, function(cur_path)
+          if utils.fs.path_equals(folder.name, cur_path) then
+            root = folder.name
+            return false
+          else
+            return true
+          end
+        end)
+      end
+    end
+  end
+  return root
+end
+
 -- 将cwd设置为lsp根目录
 local function cd_lsp_root(opts, client, buffer, auto_add_ws)
   local root = opts.root
   local single_file = opts.single_file
-  if not root and client.workspace_folders and #client.workspace_folders > 0 then
-    root = client.workspace_folders[1].name
+  local buf_name = vim.api.nvim_buf_get_name(buffer)
+  if not root then
+    root = findRootFromWorkspaceFolders(client.workspace_folders, buf_name)
     single_file = not root or not utils.fs.is_dir(root)
     if not utils.fs.is_dir(root) then
       root = utils.fs.parent(root)
@@ -24,7 +44,7 @@ local function cd_lsp_root(opts, client, buffer, auto_add_ws)
   end
   if root then
     -- cd
-    utils.vim.cd(root, vim.api.nvim_buf_get_name(buffer))
+    utils.vim.cd(root, buf_name)
 
     -- 如非单文件服务则自动添加workspace
     if auto_add_ws and not single_file then
