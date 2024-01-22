@@ -148,15 +148,12 @@ ws.close = function(ws_name)
     local match_ws_name = ws_name .. '/';
     for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
       if vim.api.nvim_buf_is_valid(bufnr) and not utils.vim.is_sepcial_ft(bufnr) then
-        local filename = vim.api.nvim_buf_get_name(bufnr)
-        if filename then
-          local idx = utils.lang.str_index(filename, match_ws_name)
-          if idx == 1 then
-            -- 如果缓冲区没有未修改内容则进行关闭
-            local ok = pcall(vim.api.nvim_buf_delete, bufnr, { force = false })
-            if not ok then
-              full_closed = false
-            end
+        local filename = utils.fs.regularize_path(vim.api.nvim_buf_get_name(bufnr))
+        if filename and utils.lang.str_index(filename, match_ws_name) == 1 then
+          -- 如果缓冲区没有未修改内容不进行关闭
+          local ok = pcall(vim.api.nvim_buf_delete, bufnr, { force = false })
+          if not ok then
+            full_closed = false
           end
         end
       end
