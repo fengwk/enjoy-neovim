@@ -58,7 +58,7 @@ local function geturl()
 
   -- 截取url
   local url = string.sub(line, start_col, end_col - 1)
-  url = url:match("https?://[~%w-_%.%?%.:/%+=&]+")
+  url = url:match("https?://[^%s]+")
   return trim_pair(url)
 end
 
