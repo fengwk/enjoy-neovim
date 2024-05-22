@@ -25,7 +25,7 @@ end
 
 -- lsp信息
 function _G._lualine_lsp_progress()
-  local messages = vim.lsp.util.get_progress_messages()
+  local messages = vim.lsp.util.status()
   if #messages == 0 then
     return ""
   end
