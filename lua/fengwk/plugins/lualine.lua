@@ -6,30 +6,16 @@ if not ok_lualine then
   return
 end
 
--- 格式化信息样式
-local function format_messages(messages)
-  local result = {}
-  local spinners = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
-  local ms = vim.loop.hrtime() / 1000000
-  local frame = math.floor(ms / 120) % #spinners
-  local i = 1
-  for _, message in pairs(messages) do
-    -- Only display at most 2 progress messages at a time to avoid clutter
-    if i < 3 then
-      table.insert(result, (message.percentage or 0) .. "%% " .. (message.title or ""))
-      i = i + 1
-    end
-  end
-  return table.concat(result, " ") .. " " .. spinners[frame + 1]
-end
-
 -- lsp信息
 function _G._lualine_lsp_progress()
-  local messages = vim.lsp.util.status()
-  if #messages == 0 then
+  local lspStatus = vim.lsp.status()
+  local pt = string.match(lspStatus, "%d+%%")
+  if not pt then
     return ""
   end
-  return " " .. format_messages(messages)
+  -- 需要对结果进行转义，否则lualine解析会报错
+  pt = string.gsub(pt, "%%", "%%%%")
+  return pt
 end
 
 -- 诊断信息

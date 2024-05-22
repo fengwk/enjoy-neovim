@@ -107,7 +107,7 @@ return packer.startup(function(use)
   -- fuzzy finding
   use {
     "nvim-telescope/telescope.nvim", -- 模糊搜索插件，require nvim-lua/plenary
-    tag = "0.1.4",
+    tag = "0.1.6",
     requires = "nvim-lua/plenary.nvim",
   }
   use "nvim-telescope/telescope-live-grep-args.nvim"                                     -- live grep增强
