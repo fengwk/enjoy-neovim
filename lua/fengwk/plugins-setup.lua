@@ -99,15 +99,16 @@ return packer.startup(function(use)
   -- copilot
   -- use "github/copilot.vim"
   -- use "hrsh7th/cmp-copilot"
-  use "zbirenbaum/copilot.lua"
-  use "zbirenbaum/copilot-cmp"
+  -- 没有copilot了暂不使用
+  -- use "zbirenbaum/copilot.lua"
+  -- use "zbirenbaum/copilot-cmp"
   -- use { "fengwk/copilot-cmp", branch = "fix/cmp-confirm" }
   use "folke/neodev.nvim" -- neovim补全，需要配置lua_ls
 
   -- fuzzy finding
   use {
     "nvim-telescope/telescope.nvim", -- 模糊搜索插件，require nvim-lua/plenary
-    tag = "0.1.4",
+    tag = "0.1.6",
     requires = "nvim-lua/plenary.nvim",
   }
   use "nvim-telescope/telescope-live-grep-args.nvim"                                     -- live grep增强
