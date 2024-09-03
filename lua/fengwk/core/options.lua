@@ -132,7 +132,8 @@ vim.o.listchars = "tab:>-,trail:·,precedes:«,extends:»,"
 -- 使用系统剪切板作为无名寄存器
 -- vim.o.clipboard = 'unnamed'
 -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
-vim.cmd("set clipboard^=unnamed,unnamedplus")
+-- vim.cmd("set clipboard^=unnamed,unnamedplus")
+vim.cmd("set clipboard=unnamedplus")
 
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true

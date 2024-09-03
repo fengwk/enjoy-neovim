@@ -32,6 +32,18 @@ function _G._lualine_lsp_progress()
   return " " .. format_messages(messages)
 end
 
+-- lsp信息 neovim 10+
+-- function _G._lualine_lsp_progress()
+--   local lspStatus = vim.lsp.status()
+--   local pt = string.match(lspStatus, "%d+%%")
+--   if not pt then
+--     return ""
+--   end
+--   -- 需要对结果进行转义，否则lualine解析会报错
+--   pt = string.gsub(pt, "%%", "%%%%")
+--   return pt
+-- end
+
 -- 诊断信息
 local diagnostics = {
   "diagnostics",

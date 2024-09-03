@@ -134,6 +134,9 @@ end
 
 -- 检查文件是否存在
 fs.exists = function(filename)
+  if not filename then
+    return false
+  end
   local file = io.open(filename, "rb")
   if file then
     file:close()
