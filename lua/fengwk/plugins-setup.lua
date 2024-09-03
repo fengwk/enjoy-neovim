@@ -46,6 +46,7 @@ return packer.startup(function(use)
   use "eddyekofo94/gruvbox-flat.nvim"
   use "Mofiqul/vscode.nvim"
   use "projekt0n/github-nvim-theme"
+  use "catppuccin/nvim"
 
   -- file explorer
   -- use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
@@ -54,6 +55,9 @@ return packer.startup(function(use)
   -- git
   use "lewis6991/gitsigns.nvim"
   use "sindrets/diffview.nvim"
+
+  -- tmux
+  use "aserowy/tmux.nvim"
 
   -- markdown
   use { "iamcco/markdown-preview.nvim", run = "cd app && yarn install" } -- 在浏览器中预览Markdown
@@ -99,8 +103,9 @@ return packer.startup(function(use)
   -- copilot
   -- use "github/copilot.vim"
   -- use "hrsh7th/cmp-copilot"
-  use "zbirenbaum/copilot.lua"
-  use "zbirenbaum/copilot-cmp"
+  -- 暂不启用copilot
+  -- use "zbirenbaum/copilot.lua"
+  -- use "zbirenbaum/copilot-cmp"
   -- use { "fengwk/copilot-cmp", branch = "fix/cmp-confirm" }
   use "folke/neodev.nvim" -- neovim补全，需要配置lua_ls
 
