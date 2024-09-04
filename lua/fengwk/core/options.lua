@@ -24,6 +24,13 @@ vim.o.pumblend = vim.o.winblend
 -- 设置终端名称为文件名
 -- vim.o.title=true
 -- 自动刷新标题
+local function set_title(title)
+  io.write("\27]0;" .. title .. "\7") -- send to terminal
+  local env_tmux = os.getenv("TMUX")
+  if env_tmux and vim.trim(env_tmux) ~= "" then
+    utils.sys.system("tmux rename-window '" .. title .. "'")
+  end
+end
 local function refresh_title(force)
   local title = ""
   local cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
@@ -38,7 +45,7 @@ local function refresh_title(force)
     end
     title = "nvim ~ " .. cwd .. title
     -- 发送title到终端标题
-    io.write("\27]0;" .. title .. "\7")
+    set_title(title)
   end
 end
 utils.vim.register_postcd("refresh_title", refresh_title)
@@ -60,7 +67,7 @@ vim.api.nvim_create_autocmd(
         local pwd = os.getenv('PWD')
         local shell = os.getenv('SHELL')
         shell = string.match(shell, "[^/]+$")
-        io.write("\27]0;" .. shell .. " ~ " .. string.match(pwd .. "", '.*/(.*)') .. "\7")
+        set_title(shell .. " ~ " .. string.match(pwd .. "", '.*/(.*)'))
       end)
   end}
 )
