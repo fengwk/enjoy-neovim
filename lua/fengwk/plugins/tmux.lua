@@ -5,10 +5,10 @@ if not ok then
 end
 
 -- move
-vim.keymap.set("n", "<A-h>", function() tmux.move_left() end)
-vim.keymap.set("n", "<A-j>", function() tmux.move_bottom() end)
-vim.keymap.set("n", "<A-k>", function() tmux.move_top() end)
-vim.keymap.set("n", "<A-l>", function() tmux.move_right() end)
+vim.keymap.set("n", "<C-space>h", function() tmux.move_left() end)
+vim.keymap.set("n", "<C-space>j", function() tmux.move_bottom() end)
+vim.keymap.set("n", "<C-space>k", function() tmux.move_top() end)
+vim.keymap.set("n", "<C-space>l", function() tmux.move_right() end)
 -- resize
 vim.keymap.set("n", "<A-Left>", function() tmux.resize_left() end)
 vim.keymap.set("n", "<A-Down>", function() tmux.resize_bottom() end)

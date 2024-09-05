@@ -264,6 +264,10 @@ local function setup_lsp(lsp, conf)
   if conf.capabilities == nil then
     conf.capabilities = make_capabilities()
   end
+  -- tsserver在lspConfig中已过时，但目前mason没有ts_ls到tsserver的映射，暂时先手动添加
+  if lsp == "tsserver" then
+    lsp = "ts_ls"
+  end
   lspconfig[lsp].setup(conf)
 end
 
