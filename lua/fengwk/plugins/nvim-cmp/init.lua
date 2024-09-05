@@ -250,16 +250,17 @@ cmp.setup({
   -- 补全项格式
   formatting = utils.sys.is_tty() and {} or {
     format = lspkind.cmp_format({
-      maxwidth = 50,
+      maxwidth = 30,
       mode = "symbol_text",
-      menu = ({
-        copilot = "[Copilot]",
-        nvim_lsp = "[Lsp]",
-        vsnip = "[Vsnip]",
-        buffer = "[Buffer]",
-        path = "[Path]",
-        cmdline = "[Cmd]",
-      })
+      -- menu占显示空间，先去掉
+      -- menu = ({
+      --   copilot = "[Copilot]",
+      --   nvim_lsp = "[Lsp]",
+      --   vsnip = "[Vsnip]",
+      --   buffer = "[Buffer]",
+      --   path = "[Path]",
+      --   cmdline = "[Cmd]",
+      -- })
     }),
   },
   -- 实验性参数
