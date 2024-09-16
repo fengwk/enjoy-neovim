@@ -57,7 +57,7 @@ local function cd_lsp_root(opts, client, buffer, auto_add_ws)
 end
 
 local auto_add_ws_clients = {
-  "clangd", "gopls", "groovy", "lua_ls", "jedi_language_server", "tsserver", "jdtls"
+  "clangd", "gopls", "groovy", "lua_ls", "jedi_language_server", "ts_ls", "jdtls"
 }
 
 local function get_range()
@@ -227,7 +227,7 @@ local lsp_configs = {
   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),     -- { "lua" }
   utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
   "pylsp",                                                   -- { "python" }
-  ["tsserver"] = require("fengwk.plugins.lsp.lsp-tsserver"), -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+  ["ts_ls"] = require("fengwk.plugins.lsp.lsp-ts_ls"),    -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "eslint",
   "vimls",                                                   -- { "vim" }
   "yamlls",                                                  -- { "yaml", "yaml.docker-compose" }
@@ -263,10 +263,6 @@ local function setup_lsp(lsp, conf)
   end
   if conf.capabilities == nil then
     conf.capabilities = make_capabilities()
-  end
-  -- tsserver在lspConfig中已过时，但目前mason没有ts_ls到tsserver的映射，暂时先手动添加
-  if lsp == "tsserver" then
-    lsp = "ts_ls"
   end
   lspconfig[lsp].setup(conf)
 end
