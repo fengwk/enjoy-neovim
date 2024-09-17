@@ -211,15 +211,15 @@ cmp.setup({
     ["<CR>"] = cmp.mapping.confirm({ select = false }),
     -- 下一个补全项
     ["<Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then -- 补全已开启则选择下一项
+      if cmp.visible() then                                                 -- 补全已开启则选择下一项
         cmp.select_next_item()
       elseif ok_copilot and require("copilot.suggestion").is_visible() then -- 接受copilot提示
         require("copilot.suggestion").accept()
-      -- vsnip使用C-j跳到下一个插入位置
-      -- elseif vim.fn["vsnip#available"](1) == 1 then
-      --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
-      -- elseif has_words_before() then -- 前边有单词则开启补全
-      --   cmp.complete()
+        -- vsnip使用C-j跳到下一个插入位置
+        -- elseif vim.fn["vsnip#available"](1) == 1 then
+        --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
+        -- elseif has_words_before() then -- 前边有单词则开启补全
+        --   cmp.complete()
       else
         fallback() -- The fallback function sends a already mapped key. In this case, it"s probably `<Tab>`
       end
@@ -228,9 +228,9 @@ cmp.setup({
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      -- vsnip使用C-k跳到上一个插入位置
-      -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-      --   feedkey("<Plug>(vsnip-jump-prev)", "")
+        -- vsnip使用C-k跳到上一个插入位置
+        -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+        --   feedkey("<Plug>(vsnip-jump-prev)", "")
       else
         fallback()
       end
@@ -245,15 +245,15 @@ cmp.setup({
           -- 可见情况下开启补全
           cmp.complete()
         end
-      -- else
-      -- 可见情况下使用Tab下翻，不再使用C-n
-      --   cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
+        -- else
+        -- 可见情况下使用Tab下翻，不再使用C-n
+        --   cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
       end
     end, { "i", "s" }),
   },
   -- 窗口样式
   window = {
-    completion = win_border(), -- 补全窗口边框
+    completion = win_border(),    -- 补全窗口边框
     documentation = win_border(), -- 文档窗口边框
   },
   -- 补全项格式
@@ -286,10 +286,10 @@ cmp.setup({
         return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'Text'
       end,
     },
-    { name = "vsnip" },    -- snippets
-    { name = "path" },     -- 文件系统路
+    { name = "vsnip" },         -- snippets
+    { name = "path" },          -- 文件系统路
     {
-      name = "buffer",     -- 缓冲区
+      name = "buffer",          -- 缓冲区
       option = {
         get_bufnrs = function() -- 默认是vim.api.nvim_get_current_buf()
           if utils.vim.ft() == "json" then
@@ -315,27 +315,41 @@ cmp.setup({
   },
   -- 排序方式
   sorting = {
-    comparators = {
-      weight_sort, -- 基于权重排序
-      -- compare.offset, -- lsp给出的顺序
-      -- compare.exact,
-      compare.recently_used, -- 近期使用
-      compare.locality, -- 当前缓冲区优先
-      compare.length, -- 长度
-      compare.order, -- id序，兜底
+    -- comparators = {
+    --   weight_sort, -- 基于权重排序
+    --   -- compare.offset, -- lsp给出的顺序
+    --   -- compare.exact,
+    --   compare.recently_used, -- 近期使用
+    --   compare.locality,      -- 当前缓冲区优先
+    --   compare.length,        -- 长度
+    --   compare.order,         -- id序，兜底
+    --
+    --   -- copilot_prioritize,
+    --   -- -- Below is the default comparitor list and order for nvim-cmp
+    --   -- compare.offset,
+    --   -- -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+    --   -- compare.exact,
+    --   -- compare.score,
+    --   -- compare.recently_used,
+    --   -- compare.locality,
+    --   -- compare.kind,
+    --   -- compare.sort_text,
+    --   -- compare.length,
+    --   -- compare.order,
+    -- },
 
-      -- copilot_prioritize,
-      -- -- Below is the default comparitor list and order for nvim-cmp
-      -- compare.offset,
-      -- -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
-      -- compare.exact,
-      -- compare.score,
-      -- compare.recently_used,
-      -- compare.locality,
-      -- compare.kind,
+    priority_weight = 2,
+    comparators = {
+      compare.offset,
+      compare.exact,
+      -- compare.scopes,
+      compare.score,
+      compare.recently_used,
+      compare.locality,
+      compare.kind,
       -- compare.sort_text,
-      -- compare.length,
-      -- compare.order,
+      compare.length,
+      compare.order,
     },
   },
   -- 启用情况
