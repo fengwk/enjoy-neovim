@@ -154,10 +154,12 @@ if ok_copilot then
     },
   }
 
+  -- 打开菜单后隐藏copilot暗纹
   cmp.event:on("menu_opened", function()
     vim.b.copilot_suggestion_hidden = true
   end)
 
+  -- 关闭菜单后显示copilot暗纹
   cmp.event:on("menu_closed", function()
     vim.b.copilot_suggestion_hidden = false
   end)
@@ -172,6 +174,8 @@ local types = require('cmp.types')
 
 -- 安装cmp
 cmp.setup({
+  -- 部分source（如golsp）会自动选择选项，这会导致操作不一致，先禁用
+  preselect = cmp.PreselectMode.None,
   -- snippets
   snippet = {
     expand = function(args)
@@ -192,7 +196,8 @@ cmp.setup({
     -- 向下滚动补全项文档
     ["<C-d>"] = cmp.mapping.scroll_docs(5),
     -- 关闭补全项窗口
-    ["<C-e>"] = cmp.mapping(function(fallback)
+    -- ["<C-e>"] = cmp.mapping(function(fallback)
+    ["<C-c>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.mapping.abort()()
       elseif ok_copilot and require("copilot.suggestion").is_visible() then
@@ -210,8 +215,9 @@ cmp.setup({
         cmp.select_next_item()
       elseif ok_copilot and require("copilot.suggestion").is_visible() then -- 接受copilot提示
         require("copilot.suggestion").accept()
-      elseif vim.fn["vsnip#available"](1) == 1 then
-        feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      -- vsnip使用C-j跳到下一个插入位置
+      -- elseif vim.fn["vsnip#available"](1) == 1 then
+      --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
       -- elseif has_words_before() then -- 前边有单词则开启补全
       --   cmp.complete()
       else
@@ -222,23 +228,26 @@ cmp.setup({
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-      elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-        feedkey("<Plug>(vsnip-jump-prev)", "")
+      -- vsnip使用C-k跳到上一个插入位置
+      -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+      --   feedkey("<Plug>(vsnip-jump-prev)", "")
       else
         fallback()
       end
     end, { "i", "s" }),
     -- 默认inert模式下<C-n>是唤出neovim自带的补全，修改为使用cmp的补全
     ["<C-n>"] = cmp.mapping(function(fallback)
-      local cmp = require('cmp')
-      if cmp.visible() then
-        cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
-      else
+      if not cmp.visible() then
         if utils.vim.ft() == "chatgpt-input" then
+          -- 与chatgpt-input键位冲突
           fallback()
         else
+          -- 可见情况下开启补全
           cmp.complete()
         end
+      -- else
+      -- 可见情况下使用Tab下翻，不再使用C-n
+      --   cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
       end
     end, { "i", "s" }),
   },
@@ -269,7 +278,7 @@ cmp.setup({
   },
   -- 补全来源
   sources = {
-    { name = "copilot" },
+    -- { name = "copilot" },
     {
       name = "nvim_lsp", -- lsp
       entry_filter = function(entry, _)
@@ -345,6 +354,7 @@ cmp.setup({
   end,
 })
 
+-- dap补全
 require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
   sources = {
     { name = "dap" },

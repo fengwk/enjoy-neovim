@@ -10,6 +10,7 @@ require('lspconfig.ui.windows').default_options.border = vim.g.__border
 vim.lsp.set_log_level("WARN")
 
 local utils = require("fengwk.utils")
+local lspsaga = require("fengwk.plugins.lsp.lspsaga")
 
 local function findRootFromWorkspaceFolders(workspace_folders, buf_name)
   local root = nil
@@ -188,13 +189,8 @@ local function build_on_attach(opts)
     keymap.set("n", "gD", vim.lsp.buf.declaration, { silent = true, buffer = bufnr, desc = "Lsp Declaration" })
     keymap.set("n", "gt", vim.lsp.buf.type_definition, { silent = true, buffer = bufnr, desc = "Lsp Type Definition" })
     keymap.set("n", "gW", vim.lsp.buf.workspace_symbol, { buffer = bufnr, desc = "Lsp Workspace Symbols" })
-    keymap.set("n", "<leader>gi", "<Cmd>Lspsaga incoming_calls<CR>",
-      { silent = true, buffer = bufnr, desc = "Lsp Incoming Calls" })
-    keymap.set("n", "<leader>go", "<Cmd>Lspsaga outgoing_calls<CR>",
-      { silent = true, buffer = bufnr, desc = "Lsp Outgoing Calls" })
-
-    -- outline
-    keymap.set("n", "<leader>oo", "<Cmd>Lspsaga outline<CR>", { desc = "Outline" })
+    -- 设置lspsaga的keymap
+    lspsaga.setup_lsp_keymap(bufnr)
 
     -- 在attatch成功后改变vim的cwd，并且注册跳转
     if client.name ~= "copilot" then

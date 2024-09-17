@@ -327,9 +327,9 @@ local imgdir = vim.fn.expand('%:t:r') .. '.assets'
 :Tabularize/{delimiter}[/[l{number}|c{number}|r{number}]...]
 ```
 - delimiter：分隔的符号，每行都按这个符号分割成小段。
-- l：所有小段靠左对齐，每小段以delimiter分割，delimiter左右离最近的小段字符有number个空格。
-- c：所有小段居中对齐，每小段以delimiter分割，delimiter左右离最近的小段字符有number个空格。
-- r：所有小段靠右对齐，每小段以delimiter分割，delimiter左右离最近的小段字符有number个空格。
+- l{number}：设置delimiter左右最近的字符有number个空格，且同一列的小段左对齐。
+- c{number}：设置delimiter左右最近的字符有number个空格，且同一列的小段居中对齐。
+- r{number}：设置delimiter左右最近的字符有number个空格，且同一列的小段右对齐。
 - lcr可一起使用，甚至可以多组一起使用，此时按照lcr的排列顺序依次执行lcr的逻辑，这里有一点比较诡异，delimiter也会计算lcr的执行顺序，见示例二。
 
 示例一：

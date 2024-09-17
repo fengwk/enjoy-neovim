@@ -83,8 +83,8 @@ local function jump_to_location(uri)
 end
 
 return {
-  debug = debug,
-  remote_debug = remote_debug,
-  copy_reference = copy_reference,
+  debug            = debug,
+  remote_debug     = remote_debug,
+  copy_reference   = copy_reference,
   jump_to_location = jump_to_location,
 }

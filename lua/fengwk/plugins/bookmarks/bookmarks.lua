@@ -3,11 +3,9 @@ local md5 = require("fengwk.plugins.bookmarks.md5")
 
 local data_path = utils.fs.stdpath("data", "bookmarks.json")
 
-local bm = {}
-
 local data_cache = nil
 local data_cache_pre_read = 0
-local data_cache_read_timeout = 1e6 * 500 -- 500毫秒，配置读取超时
+local data_cache_read_min_interval = 1e6 * 500 -- 500毫秒，配置读取最小间隔时间
 
 local function write_data(data)
   data_cache = data
@@ -16,7 +14,7 @@ end
 
 local function read_data()
   local cur_nanos = vim.loop.hrtime()
-  if cur_nanos < data_cache_pre_read + data_cache_read_timeout and data_cache then
+  if cur_nanos < data_cache_pre_read + data_cache_read_min_interval and data_cache then
     return data_cache
   end
   data_cache = utils.fs.read_data(data_path)
@@ -33,7 +31,7 @@ local function add_mark_item(mark_item)
   write_data(data)
 end
 
-bm.remove_mark_item = function(hash)
+local function remove_mark_item(hash)
   if not hash then
     return
   end
@@ -77,7 +75,7 @@ local hash = function(filename, line)
   return md5.sumhexa(text)
 end
 
-bm.add_mark = function(annotation)
+local function add_mark(annotation)
   if utils.vim.is_sepcial_ft() then
     vim.notify("current ft cannot add bookmarks")
   end
@@ -96,10 +94,10 @@ bm.add_mark = function(annotation)
   add_mark_item(mark_item)
 end
 
-bm.remove_mark = function()
+local function remove_mark()
   local filename = vim.fn.expand("%:p")
   local current_line = vim.api.nvim_get_current_line()
-  bm.remove_mark_item(hash(filename, current_line))
+  remove_mark_item(hash(filename, current_line))
 end
 
 local function get_real_row(mark_item)
@@ -140,7 +138,7 @@ local function get_real_row(mark_item)
   return -1
 end
 
-bm.open_mark = function(hash)
+local function open_mark(hash)
   if not hash then
     return
   end
@@ -171,7 +169,7 @@ bm.open_mark = function(hash)
   end)
 end
 
-bm.list_marks = function()
+local function list_marks()
   local list = {}
   local data = read_data() or {}
   for _, v in pairs(data) do
@@ -180,7 +178,7 @@ bm.list_marks = function()
   return list
 end
 
-bm.setup = function()
+local function setup()
   -- vim.fn.sign_define("bookmark", { text = "🔖" })
   -- vim.api.nvim_create_autocmd({ "BufEnter" }, {
   --   group = "workspaces",
@@ -200,8 +198,19 @@ bm.setup = function()
   --   bm.remove_mark()
   -- end, {})
   vim.keymap.set("n", "<leader>mi", function()
-    bm.add_mark(vim.fn.input("Bookmark Annotation: "))
+    add_mark(vim.fn.input("Bookmark Annotation: "))
   end, { silent = true, desc = "Pates Image To Markdown" })
+  vim.api.nvim_create_user_command("Bookmark Insert", function()
+    add_mark(vim.fn.input("Bookmark Annotation: "))
+  end, {})
 end
 
-return bm
+-- export
+return {
+  remove_mark_item = remove_mark_item,
+  add_mark         = add_mark,
+  remove_mark      = remove_mark,
+  open_mark        = open_mark,
+  list_marks       = list_marks,
+  setup            = setup,
+}

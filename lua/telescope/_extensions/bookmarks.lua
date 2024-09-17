@@ -73,17 +73,21 @@ local function picker_func(opts)
     attach_mappings = function(_, map)
       ext_common.map_preview(map)
       ext_common.map_select_one(map, open_mark)
+      -- dd删除bookmark记录
       map({ "n" }, "dd", remove_mark)
+      -- ctrl+x横屏分割
       map({ "n", "i" }, "<C-x>", function(prompt_bufnr)
         open_mark(prompt_bufnr, function()
           vim.cmd("sp")
         end)
       end)
+      -- ctrl+v竖屏分割
       map({ "n", "i" }, "<C-v>", function(prompt_bufnr)
         open_mark(prompt_bufnr, function()
           vim.cmd("vsp")
         end)
       end)
+      -- ctrl+t在tab中打开
       map({ "n", "i" }, "<C-t>", function(prompt_bufnr)
         open_mark(prompt_bufnr, function()
           vim.cmd("tabnew")

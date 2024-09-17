@@ -40,12 +40,12 @@ end
 
 v.is_large_buf = function(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  -- 如果文件大小超过阈值则不高亮
+  -- 检查文件大小是否超过阈值
   local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(bufnr))
   if ok and stats and stats.size > v.large_fsize then
     return true
   end
-  -- 如果文件行数超过阈值则不高亮
+  -- 检查文件行数是否超过阈值
   local line_count = vim.api.nvim_buf_line_count(bufnr)
   if line_count and line_count > v.large_flines then
     return true
