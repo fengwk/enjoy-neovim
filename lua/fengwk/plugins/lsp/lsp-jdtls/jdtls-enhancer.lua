@@ -28,14 +28,12 @@ end
 
 -- 通过输入参数提供远程调试能力
 local function remote_debug()
-  vim.ui.input({ prompt = "Host: " }, function(host)
-    if host then
-      vim.ui.input({ prompt = "Port: " }, function(port)
-        if port then
-          do_remote_debug(host, port)
-        end
-      end)
-    end
+  vim.ui.input({ prompt = "Host [127.0.0.1]: " }, function(host)
+    host = host or "127.0.0.1"
+    vim.ui.input({ prompt = "Port [8080]: " }, function(port)
+      port = port or "8080"
+      do_remote_debug(host, port)
+    end)
   end)
 end
 

@@ -17,12 +17,12 @@ dap.adapters.cppdbg = {
 -- 调试文件需要先使用gcc -g生成
 local conf = {
   {
-    name = "Launch file",
+    name = "Launch file with program",
     type = "cppdbg",
     request = "launch",
     program = function()
       local p = nil
-      vim.ui.input({ prompt = "Path to executable: ", default = vim.fn.getcwd() .. "/"}, function(input)
+      vim.ui.input({ prompt = "Program Path (Comple With -g): ", default = vim.fn.getcwd() .. "/"}, function(input)
         if input then
           p = input
         end
@@ -33,7 +33,7 @@ local conf = {
     stopAtEntry = true,
   },
   {
-    name = "Attach to gdbserver :12345",
+    name = "Attach to gdb Server :12345",
     type = "cppdbg",
     request = "launch",
     MIMode = "gdb",

@@ -7,7 +7,7 @@ dap.configurations.lua = {
   {
     type = "nlua",
     request = "attach",
-    name = "Attach to running Neovim instance",
+    name = "Attach To Running Neovim Instance",
   }
 }
 

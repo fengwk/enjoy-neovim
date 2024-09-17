@@ -140,6 +140,8 @@ return packer.startup(function(use)
   use "mfussenegger/nvim-dap"
   use "theHamsta/nvim-dap-virtual-text"
   -- use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
+  use "mfussenegger/nvim-dap-python"
+  use "leoluz/nvim-dap-go"
 
   -- nvim-treesitter | 提供代码的语法解析和高亮，比neovim原生的解析器更快且更加强大
   use {

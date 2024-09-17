@@ -195,9 +195,10 @@ local function setup()
 
     -- https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
     -- 注册用于调试的主类，如果是新增的main方法需要使用:JdtRefreshDebugConfigs命令刷新
-    if not single_file then
-      require("jdtls.dap").setup_dap_main_class_configs()
-    end
+    require("jdtls.dap").setup_dap_main_class_configs()
+    -- if not single_file then
+    --   require("jdtls.dap").setup_dap_main_class_configs()
+    -- end
 
     -- 注册调试命令
     vim.api.nvim_create_user_command("JdtTestClass", function() require("jdtls").test_class() end, {})
@@ -209,6 +210,10 @@ local function setup()
     vim.api.nvim_create_user_command("JdtCopyReference", function()
       require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").copy_reference()
     end, {})
+    -- 与ChatGPT run冲突
+    -- vim.keymap.set("n", "<leader>cr", function()
+    --   require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer").copy_reference()
+    -- end, { silent = true, desc = "Jdt Copy Reference" })
 
     -- 跳转到目标
     -- TODO 需要想办法定位location
@@ -337,9 +342,11 @@ local function setup()
 end
 
 vim.api.nvim_create_augroup("user_jdtls_setup", { clear = true })
+-- java or ant文件启动jdtls
 vim.api.nvim_create_autocmd(
   { "FileType" },
   { group = "user_jdtls_setup", pattern = "java,ant", callback = setup })
+-- pom.xml文件启动jdtls
 vim.api.nvim_create_autocmd(
   { "FileType" },
   { group = "user_jdtls_setup", pattern = "xml", callback = function()

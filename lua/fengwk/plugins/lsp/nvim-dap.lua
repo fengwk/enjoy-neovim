@@ -39,6 +39,10 @@ end
 local M = {}
 
 dap.defaults.fallback.terminal_win_cmd = "belowright 10new" -- 在下方打开dap terminal，10行高度
+-- dap.defaults.fallback.external_terminal = {
+--   command = '/usr/local/bin/st';
+--   args = {'-e'};
+-- }
 
 require("fengwk.plugins.lsp.nvim-dap-ui")
 require("fengwk.plugins.lsp.nvim-dap-virtual-text")
@@ -70,7 +74,7 @@ M.setup_keymap = function(bufnr)
   end, { buffer = bufnr, desc = "Dap Breakpoint" })
   -- 条件断点
   vim.keymap.set("n", "<leader>dB", function()
-    vim.ui.input({ prompt = "Condition: " }, function(cond)
+    vim.ui.input({ prompt = "Debug Condition: " }, function(cond)
       if cond then
         dap.set_breakpoint(cond)
       end
