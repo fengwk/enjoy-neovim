@@ -215,9 +215,9 @@ cmp.setup({
         cmp.select_next_item()
       elseif ok_copilot and require("copilot.suggestion").is_visible() then -- 接受copilot提示
         require("copilot.suggestion").accept()
-        -- vsnip使用C-j跳到下一个插入位置
-        -- elseif vim.fn["vsnip#available"](1) == 1 then
-        --   feedkey("<Plug>(vsnip-expand-or-jump)", "")
+        -- vsnip跳到下一个插入位置
+        elseif vim.fn["vsnip#available"](1) == 1 then
+          feedkey("<Plug>(vsnip-expand-or-jump)", "")
         -- elseif has_words_before() then -- 前边有单词则开启补全
         --   cmp.complete()
       else
@@ -228,9 +228,9 @@ cmp.setup({
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
-        -- vsnip使用C-k跳到上一个插入位置
-        -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
-        --   feedkey("<Plug>(vsnip-jump-prev)", "")
+        -- vsnip跳到上一个插入位置
+        elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+          feedkey("<Plug>(vsnip-jump-prev)", "")
       else
         fallback()
       end
