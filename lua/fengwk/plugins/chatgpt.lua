@@ -17,10 +17,10 @@ chatgpt.setup {
     keymaps = {
       close = { "<C-c>", "<C-q>" },
       close_n = { "<Esc>", "q" },
-      accept = "<C-y>", -- 将修改内容替换到文本中
-      toggle_diff = "<C-d>", -- 对比内容
+      accept = "<C-y>",              -- 将修改内容替换到文本中
+      toggle_diff = "<C-d>",         -- 对比内容
       toggle_settings = "<C-o>",
-      cycle_windows = "<Tab>", -- 在不同窗口间切换
+      cycle_windows = "<Tab>",       -- 在不同窗口间切换
       use_output_as_input = "<C-e>", -- 将回复内容作为新的输入，不能使用默认的<C-i>，因为<C-i>等价于<Tab>
     },
   },
@@ -176,16 +176,19 @@ local function run_list(x)
   end
   table.sort(run_actions)
   vim.ui.select(run_actions, {}, function(a)
-    if x then
-      vim.api.nvim_feedkeys("gv", "n", false)
+    if a then
+      if x then
+        vim.api.nvim_feedkeys("gv", "n", false)
+      end
+      vim.cmd("ChatGPTRun " .. a)
     end
-    vim.cmd("ChatGPTRun " .. a)
   end)
 end
 
 vim.keymap.set("n", "<leader>ct", "<Cmd>ChatGPT<CR>", { silent = true, desc = "GPT Chat" })
 vim.keymap.set("n", "<leader>cc", "<Cmd>ChatGPTRun complete_code<CR>", { silent = true, desc = "GPT Complete Code" })
-vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>", { silent = true, desc = "GPT Edit With Instructions" })
+vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>",
+  { silent = true, desc = "GPT Edit With Instructions" })
 vim.keymap.set("x", "<leader>ck", "<Cmd>ChatGPTRun explain_code_cn<CR>", { silent = true, desc = "GPT Explain Code CN" })
 vim.keymap.set("n", "<leader>cr", run_list, { desc = "ChatGPTRun" })
 vim.keymap.set("x", "<leader>cr", function() run_list(true) end, { desc = "ChatGPTRun" })
