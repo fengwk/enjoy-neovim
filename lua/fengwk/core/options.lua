@@ -52,24 +52,30 @@ utils.vim.register_postcd("refresh_title", refresh_title)
 vim.api.nvim_create_augroup("nvim_title_change", { clear = true })
 vim.api.nvim_create_autocmd(
   { "VimEnter" },
-  { group = "nvim_title_change", callback = function()
+  {
+    group = "nvim_title_change",
+    callback = function()
       vim.schedule(function()
         refresh_title(true)
       end)
-  end}
+    end
+  }
 )
 -- 当离开nvim时重新设置标题为当前路径
 vim.api.nvim_create_augroup("nvim_title", { clear = true })
 vim.api.nvim_create_autocmd(
   { "VimLeave" },
-  { group = "nvim_title", callback = function()
+  {
+    group = "nvim_title",
+    callback = function()
       vim.schedule(function()
         local pwd = os.getenv('PWD')
         local shell = os.getenv('SHELL')
         shell = string.match(shell, "[^/]+$")
         set_title(shell .. " ~ " .. string.match(pwd .. "", '.*/(.*)'))
       end)
-  end}
+    end
+  }
 )
 
 -- 搜索配置
@@ -173,3 +179,48 @@ if not utils.sys.is_tty() then
   vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 end
 
+-- 判断是否是用户窗口
+local function is_user_win(win)
+  local bufnr = vim.api.nvim_win_get_buf(win)
+  local buf_name = vim.fn.bufname(bufnr)
+  if buf_name:match("^%[dap%-terminal%]") then
+    return false
+  end
+  if utils.vim.is_sepcial_ft(bufnr) then
+    return false
+  end
+  return true
+end
+
+-- 自动在关闭窗口，实现退出时不同另外关闭terminal等窗口
+vim.api.nvim_create_augroup("auto_close_win", { clear = true })
+vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+  group = "auto_close_win",
+  pattern = "*",
+  callback = function()
+    local wins = vim.api.nvim_list_wins()
+    if #wins == 1 then
+      return
+    end
+    local cur_win = vim.api.nvim_get_current_win()
+    local cur_is_user_win = false
+    local user_win_cnt = 0
+    for _, win in ipairs(wins) do
+      if is_user_win(win) then
+        user_win_cnt = user_win_cnt + 1
+        if win == cur_win then
+          cur_is_user_win = true
+        end
+      end
+    end
+    if cur_is_user_win and user_win_cnt == 1 then
+      vim.schedule(function()
+        -- vim.cmd("qall")
+        local ok = pcall(vim.cmd, "qall")
+        if not ok then
+          vim.notify("No write since last change", vim.log.levels.ERROR)
+        end
+      end)
+    end
+  end
+})
