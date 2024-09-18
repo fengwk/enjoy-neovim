@@ -119,6 +119,7 @@ return packer.startup(function(use)
   use "nvim-telescope/telescope-live-grep-args.nvim"                                     -- live grep增强
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }                       -- 模糊搜索增强
   use { "nvim-telescope/telescope-smart-history.nvim", requires = "kkharji/sqlite.lua" } -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
+  use "nvim-telescope/telescope-ui-select.nvim"
 
   -- managing & installing lsp servers, linters & formatters
   use "williamboman/mason.nvim"

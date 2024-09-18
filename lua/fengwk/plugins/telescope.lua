@@ -171,7 +171,7 @@ telescope.setup {
     --   extension_config_key = value,
     -- }
     -- please take a look at the readme of the extension you want to configure
-    ["my-ui-select"] = {
+    ["ui-select"] = {
       telescope_themes.get_dropdown {},
     },
 
@@ -261,7 +261,7 @@ telescope.setup {
 }
 
 -- load_extension, somewhere after setup function:
-telescope.load_extension("my-ui-select")
+telescope.load_extension("ui-select")
 telescope.load_extension("workspace")
 telescope.load_extension("live_grep_args")
 telescope.load_extension("lsp_handlers")
