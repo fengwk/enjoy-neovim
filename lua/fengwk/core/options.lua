@@ -180,13 +180,12 @@ if not utils.sys.is_tty() then
 end
 
 -- 判断是否是用户窗口
-local function is_user_win(win)
-  local bufnr = vim.api.nvim_win_get_buf(win)
+local function is_user_buf(bufnr)
   local buf_name = vim.fn.bufname(bufnr)
   if buf_name:match("^%[dap%-terminal%]") then
     return false
   end
-  if utils.vim.is_sepcial_ft(bufnr) then
+  if vim.api.nvim_buf_is_valid(bufnr) and utils.vim.is_sepcial_ft(bufnr) then
     return false
   end
   return true
@@ -194,7 +193,7 @@ end
 
 -- 自动在关闭窗口，实现退出时不同另外关闭terminal等窗口
 vim.api.nvim_create_augroup("auto_close_win", { clear = true })
-vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
+vim.api.nvim_create_autocmd({ "WinClosed" }, {
   group = "auto_close_win",
   pattern = "*",
   callback = function()
@@ -202,18 +201,22 @@ vim.api.nvim_create_autocmd({ "BufWinLeave" }, {
     if #wins == 1 then
       return
     end
-    local cur_win = vim.api.nvim_get_current_win()
-    local cur_is_user_win = false
+    local cur_win = tonumber(vim.fn.expand("<amatch>"))
     local user_win_cnt = 0
+    local other_win_cnt = 0
     for _, win in ipairs(wins) do
-      if is_user_win(win) then
-        user_win_cnt = user_win_cnt + 1
-        if win == cur_win then
-          cur_is_user_win = true
+      local bufnr = vim.api.nvim_win_get_buf(win)
+      if bufnr and win ~= cur_win then -- 忽略当前要关闭的窗口
+        if is_user_buf(bufnr) then
+          user_win_cnt = user_win_cnt + 1
+        else
+          other_win_cnt = other_win_cnt + 1
         end
       end
     end
-    if cur_is_user_win and user_win_cnt == 1 then
+    -- 当前在用户窗口并关闭 且存在other窗口的时候处理
+    -- 这样能避免一些badcase，比如有的程序先关闭窗口然后又打开
+    if user_win_cnt == 0 and other_win_cnt > 0 then
       vim.schedule(function()
         -- vim.cmd("qall")
         local ok = pcall(vim.cmd, "qall")

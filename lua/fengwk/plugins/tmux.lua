@@ -15,6 +15,13 @@ vim.keymap.set("n", "<A-Down>", function() tmux.resize_bottom() end)
 vim.keymap.set("n", "<A-Up>", function() tmux.resize_top() end)
 vim.keymap.set("n", "<A-Right>", function() tmux.resize_right() end)
 
+vim.cmd[[
+nmap <C-Space>H <C-w>H
+nmap <C-Space>J <C-w>J
+nmap <C-Space>K <C-w>K
+nmap <C-Space>L <C-w>L
+]]
+
 tmux.setup({
   copy_sync = {
     enable = false
