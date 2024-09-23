@@ -73,17 +73,27 @@ M.setup_keymap = function(bufnr)
     dap.toggle_breakpoint()
   end, { buffer = bufnr, desc = "Dap Breakpoint" })
   -- 条件断点
-  vim.keymap.set("n", "<leader>dB", function()
+  vim.keymap.set("n", "<leader>dc", function()
     vim.ui.input({ prompt = "Debug Condition: " }, function(cond)
       if cond then
-        dap.set_breakpoint(cond)
+        dap.toggle_breakpoint(cond)
       end
     end)
   end, { buffer = bufnr, desc = "Dap Breanpoint With Condition" })
+  -- 日志断点，允许不暂停但在变量上设置表达式如x = {x}就会在repl上打印输出对应x =的变量值
+  vim.keymap.set("n", "<leader>dl", function()
+    vim.ui.input({ prompt = "Debug Log: " }, function(log)
+      if log then
+        dap.toggle_breakpoint(nil, nil, log)
+      end
+    end)
+  end, { buffer = bufnr, desc = "Dap Breanpoint With Log" })
   -- 清理所有断点
-  vim.keymap.set("n", "<leader>dc", "<Cmd>lua require('dap').clear_breakpoints()<CR>", { buffer = bufnr, silent = true, desc = "Dap Clear Breakpoints" })
+  vim.keymap.set("n", "<leader>dC", "<Cmd>lua require('dap').clear_breakpoints()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Clear Breakpoints" })
   -- 执行最后一次的run
-  vim.keymap.set("n", "<leader>dl", "<Cmd>lua require('dap').run_last()<CR>", { buffer = bufnr, silent = true, desc = "Dap Run Last" })
+  vim.keymap.set("n", "<leader>dL", "<Cmd>lua require('dap').run_last()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Run Last" })
   -- REPL开关
   vim.keymap.set("n", "<leader>dr", function()
     local current_win = vim.api.nvim_get_current_win()
@@ -92,20 +102,25 @@ M.setup_keymap = function(bufnr)
     dap.repl.toggle({ width = width }, "rightbelow vsplit")
     vim.cmd("wincmd p") -- 聚焦窗口
   end, { buffer = bufnr, silent = true, desc = "Dap REPL" })
-  vim.keymap.set("n", "<F5>", "<Cmd>lua require('dap').step_into()<CR>", { buffer = bufnr, silent = true, desc = "Dap Step Into" })
-  vim.keymap.set("n", "<F6>", "<Cmd>lua require('dap').step_over()<CR>", { buffer = bufnr, silent = true, desc = "Dap Step Over" })
-  vim.keymap.set("n", "<F7>", "<Cmd>lua require('dap').step_out()<CR>", { buffer = bufnr, silent = true, desc = "Dap Setp Out" })
+  vim.keymap.set("n", "<F5>", "<Cmd>lua require('dap').step_into()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Step Into" })
+  vim.keymap.set("n", "<F6>", "<Cmd>lua require('dap').step_over()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Step Over" })
+  vim.keymap.set("n", "<F7>", "<Cmd>lua require('dap').step_out()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Setp Out" })
   -- 这个命令同时可以启动debug
-  vim.keymap.set("n", "<F8>", "<Cmd>lua require('dap').continue()<CR>", { buffer = bufnr, silent = true, desc = "Dap Continue" })
+  vim.keymap.set("n", "<F8>", "<Cmd>lua require('dap').continue()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Continue" })
   -- 关闭当前session
-  vim.keymap.set("n", "<leader>dt", "<Cmd>lua require('dap').terminate()<CR>", { buffer = bufnr, silent = true, desc = "Dap Terminate" })
+  vim.keymap.set("n", "<leader>dt", "<Cmd>lua require('dap').terminate()<CR>",
+    { buffer = bufnr, silent = true, desc = "Dap Terminate" })
 end
 
 
 -- 关闭terminal时自动删除缓冲区，避免无法在新的session中重新打开terminal
 -- https://github.com/mfussenegger/nvim-dap/issues/603
 vim.api.nvim_create_augroup("user_dap", { clear = true })
-vim.api.nvim_create_autocmd("BufHidden",  {
+vim.api.nvim_create_autocmd("BufHidden", {
   group = "user_dap",
   callback = function(arg)
     if arg and arg.file and string.find(arg.file, "[dap-terminal]", 1, true) then
@@ -129,5 +144,70 @@ vim.api.nvim_create_autocmd("BufHidden",  {
 -- command! DapUiExpression lua _G._nvim_dap_toggle_ui('expression')
 -- command! DapUiThreads lua _G._nvim_dap_toggle_ui('threads')
 -- ]])
+
+local function set_dap_theme()
+  -- 设置颜色，在catppuccin中会使用catppuccin本身设置的主题色
+  -- local dap_breakpoint_color = {
+  --   breakpoint = {
+  --     fg = '#993939',
+  --   },
+  --   logpoing = {
+  --     fg = '#61afef',
+  --   },
+  --   stopped = {
+  --     fg = '#98c379',
+  --   },
+  -- }
+  -- vim.api.nvim_set_hl(0, 'DapBreakpoint', dap_breakpoint_color.breakpoint)
+  -- vim.api.nvim_set_hl(0, 'DapLogPoint', dap_breakpoint_color.logpoing)
+  -- vim.api.nvim_set_hl(0, 'DapStopped', dap_breakpoint_color.stopped)
+
+  local dap_breakpoint = {
+    -- 普通断点
+    error = {
+      text = "",
+      texthl = "DapBreakpoint",
+      linehl = "DapBreakpoint",
+      numhl = "DapBreakpoint",
+    },
+    -- 条件断点
+    condition = {
+      text = '󰯲',
+      texthl = 'DapBreakpoint',
+      linehl = 'DapBreakpoint',
+      numhl = 'DapBreakpoint',
+    },
+    -- 无法debug的断点
+    rejected = {
+      text = "",
+      texthl = "DapBreakpint", -- catppuccin中为灰色
+      linehl = "DapBreakpoint",
+      numhl = "DapBreakpoint",
+    },
+    logpoint = {
+      text = '󰰍',
+      texthl = 'DapLogPoint',
+      linehl = 'DapLogPoint',
+      numhl = 'DapLogPoint',
+    },
+    stopped = {
+      text = '',
+      texthl = 'DapStopped',
+      linehl = 'DapStopped',
+      numhl = 'DapStopped',
+    },
+  }
+
+  vim.fn.sign_define('DapBreakpoint', dap_breakpoint.error)
+  vim.fn.sign_define('DapBreakpointCondition', dap_breakpoint.condition)
+  vim.fn.sign_define('DapBreakpointRejected', dap_breakpoint.rejected)
+  vim.fn.sign_define('DapLogPoint', dap_breakpoint.logpoint)
+  vim.fn.sign_define('DapStopped', dap_breakpoint.stopped)
+end
+
+local utils = require("fengwk.utils")
+if not utils.sys.is_tty() then
+  set_dap_theme()
+end
 
 return M
