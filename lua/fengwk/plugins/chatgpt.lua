@@ -137,24 +137,26 @@ chatgpt.setup {
   },
   openai_params = {
     -- model = "gpt-4-0613",
-    model = "gpt-3.5-turbo-16k",
+    -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
-    frequency_penalty = 0,
-    presence_penalty = 0,
-    max_tokens = 4096,
-    temperature = 0.7,
-    top_p = 1,
+    model = "deepseek-chat",
+    temperature = 1.0, -- 值越大越有随机性，建议和top_p修改一个即可
+    top_p = 0.85, -- 值越大越有多样性
+    presence_penalty = 0.25, -- 话题新鲜度，值越大, 越可能是用到新的话题
+    frequency_penalty = 0.25, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
+    max_tokens = 4096, -- 用于限制单次回复的最大长度
     n = 1,
   },
   openai_edit_params = {
     -- model = "gpt-4-0613",
-    model = "gpt-3.5-turbo-16k",
+    -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
-    frequency_penalty = 0,
-    presence_penalty = 0,
-    max_tokens = 4096,
-    temperature = 0.7,
-    top_p = 1,
+    model = "deepseek-chat",
+    temperature = 0, -- 值越大越有随机性，建议和top_p修改一个即可
+    top_p = 0.85, -- 值越大越有多样性
+    presence_penalty = 0.25, -- 话题新鲜度，值越大, 越可能是用到新的话题
+    frequency_penalty = 0.25, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
+    max_tokens = 4096, -- 用于限制单次回复的最大长度
     n = 1,
   },
   use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
