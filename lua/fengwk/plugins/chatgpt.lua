@@ -16,21 +16,27 @@ chatgpt.setup {
     diff = false,
     keymaps = {
       close = { "<C-c>", "<C-q>" },
-      close_n = { "<Esc>", "q" },
+      close_n = { "<Esc>", "q" },    -- TODO 无close_n
       accept = "<C-y>",              -- 将修改内容替换到文本中
       toggle_diff = "<C-d>",         -- 对比内容
+      toggle_help = "<C-h>",        -- 打开帮助
       toggle_settings = "<C-o>",
       cycle_windows = "<Tab>",       -- 在不同窗口间切换
       use_output_as_input = "<C-e>", -- 将回复内容作为新的输入，不能使用默认的<C-i>，因为<C-i>等价于<Tab>
     },
   },
   chat = {
-    welcome_message = WELCOME_MESSAGE,
+    -- welcome_message = WELCOME_MESSAGE,
     loading_text = "Loading, please wait ...",
     question_sign = "",
     answer_sign = "ﮧ",
+    border_left_sign = "",
+    border_right_sign = "",
     max_line_length = 120,
     sessions_window = {
+      active_sign = "  ",
+      inactive_sign = "  ",
+      current_line_sign = "",
       border = {
         style = vim.g.__border,
         text = {
@@ -46,22 +52,25 @@ chatgpt.setup {
       close_n = { "<Esc>", "q" },
       yank_last = "<C-y>",
       yank_last_code = "<C-k>",
-      scroll_up = "<C-u>",
-      scroll_down = "<C-d>",
-      new_session = "<C-n>",
-      cycle_windows = "<Tab>",
-      cycle_modes = "<C-f>",
-      next_message = "<C-j>",
-      prev_message = "<C-k>",
+      scroll_up = "<C-u>", -- 向上滚动文本
+      scroll_down = "<C-d>", -- 向下滚动文本
+      new_session = "<C-n>", -- 新建一个session
+      cycle_windows = "<Tab>", -- 在不同创建间切换
+      cycle_modes = "<C-f>", -- 切换窗口模式，居中和靠右
+      next_message = "<C-j>", -- TODO ?
+      prev_message = "<C-k>", -- TODO ?
       select_session = { "<Space>", "<CR>" },
       rename_session = "r",
       delete_session = "d",
-      draft_message = "<C-x>",
-      edit_message = "e",
-      delete_message = "d",
-      toggle_settings = "<C-o>",
-      toggle_message_role = "<C-r>",
-      toggle_system_role_open = "<C-s>",
+      draft_message = "<C-r>", -- 消息面板
+      edit_message = "e", -- 在消息面板编辑消息
+      delete_message = "d", -- 在消息面板删除消息
+      toggle_settings = "<C-o>", -- 设置开关
+      toggle_sessions = "<C-p>", -- session开关
+      toggle_help = "<C-h>", -- 帮助开关
+      toggle_message_role = "<C-r>", -- 切换当前发言角色，可以使用AI身份发言
+      toggle_system_role_open = "<C-s>", -- 打开系统发言面板用于提示对话
+      stop_generating = "<C-x>", -- 停止生成消息
     }
   },
   popup_layout = {
@@ -123,6 +132,7 @@ chatgpt.setup {
     },
     submit = "<C-Enter>",
     submit_n = "<Enter>",
+    max_visible_lines = 20,
   },
   settings_window = {
     border = {
@@ -135,29 +145,41 @@ chatgpt.setup {
       winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
     },
   },
+  help_window = {
+    setting_sign = "  ",
+    border = {
+      style = "rounded",
+      text = {
+        top = " Help ",
+      },
+    },
+    win_options = {
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder,SignColumn:MySignColumn,FoldColumn:MyFoldColumn",
+    },
+  },
   openai_params = {
     -- model = "gpt-4-0613",
     -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
     model = "deepseek-chat",
     temperature = 1.0, -- 值越大越有随机性，建议和top_p修改一个即可
-    top_p = 0.85, -- 值越大越有多样性
-    presence_penalty = 0.25, -- 话题新鲜度，值越大, 越可能是用到新的话题
-    frequency_penalty = 0.25, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
-    max_tokens = 4096, -- 用于限制单次回复的最大长度
-    n = 1,
+    top_p = 1.0, -- 值越大越有多样性
+    presence_penalty = 0, -- 话题新鲜度，值越大, 越可能是用到新的话题
+    frequency_penalty = 0, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
+    -- max_tokens = 4096, -- 用于限制单次回复的最大长度
+    -- n = 1,
   },
   openai_edit_params = {
     -- model = "gpt-4-0613",
     -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
     model = "deepseek-chat",
-    temperature = 0, -- 值越大越有随机性，建议和top_p修改一个即可
-    top_p = 0.85, -- 值越大越有多样性
-    presence_penalty = 0.25, -- 话题新鲜度，值越大, 越可能是用到新的话题
-    frequency_penalty = 0.25, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
-    max_tokens = 4096, -- 用于限制单次回复的最大长度
-    n = 1,
+    temperature = 1.0, -- 值越大越有随机性，建议和top_p修改一个即可
+    top_p = 1.0, -- 值越大越有多样性
+    presence_penalty = 0, -- deepseek-chat中frequency_penalty和frequency_penalty取默认值0否则会返回重复的内容
+    frequency_penalty = 0,
+    -- max_tokens = 4096, -- 用于限制单次回复的最大长度
+    -- n = 1,
   },
   use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
   actions_paths = {
@@ -165,6 +187,10 @@ chatgpt.setup {
   },
   show_quickfixes_cmd = "copen", -- 指定quickfix打开的命令
   predefined_chat_gpt_prompts = "https://raw.githubusercontent.com/f/awesome-chatgpt-prompts/main/prompts.csv",
+  highlights = {
+    help_key = "@symbol",
+    help_description = "@comment",
+  },
 }
 
 local function run_list(x)
