@@ -182,6 +182,7 @@ chatgpt.setup {
     -- n = 1,
   },
   use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
+  ignore_default_actions_path = true, -- 忽略默认的actoins
   actions_paths = {
     chatgt_actions_json
   },

@@ -6,11 +6,8 @@
             "template": "explain the following code:\n\ncode:\n```{{filetype}}\n{{input}}\n```\n\nuse markdown format and use chinese.\nhere's what the above code is doing:\n```",
             "strategy": "display",
             "params": {
-                "model": "gpt-3.5-turbo",
-                "max_tokens": 2048,
-                "stop": [
-                    "```"
-                ]
+                "model": "deepseek-chat",
+                "max_tokens": 4096
             }
         }
     },
@@ -21,11 +18,7 @@
             "template": "You need to play the role of a professional software engineer and analyze the code for bugs:\n\nCode:\n```{{filetype}}\n{{input}}\n``\n\nUse markdown format and use Chinese.\nHere's what the above code is doing:\n```",
             "strategy": "display",
             "params": {
-                "model": "gpt-3.5-turbo",
-                "max_tokens": 2048,
-                "stop": [
-                    "```"
-                ]
+                "model": "deepseek-chat"
             }
         }
     },
@@ -35,10 +28,7 @@
             "template": "# An elaborate, high quality docstring for the above function:\n# Writing a good docstring\n\nThis is an example of writing a really good docstring that follows a best practice for the given language. Attention is paid to detailing things like\n* parameter and return types (if applicable)\n* any errors that might be raised or returned, depending on the language\n\nWrite docstring in Chinese.\n\nI received the following code:\n\n```{{filetype}}\n{{input}}\n```\n\nThe code with a really good docstring added is below:\n\n```{{filetype}}",
             "strategy": "edit",
             "params": {
-                "model": "gpt-3.5-turbo",
-                "stop": [
-                    "```"
-                ]
+                "model": "deepseek-chat"
             }
         }
     },
@@ -48,10 +38,7 @@
             "template": "# Generate sound, comprehensive, high-quality unit tests\n\n- Please play a professional software engineer to write unit tests for the following code.\n- Generate unit tests for the appropriate language based on the input type.\n- If it is java language please use junit4 framework.\n- Ensure that unit tests are as comprehensive and complete as possible.\n- Add comments where necessary, such as hard-to-understand strings or binary numbers that are difficult for humans to read.\n\n```{{filetype}}\n{{input}}\n```\n\nHere is the code with the unit tests added:\n\n```{{filetype}}",
             "strategy": "edit",
             "params": {
-                "model": "gpt-3.5-turbo",
-                "stop": [
-                    "```"
-                ]
+                "model": "deepseek-chat"
             }
         }
     },
@@ -61,11 +48,8 @@
             "template": "Generate a high-quality ```{{filetype}}``` english variable name with the following input text:\n```{{input}}\n```\n\nHere are the generated variable name:\n```",
             "strategy": "replace",
             "params": {
-                "model": "gpt-3.5-turbo",
-                "max_tokens": 256,
-                "stop": [
-                    "```"
-                ]
+                "model": "deepseek-chat",
+                "max_tokens": 256
             }
         }
     }
