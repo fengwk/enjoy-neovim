@@ -166,8 +166,8 @@ chatgpt.setup {
     top_p = 1.0, -- 值越大越有多样性
     presence_penalty = 0, -- 话题新鲜度，值越大, 越可能是用到新的话题
     frequency_penalty = 0, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
-    -- max_tokens = 4096, -- 用于限制单次回复的最大长度
-    -- n = 1,
+    max_tokens = 4096, -- 用于限制单次回复的最大长度
+    n = 1,
   },
   openai_edit_params = {
     -- model = "gpt-4-0613",
@@ -178,8 +178,8 @@ chatgpt.setup {
     top_p = 1.0, -- 值越大越有多样性
     presence_penalty = 0, -- deepseek-chat中frequency_penalty和frequency_penalty取默认值0否则会返回重复的内容
     frequency_penalty = 0,
-    -- max_tokens = 4096, -- 用于限制单次回复的最大长度
-    -- n = 1,
+    max_tokens = 4096, -- 用于限制单次回复的最大长度
+    n = 1,
   },
   use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
   ignore_default_actions_path = true, -- 忽略默认的actoins
@@ -215,6 +215,20 @@ local function run_list(x)
 end
 
 vim.keymap.set("n", "<leader>ct", "<Cmd>ChatGPT<CR>", { silent = true, desc = "GPT Chat" })
+vim.keymap.set("v", "<leader>ct", function()
+  utils.motion.visual(function(args)
+    local text = table.concat(args.textobject, "\n")
+    -- 使用vim.schedule调度，避免序列串到chatgpt输入框中
+    vim.schedule(function()
+      chatgpt.open_chat_with({
+        new_session = true,
+        messages = {
+          { role = "user", content = text }
+        }
+      })
+    end)
+  end)
+end)
 vim.keymap.set("n", "<leader>cc", "<Cmd>ChatGPTRun complete_code<CR>", { silent = true, desc = "GPT Complete Code" })
 vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>",
   { silent = true, desc = "GPT Edit With Instructions" })
