@@ -99,7 +99,7 @@ M.setup_keymap = function(bufnr)
     local current_win = vim.api.nvim_get_current_win()
     local current_width = vim.api.nvim_win_get_width(current_win)
     local width = math.max(15, math.ceil(current_width / 3))
-    dap.repl.toggle({ width = width }, "rightbelow vsplit")
+    dap.repl.toggle({ width = width, wrap = true }, "rightbelow vsplit")
     vim.cmd("wincmd p") -- 聚焦窗口
   end, { buffer = bufnr, silent = true, desc = "Dap REPL" })
   vim.keymap.set("n", "<F5>", "<Cmd>lua require('dap').step_into()<CR>",

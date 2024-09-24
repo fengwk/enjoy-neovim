@@ -22,16 +22,20 @@ local function do_remote_debug(host, port)
       hostName = host,
       port = port,
     })
-    vim.notify("attach to " .. host .. ":" .. port)
+    vim.notify("\rattach to " .. host .. ":" .. port)
   end
 end
 
 -- 通过输入参数提供远程调试能力
 local function remote_debug()
   vim.ui.input({ prompt = "Host [127.0.0.1]: " }, function(host)
-    host = host or "127.0.0.1"
-    vim.ui.input({ prompt = "Port [8080]: " }, function(port)
-      port = port or "8080"
+    if not host or #host == 0 then
+      host = "127.0.0.1"
+    end
+    vim.ui.input({ prompt = "Port [10000]: " }, function(port)
+      if not port or #port == 0 then
+        port = "10000"
+      end
       do_remote_debug(host, port)
     end)
   end)
