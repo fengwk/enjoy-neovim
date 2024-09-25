@@ -5,8 +5,9 @@ local utils = require "fengwk.utils"
 vim.g.__border = "rounded"
 
 -- 设置非文件类型
+-- TODO 将所有的非用户文件类型都归为一类在某些情况下可能有问题，例如在自动关闭非用户文件时也会作用于gitcommit类型，因此需要特殊处理这些情况
 utils.vim.setup_special_ft { "packer", "NvimTree", "toggleterm", "TelescopePrompt", "qf", "aerial", "dapui_scopes",
-  "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "gitrebase", "diff" }
+  "dapui_stacks", "dapui_breakpoints", "dapui_console", "dap-repl", "dapui_watches", "dap-repl", "gitcommit", "gitrebase", "diff", "cmp_menu" }
 -- 设置大文件行数阈值，1W行
 utils.vim.setup_large_flines(10000)
 -- 设置大文件占用内存阈值，256K
@@ -23,14 +24,22 @@ vim.o.pumblend = vim.o.winblend
 
 -- 设置终端名称为文件名
 -- vim.o.title=true
--- 自动刷新标题
+-- 为终端设置指定标题
 local function set_title(title)
-  io.write("\27]0;" .. title .. "\7") -- send to terminal
+  -- 将标题发送到终端
+  -- '\27'为ASCII字符ESC表示控制序列开始
+  -- ']'是OSC(Operating System Command)的开始
+  -- '0;'表示窗口标题
+  -- '\7'是ASCII字符BEL表示控制序列结束
+  io.write("\27]0;" .. title .. "\7")
+
+  -- 如果当前是tmux环境执行tmux命令设置tmux window名称
   local env_tmux = os.getenv("TMUX")
   if env_tmux and vim.trim(env_tmux) ~= "" then
     utils.sys.system("tmux rename-window '" .. title .. "'")
   end
 end
+-- 刷新终端标题
 local function refresh_title(force)
   local title = ""
   local cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
@@ -48,6 +57,7 @@ local function refresh_title(force)
     set_title(title)
   end
 end
+-- 注册标题自动刷新
 utils.vim.register_postcd("refresh_title", refresh_title)
 vim.api.nvim_create_augroup("nvim_title_change", { clear = true })
 vim.api.nvim_create_autocmd(
@@ -197,13 +207,17 @@ vim.api.nvim_create_autocmd({ "WinClosed" }, {
   group = "auto_close_win",
   pattern = "*",
   callback = function()
-    local wins = vim.api.nvim_list_wins()
-    if #wins == 1 then
+    local cur_win = tonumber(vim.fn.expand("<amatch>"))
+    local cur_buf = vim.api.nvim_win_get_buf(cur_win)
+    -- 如果当前关闭的是特殊窗口不进行处理
+    -- 这个条件可以规避类似cmp_menu窗口自动关闭时引发的问题
+    if utils.vim.is_sepcial_ft(cur_buf) then
       return
     end
-    local cur_win = tonumber(vim.fn.expand("<amatch>"))
+    -- 计算当前用户窗口数量和非用户窗口数量
     local user_win_cnt = 0
     local other_win_cnt = 0
+    local wins = vim.api.nvim_list_wins()
     for _, win in ipairs(wins) do
       local bufnr = vim.api.nvim_win_get_buf(win)
       if bufnr and win ~= cur_win then -- 忽略当前要关闭的窗口
@@ -214,8 +228,7 @@ vim.api.nvim_create_autocmd({ "WinClosed" }, {
         end
       end
     end
-    -- 当前在用户窗口并关闭 且存在other窗口的时候处理
-    -- 这样能避免一些badcase，比如有的程序先关闭窗口然后又打开
+    -- 除去当前关闭的窗口后没有用户窗口，且还存在非用户窗口则尝试进行关闭
     if user_win_cnt == 0 and other_win_cnt > 0 then
       vim.schedule(function()
         -- vim.cmd("qall")
