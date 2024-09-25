@@ -49,8 +49,9 @@ return packer.startup(function(use)
   use "catppuccin/nvim"
 
   -- file explorer
-  -- use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
-  use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons" } -- require kyazdani42/nvim-web-devicons
+  -- 使用这个稳定的commit更新版本可能导致打开explorer的情况下，选文件或telescope进行跳转后explorer树中定位失败的问题
+  use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons", commit = "3cc698b" } -- require kyazdani42/nvim-web-devicons
+  -- use { "kyazdani42/nvim-tree.lua", requires = "kyazdani42/nvim-web-devicons" } -- require kyazdani42/nvim-web-devicons
 
   -- git
   use "lewis6991/gitsigns.nvim"
