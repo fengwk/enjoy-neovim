@@ -162,7 +162,6 @@ return packer.startup(function(use)
 
   -- chatgpt
   use {
-    -- "jackMort/ChatGPT.nvim",
     "fengwk/ChatGPT.nvim",
     branch = "dev",
     requires = {

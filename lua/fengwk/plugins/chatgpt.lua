@@ -7,8 +7,7 @@ end
 local utils = require("fengwk.utils")
 local chatgt_actions_json = utils.fs.stdpath("config", "lib/chatgpt_actoins.json")
 
--- api key forward
--- export OPENAI_API_HOST=api.chatanywhere.com.cn
+local DEFAULT_SYSTEM_MESSAGE = "如果user没有要求，回答语言的组织尽量简洁精炼。"
 
 chatgpt.setup {
   yank_register = "+",
@@ -16,7 +15,7 @@ chatgpt.setup {
     diff = false,
     keymaps = {
       close = { "<C-c>", "<C-q>" },
-      close_n = { "<Esc>", "q" },    -- TODO 无close_n
+      close_n = { "<Esc>", "q" },    -- normal模式下关闭
       accept = "<C-y>",              -- 将修改内容替换到文本中
       toggle_diff = "<C-d>",         -- 对比内容
       toggle_help = "<C-h>",         -- 打开帮助
@@ -27,6 +26,7 @@ chatgpt.setup {
   },
   chat = {
     -- welcome_message = WELCOME_MESSAGE,
+    default_system_message = DEFAULT_SYSTEM_MESSAGE,
     loading_text = "Loading, please wait ...",
     question_sign = "",
     answer_sign = "ﮧ",
@@ -214,18 +214,11 @@ local function run_list(x)
   end)
 end
 
-vim.keymap.set("n", "<leader>ct", function()
-  local system_prompt = "如果user没有要求，尽量使用简练的语言回答问题的核心本质";
-  chatgpt.open_chat_with({
-    new_session = false,
-    system_message = system_prompt,
-    open_system_panel = false,
-  })
-end, { silent = true, desc = "GPT Chat" })
+vim.keymap.set("n", "<leader>ct", "<Cmd>ChatGPT<CR>", { silent = true, desc = "GPT Chat" })
 vim.keymap.set("v", "<leader>ct", function()
   utils.motion.visual(function(args)
     local text = table.concat(args.textobject, "\n")
-    local system_prompt = [[如果user没有要求，尽量使用简练的语言回答问题的核心本质。现在我们针对以下内容展开讨论:
+    local system_prompt = [[%s现在我们针对以下内容展开讨论:
 
     ```
     %s
@@ -234,7 +227,7 @@ vim.keymap.set("v", "<leader>ct", function()
     vim.schedule(function()
       chatgpt.open_chat_with({
         new_session = true,
-        system_message = string.format(system_prompt, text),
+        system_message = string.format(system_prompt, DEFAULT_SYSTEM_MESSAGE, text),
         open_system_panel = true,
         -- messages = {
           --   { role = "user", content = text }
@@ -242,7 +235,7 @@ vim.keymap.set("v", "<leader>ct", function()
         })
       end)
     end)
-  end, { silent = true, desc = "GPT Chat With" })
+  end, { desc = "GPT Chat With" })
 vim.keymap.set("n", "<leader>cc", "<Cmd>ChatGPTRun complete_code<CR>", { silent = true, desc = "GPT Complete Code" })
 vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>",
   { silent = true, desc = "GPT Edit With Instructions" })
