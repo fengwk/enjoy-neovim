@@ -71,7 +71,7 @@ return packer.startup(function(use)
   use "mg979/vim-visual-multi"                    -- 多光标，:h vm-*
   use "kevinhwang91/nvim-bqf"                     -- quickfix增强
   use "folke/flash.nvim"
-  use "gcmt/wildfire.vim"                         -- textobjects选择器，使用tree-sitter incremental_selection代替
+  -- use "gcmt/wildfire.vim"                         -- textobjects选择器，使用tree-sitter incremental_selection代替
   use "windwp/nvim-autopairs"                     -- 自动补充成对符号
   use "windwp/nvim-ts-autotag"                    -- 自动补全tag
   use { "godlygeek/tabular", cmd = "Tabularize" } -- 自定义对齐格式化
