@@ -19,7 +19,7 @@ chatgpt.setup {
       close_n = { "<Esc>", "q" },    -- TODO 无close_n
       accept = "<C-y>",              -- 将修改内容替换到文本中
       toggle_diff = "<C-d>",         -- 对比内容
-      toggle_help = "<C-h>",        -- 打开帮助
+      toggle_help = "<C-h>",         -- 打开帮助
       toggle_settings = "<C-o>",
       cycle_windows = "<Tab>",       -- 在不同窗口间切换
       use_output_as_input = "<C-e>", -- 将回复内容作为新的输入，不能使用默认的<C-i>，因为<C-i>等价于<Tab>
@@ -52,25 +52,25 @@ chatgpt.setup {
       close_n = { "<Esc>", "q" },
       yank_last = "<C-y>",
       yank_last_code = "<C-k>",
-      scroll_up = "<C-u>", -- 向上滚动文本
-      scroll_down = "<C-d>", -- 向下滚动文本
-      new_session = "<C-n>", -- 新建一个session
+      scroll_up = "<C-u>",     -- 向上滚动文本
+      scroll_down = "<C-d>",   -- 向下滚动文本
+      new_session = "<C-n>",   -- 新建一个session
       cycle_windows = "<Tab>", -- 在不同创建间切换
-      cycle_modes = "<C-f>", -- 切换窗口模式，居中和靠右
-      next_message = "<C-j>", -- TODO ?
-      prev_message = "<C-k>", -- TODO ?
+      cycle_modes = "<C-f>",   -- 切换窗口模式，居中和靠右
+      next_message = "<C-j>",  -- TODO ?
+      prev_message = "<C-k>",  -- TODO ?
       select_session = { "<Space>", "<CR>" },
       rename_session = "r",
       delete_session = "d",
-      draft_message = "<C-r>", -- 消息面板
-      edit_message = "e", -- 在消息面板编辑消息
-      delete_message = "d", -- 在消息面板删除消息
-      toggle_settings = "<C-o>", -- 设置开关
-      toggle_sessions = "<C-p>", -- session开关
-      toggle_help = "<C-h>", -- 帮助开关
-      toggle_message_role = "<C-r>", -- 切换当前发言角色，可以使用AI身份发言
+      draft_message = "<C-r>",           -- 消息面板
+      edit_message = "e",                -- 在消息面板编辑消息
+      delete_message = "d",              -- 在消息面板删除消息
+      toggle_settings = "<C-o>",         -- 设置开关
+      toggle_sessions = "<C-p>",         -- session开关
+      toggle_help = "<C-h>",             -- 帮助开关
+      toggle_message_role = "<C-r>",     -- 切换当前发言角色，可以使用AI身份发言
       toggle_system_role_open = "<C-s>", -- 打开系统发言面板用于提示对话
-      stop_generating = "<C-x>", -- 停止生成消息
+      stop_generating = "<C-x>",         -- 停止生成消息
     }
   },
   popup_layout = {
@@ -162,11 +162,11 @@ chatgpt.setup {
     -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
     model = "deepseek-chat",
-    temperature = 1.0, -- 值越大越有随机性，建议和top_p修改一个即可
-    top_p = 1.0, -- 值越大越有多样性
-    presence_penalty = 0, -- 话题新鲜度，值越大, 越可能是用到新的话题
+    temperature = 1.0,     -- 值越大越有随机性，建议和top_p修改一个即可
+    top_p = 1.0,           -- 值越大越有多样性
+    presence_penalty = 0,  -- 话题新鲜度，值越大, 越可能是用到新的话题
     frequency_penalty = 0, -- 频率惩罚，值越大, 越倾向于生成不常见的词汇和表达方式
-    max_tokens = 4096, -- 用于限制单次回复的最大长度
+    max_tokens = 4096,     -- 用于限制单次回复的最大长度
     n = 1,
   },
   openai_edit_params = {
@@ -174,15 +174,15 @@ chatgpt.setup {
     -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
     model = "deepseek-chat",
-    temperature = 1.0, -- 值越大越有随机性，建议和top_p修改一个即可
-    top_p = 1.0, -- 值越大越有多样性
+    temperature = 1.0,    -- 值越大越有随机性，建议和top_p修改一个即可
+    top_p = 1.0,          -- 值越大越有多样性
     presence_penalty = 0, -- deepseek-chat中frequency_penalty和frequency_penalty取默认值0否则会返回重复的内容
     frequency_penalty = 0,
-    max_tokens = 4096, -- 用于限制单次回复的最大长度
+    max_tokens = 4096,    -- 用于限制单次回复的最大长度
     n = 1,
   },
   use_openai_functions_for_edits = false, -- 是否使用function call，这个选项目前没必要因为直接应用修改就可以了，没必要让gpt调用修改函数
-  ignore_default_actions_path = true, -- 忽略默认的actoins
+  ignore_default_actions_path = true,     -- 忽略默认的actoins
   actions_paths = {
     chatgt_actions_json
   },
@@ -214,21 +214,35 @@ local function run_list(x)
   end)
 end
 
-vim.keymap.set("n", "<leader>ct", "<Cmd>ChatGPT<CR>", { silent = true, desc = "GPT Chat" })
+vim.keymap.set("n", "<leader>ct", function()
+  local system_prompt = "如果user没有要求，尽量使用简练的语言回答问题的核心本质";
+  chatgpt.open_chat_with({
+    new_session = false,
+    system_message = system_prompt,
+    open_system_panel = false,
+  })
+end, { silent = true, desc = "GPT Chat" })
 vim.keymap.set("v", "<leader>ct", function()
   utils.motion.visual(function(args)
     local text = table.concat(args.textobject, "\n")
+    local system_prompt = [[如果user没有要求，尽量使用简练的语言回答问题的核心本质。现在我们针对以下内容展开讨论:
+
+    ```
+    %s
+    ```]]
     -- 使用vim.schedule调度，避免序列串到chatgpt输入框中
     vim.schedule(function()
       chatgpt.open_chat_with({
         new_session = true,
-        messages = {
-          { role = "user", content = text }
-        }
-      })
+        system_message = string.format(system_prompt, text),
+        open_system_panel = true,
+        -- messages = {
+          --   { role = "user", content = text }
+          -- },
+        })
+      end)
     end)
-  end)
-end)
+  end, { silent = true, desc = "GPT Chat With" })
 vim.keymap.set("n", "<leader>cc", "<Cmd>ChatGPTRun complete_code<CR>", { silent = true, desc = "GPT Complete Code" })
 vim.keymap.set("x", "<leader>ce", "<Esc><Cmd>ChatGPTEditWithInstructions<CR>",
   { silent = true, desc = "GPT Edit With Instructions" })
