@@ -227,12 +227,11 @@ vim.keymap.set("v", "<leader>ct", function()
     vim.schedule(function()
       chatgpt.open_chat_with({
         new_session = true,
-        system_message = string.format(system_prompt, DEFAULT_SYSTEM_MESSAGE, text),
-        open_system_panel = true,
-        -- messages = {
-          --   { role = "user", content = text }
-          -- },
-        })
+        open_system_panel = "open",
+        messages = {
+          { role = "system", content = string.format(system_prompt, DEFAULT_SYSTEM_MESSAGE, text) }
+        },
+      })
       end)
     end)
   end, { desc = "GPT Chat With" })
