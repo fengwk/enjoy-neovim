@@ -58,12 +58,11 @@ local function refresh_title(force)
   end
 end
 -- 注册标题自动刷新
-utils.vim.register_postcd("refresh_title", refresh_title)
-vim.api.nvim_create_augroup("nvim_title_change", { clear = true })
+vim.api.nvim_create_augroup("NvimTitleChange", { clear = true })
 vim.api.nvim_create_autocmd(
-  { "VimEnter" },
+  { "BufEnter" },
   {
-    group = "nvim_title_change",
+    group = "NvimTitleChange",
     callback = function()
       vim.schedule(function()
         refresh_title(true)

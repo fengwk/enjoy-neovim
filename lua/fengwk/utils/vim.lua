@@ -96,20 +96,7 @@ v.cd = function(root, filename)
     if ok_finders_find_file then
       finders_find_file.fn(filename)
     end
-    -- 执行cd后处理函数
-    if v.postcd then
-      for _, fn in pairs(v.postcd) do
-        fn()
-      end
-    end
   end
-end
-
-v.register_postcd = function(name, fn)
-  if not v.postcd then
-    v.postcd = {}
-  end
-  v.postcd[name] = fn
 end
 
 vim.cmd [[

@@ -205,6 +205,21 @@ end
 
 nvim_tree.setup(config)
 
+-- 支持自动定位到文件
+vim.api.nvim_create_augroup("NvimTreeAutoFind", { clear = true })
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  group = "NvimTreeAutoFind",
+  pattern = "*",
+  callback = function()
+    local bufnr = tonumber(vim.fn.expand("<abuf>"))
+    local filename = vim.api.nvim_buf_get_name(bufnr)
+    local ok_finders_find_file, finders_find_file = pcall(require, "nvim-tree.actions.finders.find-file")
+    if not utils.vim.is_sepcial_ft(bufnr) and ok_finders_find_file then
+      finders_find_file.fn(filename)
+    end
+  end
+})
+
 -- 展开或关闭NvimTree，如果是展开将定位到文件对应的NvimTree位置
 vim.keymap.set("n", "<leader>E", function()
   nvim_tree_api.tree.toggle({
