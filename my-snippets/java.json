@@ -345,10 +345,10 @@
             "public void $1Notify(String json) {",
             "\ttry {",
             "\t\tthis.$1 = JSON.parseObject(json, ${3:$2});",
-            "\t\t\tlog.error(\"change $1 success, json={}\", json);",
-            "\t\t} catch (Exception ex) {",
-            "\t\t\tlog.error(\"change $1 failed, json={}\", json, ex);",
-            "\t\t}",
+            "\t\tlog.info(\"change $1 success, json={}\", json);",
+            "\t} catch (Exception ex) {",
+            "\t\tlog.error(\"change $1 failed, json={}\", json, ex);",
+            "\t}",
             "}$0"
         ],
         "description": "@confignotify"
