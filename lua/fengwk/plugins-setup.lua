@@ -161,18 +161,9 @@ return packer.startup(function(use)
   use "nvim-treesitter/nvim-treesitter-textobjects"
 
   -- chatgpt
-  use {
-    "fengwk/ChatGPT.nvim",
-    branch = "dev",
-    requires = {
-      "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
-      "folke/trouble.nvim",
-      "nvim-telescope/telescope.nvim"
-    },
-  }
   -- use {
-  --   "jackMort/ChatGPT.nvim",
+  --   "fengwk/ChatGPT.nvim",
+  --   branch = "dev",
   --   requires = {
   --     "MunifTanjim/nui.nvim",
   --     "nvim-lua/plenary.nvim",
@@ -180,6 +171,15 @@ return packer.startup(function(use)
   --     "nvim-telescope/telescope.nvim"
   --   },
   -- }
+  use {
+    "jackMort/ChatGPT.nvim",
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "folke/trouble.nvim",
+      "nvim-telescope/telescope.nvim"
+    },
+  }
 
   -- libs
   -- use_rocks "utf8"
