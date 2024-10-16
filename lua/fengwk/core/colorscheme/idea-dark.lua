@@ -22,7 +22,7 @@ local hsl = lush.hsl
 
 -- GUI options
 -- local bf, it, un = 'bold', 'italic', 'underline'
-local bf, it, un = 'bold', 'italic', 'undercurl'
+local bf, it, un, cun = 'bold', 'italic', 'underline', 'undercurl'
 
 -- Base colors
 -- local c0 = hsl(240, 1, 15)
@@ -129,10 +129,10 @@ DiffText     { DiffChange, gui=un };
 DiffAdded    { DiffAdd };
 DiffRemoved  { DiffDelete };
 
-SpellBad     { fg=red,     gui=un };
-SpellCap     { fg=magenta, gui=un };
-SpellLocal   { fg=orange,  gui=un };
-SpellRare    { fg=yellow,  gui=un };
+SpellBad     { fg=red,     gui=cun };
+SpellCap     { fg=magenta, gui=cun };
+SpellLocal   { fg=orange,  gui=cun };
+SpellRare    { fg=yellow,  gui=cun };
 
 -- DiagnosticsDefaultError           { fg=red };
 -- -- DiagnosticUnderlineWarn           { fg=yellow };
@@ -152,10 +152,10 @@ SpellRare    { fg=yellow,  gui=un };
 -- DiagnosticUnderlineInformation   { fg=yellow, gui=un };
 -- DiagnosticUnderlineHint          { fg=yellow, gui=un };
 
-DiagnosticUnderlineError { fg=red, gui=un }; -- Used to underline "Error" diagnostics
-DiagnosticUnderlineWarn { fg=yellow, gui=un }; -- Used to underline "Warn" diagnostics
-DiagnosticUnderlineInfo { fg=hsl(179, 87, 76), gui=un }; -- Used to underline "Info" diagnostics
-DiagnosticUnderlineHint { fg=teal, gui=un }; -- Used to underline "Hint" diagnostics
+DiagnosticUnderlineError { fg=red, gui=cun }; -- Used to underline "Error" diagnostics
+DiagnosticUnderlineWarn { fg=yellow, gui=cun }; -- Used to underline "Warn" diagnostics
+DiagnosticUnderlineInfo { fg=hsl(179, 87, 76), gui=cun }; -- Used to underline "Info" diagnostics
+DiagnosticUnderlineHint { fg=teal, gui=cun }; -- Used to underline "Hint" diagnostics
 -- DiagnosticUnderlineOk = { fg=yellow, gui=un }, -- Used to underline "Ok" diagnostics
 
 
@@ -175,10 +175,10 @@ LspDiagnosticsDefaultHint            { fg=teal };
 --LspDiagnosticsVirtualTextWarning     { };    -- "Warning" diagnostic virtual text
 --LspDiagnosticsVirtualTextInformation { };    -- "Information" diagnostic virtual text
 --LspDiagnosticsVirtualTextHint        { };    -- "Hint" diagnostic virtual text
-LspDiagnosticsUnderlineError         { gui=un };    -- underline "Error" diagnostics
-LspDiagnosticsUnderlineWarning       { gui=un };    -- underline "Warning" diagnostics
-LspDiagnosticsUnderlineInformation   { gui=un };    -- underline "Information" diagnostics
-LspDiagnosticsUnderlineHint          { gui=un };    -- underline "Hint" diagnostics
+LspDiagnosticsUnderlineError         { gui=cun };    -- underline "Error" diagnostics
+LspDiagnosticsUnderlineWarning       { gui=cun };    -- underline "Warning" diagnostics
+LspDiagnosticsUnderlineInformation   { gui=cun };    -- underline "Information" diagnostics
+LspDiagnosticsUnderlineHint          { gui=cun };    -- underline "Hint" diagnostics
 --LspDiagnosticsFloatingError          { };    -- color "Error" diagnostic messages in diagnostics float
 --LspDiagnosticsFloatingWarning        { };    -- color "Warning" diagnostic messages in diagnostics float
 --LspDiagnosticsFloatingInformation    { };    -- color "Information" diagnostic messages in diagnostics float
