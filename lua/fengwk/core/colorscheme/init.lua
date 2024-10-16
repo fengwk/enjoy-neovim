@@ -2,6 +2,7 @@ require("fengwk.core.colorscheme.github-nvim-theme")
 require("fengwk.core.colorscheme.catppuccin")
 require("fengwk.core.colorscheme.vscode")
 local gruvbox_flat = require("fengwk.core.colorscheme.gruvbox-flat")
+local nvim_dap = require("fengwk.plugins.lsp.nvim-dap")
 
 local function set_hi(name, fg, bg)
   local cmd = ""
@@ -136,6 +137,10 @@ local function on_changed(colorscheme)
       hi clear FloatTitle
       hi link FloatTitle Normal
     ]]
+  end
+
+  if not colorscheme:find("gruvbox") and not colorscheme:find("catppuccin") then
+    nvim_dap.set_dap_theme()
   end
 
   if colorscheme == "gruvbox" then

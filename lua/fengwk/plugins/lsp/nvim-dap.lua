@@ -36,8 +36,6 @@ if not ok_dap then
   return
 end
 
-local M = {}
-
 dap.defaults.fallback.terminal_win_cmd = "belowright 10new" -- 在下方打开dap terminal，10行高度
 -- dap.defaults.fallback.external_terminal = {
 --   command = '/usr/local/bin/st';
@@ -67,7 +65,7 @@ if ok_mason_nvim_dap then
   })
 end
 
-M.setup_keymap = function(bufnr)
+local function setup_keymap(bufnr)
   -- 断点开关
   vim.keymap.set("n", "<leader>db", function()
     dap.toggle_breakpoint()
@@ -146,22 +144,14 @@ vim.api.nvim_create_autocmd("BufHidden", {
 -- ]])
 
 local function set_dap_theme()
-  -- 设置颜色，在catppuccin中会使用catppuccin本身设置的主题色
-  -- local dap_breakpoint_color = {
-  --   breakpoint = {
-  --     fg = '#993939',
-  --   },
-  --   logpoing = {
-  --     fg = '#61afef',
-  --   },
-  --   stopped = {
-  --     fg = '#98c379',
-  --   },
-  -- }
-  -- vim.api.nvim_set_hl(0, 'DapBreakpoint', dap_breakpoint_color.breakpoint)
-  -- vim.api.nvim_set_hl(0, 'DapLogPoint', dap_breakpoint_color.logpoing)
-  -- vim.api.nvim_set_hl(0, 'DapStopped', dap_breakpoint_color.stopped)
+  vim.api.nvim_set_hl(0, 'DapBreakpoint', { fg = '#e78284' })
+  vim.api.nvim_set_hl(0, 'DapBreakpointCondition', { fg = '#e78284' })
+  vim.api.nvim_set_hl(0, 'DapBreakpointRejected', { fg = '#CDD0D3' })
+  vim.api.nvim_set_hl(0, 'DapLogPoint', { fg = '#61afef' })
+  vim.api.nvim_set_hl(0, 'DapStopped', { fg = '#98c379' })
+end
 
+local function set_dap_sign()
   local dap_breakpoint = {
     -- 普通断点
     error = {
@@ -207,7 +197,11 @@ end
 
 local utils = require("fengwk.utils")
 if not utils.sys.is_tty() then
-  set_dap_theme()
+  set_dap_sign()
 end
 
-return M
+
+return {
+  setup_keymap = setup_keymap,
+  set_dap_theme = set_dap_theme,
+}

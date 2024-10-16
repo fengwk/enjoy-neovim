@@ -61,7 +61,7 @@ local mid     = c2.lighten(10)   -- either foreground or background
 local faded   = fg.darken(45)    -- non-important text elements
 local pop     = c7
 
-return lush(function(injected_functions) 
+return lush(function(injected_functions)
 local sym = injected_functions.sym
 return {
 Normal       { fg=fg,      bg=bg };
