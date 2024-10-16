@@ -21,7 +21,8 @@ local hsl = lush.hsl
 --------------------------------------------------
 
 -- GUI options
-local bf, it, un = 'bold', 'italic', 'underline'
+-- local bf, it, un = 'bold', 'italic', 'underline'
+local bf, it, un = 'bold', 'italic', 'undercurl'
 
 -- Base colors
 -- local c0 = hsl(240, 1, 15)
@@ -40,7 +41,7 @@ local salmon  = hsl(10,  90, 70)
 local orange  = hsl(27, 61, 50)
 local yellow  = hsl(37, 100, 71)
 
-local green   = hsl(101, 29, 47)
+local green   = hsl(101, 29, 47).lighten(10)
 local teal    = hsl(150,  40, 50)
 local cyan    = hsl(180, 58, 38)
 
@@ -54,7 +55,7 @@ local overbg  = c1    -- other backgrounds
 local subtle  = c2    -- out-of-buffer elements
 
 local fg      = hsl(210, 7, 82)
-local comment = green.darken(10)    -- comments
+local comment = green.darken(20)    -- comments
 local folder  = hsl(202, 9, 57)
 local treebg  = hsl(220, 3, 19)
 local mid     = c2.lighten(10)   -- either foreground or background
@@ -68,7 +69,7 @@ Normal       { fg=fg,      bg=bg };
 NormalFloat  { fg=fg,      bg=overbg };
 NormalNC     { fg=fg,      bg=bg.da(10) }; -- normal text in non-current windows
 
-Comment      { fg=comment,  gui=it };
+Comment      { fg=hsl(218, 5, 46),  gui=it }; -- 未使用的字段或函数
 Whitespace   { fg=mid };                  -- 'listchars'
 Conceal      { fg=hsl(0, 0, 25) };
 NonText      { fg=treebg };              -- characters that don't exist in the text
@@ -133,6 +134,29 @@ SpellCap     { fg=magenta, gui=un };
 SpellLocal   { fg=orange,  gui=un };
 SpellRare    { fg=yellow,  gui=un };
 
+-- DiagnosticsDefaultError           { fg=red };
+-- -- DiagnosticUnderlineWarn           { fg=yellow };
+-- DiagnosticsDefaultWarning         { fg=yellow };
+-- DiagnosticsDefaultInformation     { fg=fg };
+-- DiagnosticsDefaultHint            { fg=teal };
+--
+-- DiagnosticsUnderlineError         { fg=yellow, gui=un };
+-- -- DiagnosticsUnderlineWarning       { gui=un };
+-- DiagnosticsUnderlineInformation   { fg=yellow, gui=un };
+-- DiagnosticsUnderlineHint          { fg=yellow, gui=un };
+--
+-- DiagnosticUnderlineError         { fg=red, gui=un };
+-- DiagnosticUnderlineWarn           { fg=yellow, gui=un };
+-- DiagnosticUnderlineWarn           { fg=yellow, gui=un };
+-- DiagnosticsUnderlineWarning       { gui=un };
+-- DiagnosticUnderlineInformation   { fg=yellow, gui=un };
+-- DiagnosticUnderlineHint          { fg=yellow, gui=un };
+
+DiagnosticUnderlineError { fg=red, gui=un }; -- Used to underline "Error" diagnostics
+DiagnosticUnderlineWarn { fg=yellow, gui=un }; -- Used to underline "Warn" diagnostics
+DiagnosticUnderlineInfo { fg=hsl(179, 87, 76), gui=un }; -- Used to underline "Info" diagnostics
+DiagnosticUnderlineHint { fg=teal, gui=un }; -- Used to underline "Hint" diagnostics
+-- DiagnosticUnderlineOk = { fg=yellow, gui=un }, -- Used to underline "Ok" diagnostics
 
 
 ---- Language Server Protocol highlight groups ---------------------------------
@@ -257,13 +281,13 @@ sym "@attribute"                { PreProc };               -- Unstable
 sym "@include"                  { PreProc };               -- includes: `#include` in C `use` or `extern crate` in Rust or `require` in Lua.
 
 sym "@type"                     { Type };
-sym "@type.builtin"             { Type,     gui=it };
+sym "@type.builtin"             { fg=orange,     gui=it };
 
 sym "@punctuation.delimiter"    { Delimiter };             -- delimiters ie: `.`
 sym "@punctuation.bracket"      { fg=fg };                 -- brackets and parens.
 sym "@punctuation.special"      { Delimiter };             -- special punctutation that does not fall in the catagories before.
 
-sym "@comment"                  { Comment };
+sym "@comment"                  { fg=comment };
 sym "@tag"                      { Tag };                   -- Tags like html tag names.
 sym "@tag.delimiter"            { Special };               -- Tag delimiter like < > /
 sym "@text"                     { fg=fg };
