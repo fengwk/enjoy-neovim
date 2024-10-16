@@ -47,6 +47,8 @@ return packer.startup(function(use)
   use "Mofiqul/vscode.nvim"
   use "projekt0n/github-nvim-theme"
   use "catppuccin/nvim"
+  -- use { "briones-gabriel/darcula-solid.nvim", requires = "rktjmp/lush.nvim" }
+  use "rktjmp/lush.nvim"
 
   -- file explorer
   -- 使用这个稳定的commit更新版本可能导致打开explorer的情况下，选文件或telescope进行跳转后explorer树中定位失败的问题

@@ -296,3 +296,23 @@ nvim_treesitter_config.setup({
     },
   }
 })
+
+-- vim.api.nvim_create_user_command("PrintTreesitterNode", function ()
+--   -- 获取当前光标位置
+--   local cursor = vim.api.nvim_win_get_cursor(0)
+--   local row, col = cursor[1] - 1, cursor[2]
+--
+--   -- 获取当前缓冲区的 Treesitter 根节点
+--   local parser = vim.treesitter.get_parser(0)
+--   local tree = parser:parse()[1]
+--   local root = tree:root()
+--
+--   -- 查找光标所在位置的节点
+--   local node = root:named_descendant_for_range(row, col, row, col)
+--
+--   -- 获取节点的类型
+--   local node_type = node:type()
+--
+--   -- 输出节点类型
+--   print("Current node type: " .. node_type)
+-- end, {})
