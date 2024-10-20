@@ -296,6 +296,11 @@ local function setup()
         -- The `name` is NOT arbitrary, but must match one of the elements from `enum ExecutionEnvironment` in the link above
         runtimes = build_runtimes(),
       },
+      format = {
+        enabled = true,
+        -- 插入空格而不是tab
+        insertSpaces = true,
+      },
       settings = {
         -- https://github.com/eclipse/eclipse.jdt.ls/issues/1892#issuecomment-929715918
         -- https://github.com/redhat-developer/vscode-java/wiki/Settings-Global-Preferences
