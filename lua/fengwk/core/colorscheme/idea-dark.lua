@@ -193,10 +193,10 @@ LspDiagnosticsUnderlineHint          { gui=cun };    -- underline "Hint" diagnos
 ---- Standard highlight groups -------------------------------------------------
 -- See :help group-name
 
-Constant       { fg=magenta };
+Constant       { fg=purple };
 Number         { fg=blue };
 Float          { Number };
-Boolean        { Constant };
+Boolean        { fg=magenta };
 Character      { fg=orange };
 String         { fg=green };
 
@@ -244,7 +244,7 @@ Todo       { gui=bf };  --  anything that needs extra attention
 ---- TREESITTER ----------------------------------------------------------------
 
 sym "@constant"                 { Constant };
-sym "@constant.builtin"         { Constant,   gui=it };    -- constant that are built in the language: `nil` in Lua.
+sym "@constant.builtin"         { fg=orange,   gui=it };    -- constant that are built in the language: `nil` in Lua.
 sym "@constant.macro"           { Constant,   gui=bf };    -- constants that are defined by macros: `NULL` in C.
 sym "@number"                   { Number };
 sym "@float"                    { Float };
@@ -260,7 +260,7 @@ sym "@property"                 { fg=purple };
 sym "@parameter"                { fg=fg };
 sym "@parameter.reference"      { fg=fg };
 sym "@variable"                 { fg=fg };                 -- Any variable name that does not have another highlight
-sym "@variable.builtin"         { Constant,      gui=it }; -- Variable names that are defined by the languages like `this` or `self`.
+sym "@variable.builtin"         { fg=orange,      gui=it }; -- Variable names that are defined by the languages like `this` or `self`.
 
 sym "@function"                 { Function };
 sym "@function.builtin"         { Function };
