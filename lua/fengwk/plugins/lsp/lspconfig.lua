@@ -140,7 +140,7 @@ local function build_on_attach(opts)
 
     -- 不要使用lsp的token替代treesitter的token，以此避免color被修改
     -- https://www.reddit.com/r/neovim/comments/109f8p9/why_lsp_changes_my_colors/
-    client.server_capabilities.semanticTokensProvider = nil
+    -- client.server_capabilities.semanticTokensProvider = nil
 
     -- dap
     require("fengwk.plugins.lsp.nvim-dap").setup_keymap(bufnr)

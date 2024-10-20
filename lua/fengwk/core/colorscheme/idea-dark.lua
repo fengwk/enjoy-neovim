@@ -282,6 +282,7 @@ sym "@include"                  { PreProc };               -- includes: `#includ
 
 sym "@type"                     { Type };
 sym "@type.builtin"             { fg=orange,     gui=it };
+sym "@type.qualifier"           { fg=orange }; -- java lsp 启用后控制 public class static 等这些关键词的高亮
 
 sym "@punctuation.delimiter"    { Delimiter };             -- delimiters ie: `.`
 sym "@punctuation.bracket"      { fg=fg };                 -- brackets and parens.
