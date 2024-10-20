@@ -193,7 +193,7 @@ LspDiagnosticsUnderlineHint          { gui=cun };    -- underline "Hint" diagnos
 ---- Standard highlight groups -------------------------------------------------
 -- See :help group-name
 
-Constant       { fg=purple };
+Constant       { fg=magenta };
 Number         { fg=blue };
 Float          { Number };
 Boolean        { fg=magenta };
@@ -255,8 +255,8 @@ sym "@string.regex"             { Character };
 sym "@string.escape"            { Character };             -- escape characters within a string
 sym "@symbol"                   { fg=green, gui=it };      -- For identifiers referring to symbols or atoms.
 
-sym "@field"                    { fg=purple };
-sym "@property"                 { fg=purple };
+sym "@field"                    { fg=magenta };
+sym "@property"                 { fg=magenta };
 sym "@parameter"                { fg=fg };
 sym "@parameter.reference"      { fg=fg };
 sym "@variable"                 { fg=fg };                 -- Any variable name that does not have another highlight
