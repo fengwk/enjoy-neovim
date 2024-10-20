@@ -209,7 +209,8 @@ Repeat         { Statement };
 Label          { Statement };       -- case, default, etc.
 Operator       { fg=fg };
 Keyword        { Statement };    -- any other keyword
-Exception      { fg=red };
+-- Exception      { fg=red };
+Exception      { fg=orange }; -- try catch 被作为Exception
 
 -- PreProc        { fg=orange };    --  generic Preprocessor
 PreProc        { fg=hsl(56, 35, 54) };    --  generic Preprocessor
