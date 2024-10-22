@@ -51,15 +51,18 @@ local magenta = hsl(310, 40, 64)
 
 -- Set base colors
 local bg      = c0    -- base background
-local overbg  = c1    -- other backgrounds
+-- local overbg  = c1    -- other backgrounds
+local overbg  = c0    -- other backgrounds
 local subtle  = c2    -- out-of-buffer elements
 
+local unuse   = hsl(218, 5, 46)
 local fg      = hsl(210, 7, 82)
 local comment = green.darken(20)    -- comments
 local folder  = hsl(202, 9, 57)
 local treebg  = hsl(220, 3, 19)
 local mid     = c2.lighten(10)   -- either foreground or background
-local faded   = fg.darken(45)    -- non-important text elements
+-- local faded   = fg.darken(45)    -- non-important text elements
+local faded   = unuse -- 影响行号字符颜色
 local pop     = c7
 
 return lush(function(injected_functions)
@@ -69,10 +72,11 @@ Normal       { fg=fg,      bg=bg };
 NormalFloat  { fg=fg,      bg=overbg };
 NormalNC     { fg=fg,      bg=bg.da(10) }; -- normal text in non-current windows
 
-Comment      { fg=hsl(218, 5, 46),  gui=it }; -- 未使用的字段或函数
+Comment      { fg=unuse,  gui=it }; -- 未使用的字段或函数
 Whitespace   { fg=mid };                  -- 'listchars'
 Conceal      { fg=hsl(0, 0, 25) };
-NonText      { fg=treebg };              -- characters that don't exist in the text
+-- NonText      { fg=treebg };              -- characters that don't exist in the text
+NonText      { fg=unuse };              -- characters that don't exist in the text
 SpecialKey   { Whitespace };              -- Unprintable characters: text displayed differently from what it really is
 
 
@@ -187,8 +191,6 @@ LspDiagnosticsUnderlineHint          { gui=cun };    -- underline "Hint" diagnos
 --LspDiagnosticsSignWarning            { };    -- "Warning" signs in sign column
 --LspDiagnosticsSignInformation        { };    -- "Information" signs in sign column
 --LspDiagnosticsSignHint               { };    -- "Hint" signs in sign column
-
-
 
 ---- Standard highlight groups -------------------------------------------------
 -- See :help group-name
@@ -310,6 +312,7 @@ markdownLinkText {fg=fg};
 
 -- NvimTree
 NvimTreeNormal       { bg=treebg, fg=fg };
+NvimTreeCursorLine   { bg=treebg.lighten(7) };
 NvimTreeIndentMarker { fg=hsl(204, 3, 32) };
 NvimTreeRootFolder   { fg=folder };
 NvimTreeFolderIcon   { fg=folder };
