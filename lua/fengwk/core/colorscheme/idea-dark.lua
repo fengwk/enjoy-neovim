@@ -73,7 +73,7 @@ NormalFloat  { fg=fg,      bg=overbg };
 NormalNC     { fg=fg,      bg=bg.da(10) }; -- normal text in non-current windows
 
 Comment      { fg=unuse,  gui=it }; -- 未使用的字段或函数
-luaComment   { fg=comment,  gui=it }; -- lua的评论
+-- luaComment   { fg=comment,  gui=it }; -- lua的评论 >无效
 
 Whitespace   { fg=mid };                  -- 'listchars'
 Conceal      { fg=hsl(0, 0, 25) };
