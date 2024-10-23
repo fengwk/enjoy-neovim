@@ -72,8 +72,7 @@ Normal       { fg=fg,      bg=bg };
 NormalFloat  { fg=fg,      bg=overbg };
 NormalNC     { fg=fg,      bg=bg.da(10) }; -- normal text in non-current windows
 
-Comment      { fg=unuse,  gui=it }; -- 未使用的字段或函数
--- luaComment   { fg=comment,  gui=it }; -- lua的评论 >无效
+Comment      { fg=comment,  gui=it };
 
 Whitespace   { fg=mid };                  -- 'listchars'
 Conceal      { fg=hsl(0, 0, 25) };
@@ -164,7 +163,6 @@ DiagnosticUnderlineInfo { fg=hsl(179, 87, 76), gui=cun }; -- Used to underline "
 DiagnosticUnderlineHint { fg=teal, gui=cun }; -- Used to underline "Hint" diagnostics
 -- DiagnosticUnderlineOk = { fg=yellow, gui=un }, -- Used to underline "Ok" diagnostics
 
-
 ---- Language Server Protocol highlight groups ---------------------------------
 
 LspReferenceText                  { bg=mid };    -- highlighting "text" references
@@ -243,7 +241,10 @@ Ignore     { fg=faded };           --  left blank, hidden  |hl-Ignore|
 Error      { fg=red };             --  any erroneous construct
 Todo       { gui=bf };  --  anything that needs extra attention
 
-
+-- 默认为Comment的项
+DiagnosticUnnecessary { fg=unuse }; -- 未使用提示
+-- NvimTreeGitIgnored { fg=unuse };
+NvimDapVirtualText { fg=unuse };
 
 ---- TREESITTER ----------------------------------------------------------------
 
