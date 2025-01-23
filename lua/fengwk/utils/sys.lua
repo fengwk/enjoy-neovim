@@ -32,6 +32,9 @@ sys.system = function(cmd, background)
 end
 
 sys.is_tty = function()
+  if vim.fn.has('mac') > 0 then
+    return false
+  end
   local tty = sys.system "tty"
   return tty and string.match(tty, "^/dev/tty") ~= nil
 end
