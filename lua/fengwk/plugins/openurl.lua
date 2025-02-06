@@ -9,7 +9,7 @@ local function openurl(url)
   if url:match("^jdt") then
     jdtls_enhancer.jump_to_location(url)
   elseif url:match("^https?://[^%s]+$") then
-    utils.sys.system("xdg-open '" .. url .. "'", true)
+    utils.sys.open(url)
   end
 end
 

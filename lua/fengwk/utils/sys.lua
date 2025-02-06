@@ -7,6 +7,14 @@ local os = {
 }
 sys.os = os[vim.loop.os_uname().sysname] or "wsl"
 
+sys.open = function(uri)
+  if vim.fn.has('mac') > 0 then
+    sys.system("open '" .. uri .. "'", true)
+  else
+    sys.system("xdg-open '" .. uri .. "'", true)
+  end
+end
+
 -- 用于替代vim.fn.system，保留了当前的执行环境
 sys.system = function(cmd, background)
   if type(cmd) == "table" then
