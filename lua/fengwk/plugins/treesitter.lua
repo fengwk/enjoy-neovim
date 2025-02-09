@@ -217,11 +217,6 @@ nvim_treesitter_config.setup({
 		},
   },
 
-  -- https://github.com/windwp/nvim-ts-autotag#setup
-  autotag = {
-    enable = true,
-  },
-
   -- textobjects
   textobjects = {
     select = {

@@ -72,7 +72,7 @@ return packer.startup(function(use)
   use "numToStr/Comment.nvim"                     -- 注释
   use "mg979/vim-visual-multi"                    -- 多光标，:h vm-*
   use "kevinhwang91/nvim-bqf"                     -- quickfix增强
-  use "folke/flash.nvim"
+  use "folke/flash.nvim"                          -- 快速跳转
   -- use "gcmt/wildfire.vim"                         -- textobjects选择器，使用tree-sitter incremental_selection代替
   use "windwp/nvim-autopairs"                     -- 自动补充成对符号
   use "windwp/nvim-ts-autotag"                    -- 自动补全tag
