@@ -9,6 +9,10 @@ local utils = require("fengwk.utils")
 local lspconfig = require("fengwk.plugins.lsp.lspconfig")
 local jdtls_enhancer = require("fengwk.plugins.lsp.lsp-jdtls.jdtls-enhancer")
 
+local data_path = vim.fn.stdpath("data")
+local cache_path = vim.fn.stdpath("cache")
+local config_path = vim.fn.stdpath("config")
+
 local java_home_preset = {
   java_home_5 = os.getenv("JAVA_HOME_5"),
   java_home_6 = os.getenv("JAVA_HOME_6"),
@@ -28,13 +32,13 @@ local java_home_preset = {
 
 local java_home_17 = java_home_preset.java_home_17
 local cpsp = utils.sys.os == "win" and ";" or ":"
-local cp = "." .. cpsp .. utils.fs.join(java_home_17, "lib/*.jar")
+local cp = "." .. cpsp .. vim.fs.joinpath(java_home_17, "lib", "*.jar")
 
-local java = utils.fs.join(java_home_17, "bin/java")
-local jdtls_home = utils.fs.stdpath("data", "mason/packages/jdtls")
-local lombok_jar = utils.fs.join(jdtls_home, "lombok.jar")
-local launcher_jar = vim.fn.glob(utils.fs.join(jdtls_home, "plugins/org.eclipse.equinox.launcher_*.jar"))
-local config_dir = utils.fs.join(jdtls_home, (utils.sys.os == "win" and "config_win" or "config_linux"))
+local java = vim.fs.joinpath(java_home_17, "bin", "java")
+local jdtls_home = vim.fs.joinpath(data_path, "mason", "packages", "jdtls")
+local lombok_jar = vim.fs.joinpath(jdtls_home, "lombok.jar")
+local launcher_jar = vim.fn.glob(vim.fs.joinpath(jdtls_home, "plugins", "org.eclipse.equinox.launcher_*.jar"))
+local config_dir = vim.fs.joinpath(jdtls_home, (utils.sys.os == "win" and "config_win" or "config_linux"))
 
 local runtimes_preset = {
   {
@@ -44,86 +48,86 @@ local runtimes_preset = {
   {
     name = "JavaSE-1.6",
     path = java_home_preset.java_home_6,
-    sources = utils.fs.join(java_home_preset.java_home_6, "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_6, "src.zip"),
     javadoc = "https://docs.oracle.com/javase/6/docs/api",
   },
   {
     name = "JavaSE-1.7",
     path = java_home_preset.java_home_7,
-    sources = utils.fs.join(java_home_preset.java_home_7, "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_7, "src.zip"),
     javadoc = "https://docs.oracle.com/javase/7/docs/api",
   },
   {
     name = "JavaSE-1.8",
     path = java_home_preset.java_home_8,
-    sources = utils.fs.join(java_home_preset.java_home_8, "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_8, "src.zip"),
     javadoc = "https://docs.oracle.com/javase/8/docs/api",
     default = true,
   },
   {
     name = "JavaSE-9",
     path = java_home_preset.java_home_9,
-    sources = utils.fs.join(java_home_preset.java_home_9, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_9, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/9/docs/api",
   },
   {
     name = "JavaSE-10",
     path = java_home_preset.java_home_10,
-    sources = utils.fs.join(java_home_preset.java_home_10, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_10, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/10/docs/api",
   },
   {
     name = "JavaSE-11",
     path = java_home_preset.java_home_11,
-    sources = utils.fs.join(java_home_preset.java_home_11, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_11, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/11/docs/api",
   },
   {
     name = "JavaSE-12",
     path = java_home_preset.java_home_12,
-    sources = utils.fs.join(java_home_preset.java_home_12, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_12, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/12/docs/api",
   },
   {
     name = "JavaSE-13",
     path = java_home_preset.java_home_13,
-    sources = utils.fs.join(java_home_preset.java_home_13, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_13, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/13/docs/api",
   },
   {
     name = "JavaSE-14",
     path = java_home_preset.java_home_14,
-    sources = utils.fs.join(java_home_preset.java_home_14, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_14, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/14/docs/api",
   },
   {
     name = "JavaSE-15",
     path = java_home_preset.java_home_15,
-    sources = utils.fs.join(java_home_preset.java_home_15, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_15, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/15/docs/api",
   },
   {
     name = "JavaSE-16",
     path = java_home_preset.java_home_16,
-    sources = utils.fs.join(java_home_preset.java_home_16, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_16, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/16/docs/api",
   },
   {
     name = "JavaSE-17",
     path = java_home_preset.java_home_17,
-    sources = utils.fs.join(java_home_preset.java_home_17, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_17, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/17/docs/api",
   },
   {
     name = "JavaSE-18",
     path = java_home_preset.java_home_18,
-    sources = utils.fs.join(java_home_preset.java_home_18, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_18, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/18/docs/api",
   },
   {
     name = "JavaSE-19",
     path = java_home_preset.java_home_19,
-    sources = utils.fs.join(java_home_preset.java_home_19, "lib", "src.zip"),
+    sources = vim.fs.joinpath(java_home_preset.java_home_19, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/19/docs/api",
   },
 }
@@ -154,10 +158,10 @@ local function setup()
     -- 转义工作目录作为名称
   local workspace_name = utils.fs.escape_filename(workspace_dir)
   -- 数据目录
-  local data_dir = utils.fs.stdpath("cache", "lsp/jdtls", workspace_name )
+  local data_dir = vim.fs.joinpath(cache_path, "lsp", "jdtls", workspace_name)
 
   -- java全局首选项
-  local java_settings_url = utils.fs.stdpath("config", "lua/fengwk/plugins/lsp/lsp-jdtls/org.eclipse.jdt.core.prefs")
+  local java_settings_url = vim.fs.joinpath(config_path, "lua", "fengwk", "plugins", "lsp", "lsp-jdtls", "org.eclipse.jdt.core.prefs")
 
   -- jdtls配置
   local config = {}
@@ -326,12 +330,12 @@ local function setup()
   local bundles = {}
   -- debug插件
   -- https://github.com/mfussenegger/nvim-jdtls#java-debug-installation
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs.stdpath("data", "mason/packages/java-debug-adapter/extension/server/*.jar")), "\n"))
+  vim.list_extend(bundles, vim.split(vim.fn.glob(vim.fs.joinpath(data_path, "mason", "packages", "java-debug-adapter", "extension", "server", "*.jar")), "\n"))
   -- 单元测试插件
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs.stdpath("data", "mason/packages/java-test/extension/server/*.jar")), "\n"))
+  vim.list_extend(bundles, vim.split(vim.fn.glob(vim.fs.joinpath(data_path, "mason", "packages", "java-test", "extension", "server", "*.jar")), "\n"))
   -- eclipse插件支持
   -- https://github.com/eclipse/eclipse.jdt.ls/blob/master/CONTRIBUTING.md
-  vim.list_extend(bundles, vim.split(vim.fn.glob(utils.fs.stdpath("config", "lua/fengwk/plugins/lsp/lsp-jdtls/eclipse-pde/*.jar")), "\n"))
+  vim.list_extend(bundles, vim.split(vim.fn.glob(vim.fs.joinpath(config_path, "lua", "fengwk", "plugins", "lsp", "lsp-jdtls", "eclipse-pde", "*.jar")), "\n"))
 
   local extendedClientCapabilities = vim.deepcopy(jdtls.extendedClientCapabilities)
   extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
