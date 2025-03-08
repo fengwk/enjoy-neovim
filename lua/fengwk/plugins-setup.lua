@@ -2,7 +2,8 @@ local utils = require "fengwk.utils"
 
 -- 自动安装packer
 local ensure_packer = function()
-  local install_path = utils.fs.stdpath("data", "site/pack/packer/start/packer.nvim")
+  local data_dir = vim.fn.stdpath("data")
+  local install_path = vim.fs.joinpath(data_dir, "sitepack", "packer", "start", "packer.nvim")
   if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     utils.sys.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path }
     vim.cmd [[packadd packer.nvim]]

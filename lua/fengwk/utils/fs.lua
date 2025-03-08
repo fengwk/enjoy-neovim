@@ -2,12 +2,12 @@ local sys = require "fengwk.utils.sys"
 
 local fs = {}
 
-local sp = {
-  ["Windows"] = "\\",
-  ["Linux"] = "/",
-  ["Darwin"] = "/",
-}
-fs.sp = sp[vim.loop.os_uname().sysname]
+local sysname = string.lower(vim.loop.os_uname().sysname)
+if string.find(sysname, "windows") ~= nil then
+  fs.sp = "\\"
+else
+  fs.sp = "/"
+end
 
 local function regularize(path)
   return string.gsub(path, "/", fs.sp)
@@ -25,18 +25,6 @@ fs.join = function(...)
   local args = to_table(...)
   local p = table.concat(args, fs.sp)
   return regularize(p)
-end
-
-fs.stdpath = function(...)
-  local what = select(1, ...)
-  local p = vim.fn.stdpath(what)
-  local args = { p }
-  for i, v in ipairs({ ... }) do
-    if i > 1 then
-      table.insert(args, v)
-    end
-  end
-  return fs.join(unpack(args))
 end
 
 fs.read_file = function(filename)

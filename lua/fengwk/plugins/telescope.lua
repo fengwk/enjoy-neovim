@@ -18,10 +18,18 @@ local function jdtls_sort_prompt_pre_process(prompt)
   return prompt
 end
 
+-- windows需要安装rg来支持grep
+-- scoop install ripgrep
+-- windows sqllite 支持
+if utils.sys.os == "windows" then
+  local sqllite_dll = vim.fs.joinpath(vim.fn.stdpath("config"), "lib", "sqllite", "sqlite3.dll")
+  vim.g["sqlite_clib_path"] = sqllite_dll
+end
+
 telescope.setup {
   defaults = {
     history = { -- 支持telescope历史与cwd绑定
-      path = utils.fs.stdpath("data", "telescope_history.sqlite3"),
+      path = vim.fs.joinpath(vim.fn.stdpath("data"), "telescope_history.sqlite3"),
       limit = 500,
     },
     winblend = vim.o.winblend, -- 提供窗口透明，使用全局的winblend

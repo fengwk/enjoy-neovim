@@ -1,6 +1,6 @@
 local utils = require("fengwk.utils")
 
-local data_path = utils.fs.stdpath("data", "workspaces.json")
+local data_path = vim.fs.joinpath(vim.fn.stdpath("data"), "workspaces.json")
 
 local ws = {}
 

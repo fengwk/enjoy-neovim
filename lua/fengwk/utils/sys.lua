@@ -1,11 +1,15 @@
 local sys = {}
 
-local os = {
-  ["Windows"] = "win",
-  ["Linux"] = "linux",
-  ["Darwin"] = "macos",
-}
-sys.os = os[vim.loop.os_uname().sysname] or "wsl"
+local sysname = string.lower(vim.loop.os_uname().sysname)
+if string.find(sysname, "windows") ~= nil then
+  sys.os = "win"
+elseif string.find(sysname, "linux") ~= nil then
+  sys.os = "linux"
+elseif string.find(sysname, "darwin") ~= nil then
+  sys.os = "macos"
+else
+  sys.os = "wsl"
+end
 
 sys.open = function(uri)
   if vim.fn.has('mac') > 0 then

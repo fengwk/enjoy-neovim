@@ -5,7 +5,8 @@ if not ok then
 end
 
 local utils = require("fengwk.utils")
-local chatgt_actions_json = utils.fs.stdpath("config", "lib/chatgpt_actoins.json")
+
+local chatgt_actions_json = vim.fs.joinpath(vim.fn.stdpath("config"), "lib", "chatgpt_actoins.json")
 
 local DEFAULT_SYSTEM_MESSAGE = "如果user没有要求，回答语言的组织尽量简洁精炼。"
 

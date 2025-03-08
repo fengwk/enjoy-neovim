@@ -1,7 +1,7 @@
 local utils = require("fengwk.utils")
 local md5 = require("fengwk.plugins.bookmarks.md5")
 
-local data_path = utils.fs.stdpath("data", "bookmarks.json")
+local data_path = vim.fs.joinpath(vim.fn.stdpath("data"), "bookmarks.json")
 
 local data_cache = nil
 local data_cache_pre_read = 0

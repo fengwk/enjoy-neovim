@@ -1,6 +1,7 @@
 local utils = require "fengwk.utils"
 
-local format_json = utils.fs.stdpath("config", "lib/format-json.py")
+local format_json = vim.fs.joinpath(vim.fn.stdpath("config"), "lib", "format-json.py")
+
 local mode_range_map = {
   v = "'<,'>",
   l = "line(\".\")",
