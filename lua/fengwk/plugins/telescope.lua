@@ -21,7 +21,7 @@ end
 -- windows需要安装rg来支持grep
 -- scoop install ripgrep
 -- windows sqllite 支持
-if utils.sys.os == "windows" then
+if utils.sys.os == "win" then
   local sqllite_dll = vim.fs.joinpath(vim.fn.stdpath("config"), "lib", "sqllite", "sqlite3.dll")
   vim.g["sqlite_clib_path"] = sqllite_dll
 end
