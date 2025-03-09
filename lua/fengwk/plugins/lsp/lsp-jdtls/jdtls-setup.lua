@@ -33,11 +33,8 @@ local java_home_preset = {
   java_home_21 = os.getenv("JAVA_HOME_21") or "",
 }
 
-local java_home_17 = java_home_preset.java_home_17
-local cpsp = utils.sys.os == "win" and ";" or ":"
-local cp = "." .. cpsp .. vim.fs.joinpath(java_home_17, "lib", "*.jar")
-
-local java = vim.fs.joinpath(java_home_17, "bin", "java")
+local java_home_21 = java_home_preset.java_home_21
+local java = vim.fs.joinpath(java_home_21, "bin", "java")
 local jdtls_home = vim.fs.joinpath(data_path, "mason", "packages", "jdtls")
 local lombok_jar = vim.fs.joinpath(jdtls_home, "lombok.jar")
 local launcher_jar = vim.fn.glob(vim.fs.joinpath(jdtls_home, "plugins", "org.eclipse.equinox.launcher_*.jar"))
@@ -183,12 +180,11 @@ local function setup()
 
   -- jdtls启动命令
   config.cmd = {
-    "env", "JAVA_HOME=$JAVA_HOME_17",
     java,
-    "-cp", cp,
     "-Declipse.application=org.eclipse.jdt.ls.core.id1",
     "-Dosgi.bundles.defaultStartLevel=4",
     "-Declipse.product=org.eclipse.jdt.ls.core.product",
+    "-Dlog.protocol=true",
     "-Dlog.level=ALL",
     "-Xmx2G",
     "--add-modules=ALL-SYSTEM",
