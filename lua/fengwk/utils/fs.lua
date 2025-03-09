@@ -64,7 +64,7 @@ local function match_file(dir, parts)
     -- 过滤"."和".."目录
     if filetail ~= "." and filetail ~= ".." then
       for _, p in ipairs(parts) do
-        if p ~= nil and string.match(filetail, "^" .. p .. "$") then
+        if p ~= nil and string.match(filetail, "^" .. p .. "$") ~= nil then
           return true
         end
       end
@@ -122,20 +122,10 @@ end
 
 -- 检查文件是否存在
 fs.exists = function(filename)
-  if not filename then
-    return false
-  end
-  local file = io.open(filename, "rb")
-  if file then
-    file:close()
-  end
-  return file ~= nil
+  return vim.loop.fs_stat(filename) ~= nil
 end
 
 fs.is_dir = function(path)
-  if not fs.exists(path) then
-    return false
-  end
   local stat = vim.loop.fs_stat(path)
   if stat and stat.type == "directory" then
     return true
@@ -152,7 +142,7 @@ fs.ensure_dir = function(dir)
   if fs.exists(dir) then
     return
   end
-  vim.fn.system { "mkdir", "-p", "dir" }
+  vim.fn.system { "mkdir", "-p", dir }
 end
 
 -- 转义filename

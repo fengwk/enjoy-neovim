@@ -2,7 +2,8 @@
 local utils = require("fengwk.utils")
 
 -- 缓存文件路径
-local state_filename = utils.fs.stdpath("cache", "im-switch/state")
+local data_dir = vim.fn.stdpath("cache")
+local state_filename = vim.fs.joinpath(data_dir, "im-switch-state")
 
 local state_out = nil;
 local state_cache_timeout = 1e6 * 100 -- 100毫秒，配置读取超时
@@ -47,7 +48,6 @@ local function auto_switch_micro_pinyin(mode)
     end
   else
     -- 退出插入模式时将将当前状态记录下来，并切回英文
-    utils.fs.ensure_dir(vim.fn.fnamemodify(state_filename, ":h"))
     local state = utils.sys.system { "im-switch-x64.exe", "en" }
     utils.fs.write_file(state_filename, state)
   end
@@ -63,7 +63,6 @@ local function auto_switch_micro_pinyin_wsl(mode)
     end
   else
     -- 退出插入模式时将将当前状态记录下来，并切回英文
-    utils.fs.ensure_dir(vim.fn.fnamemodify(state_filename, ":h"))
     local state = utils.sys.system { "cmd.exe", "/C", "im-switch-x64.exe", "en" }
     utils.fs.write_file(state_filename, state)
   end
