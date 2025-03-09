@@ -217,25 +217,69 @@ local function make_capabilities()
   return capabilities
 end
 
+
 -- lsp配置表
-local lsp_configs = {
-  "bashls",                                                  -- { "sh" }
-  ["clangd"] = require("fengwk.plugins.lsp.lsp-clangd"),     -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
-  "cssls",                                                   -- { "css", "scss", "less" }
-  ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),       -- { "go", "gomod", "gowork", "gotmpl" }
-  "groovyls",                                                -- { "groovy" }
-  "html",                                                    -- { "html" }
-  ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),     -- { "lua" }
-  -- utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
-  "pylsp",                                                   -- { "python" }
-  ["ts_ls"] = require("fengwk.plugins.lsp.lsp-ts_ls"),    -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
-  "eslint",
-  "vimls",                                                   -- { "vim" }
-  "yamlls",                                                  -- { "yaml", "yaml.docker-compose" }
-  -- "lemminx",                                                  -- { "xml", "xsd", "xsl", "xslt", "svg" }
-  "dockerls",                                                -- { "dockerfile" }
-  ["jsonls"] = require("fengwk.plugins.lsp.lsp-jsonls"),     -- { "json", "jsonc" }
-}
+local lsp_configs = {}
+
+-- { "sh" }
+table.insert(lsp_configs, "bashls")
+
+-- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+-- arm架构目前不支持clangd
+local sys_arch = utils.sys.system("uname -m") or ""
+local arm = string.find(sys_arch, "armv71") ~= nil or string.find(sys_arch, "aarch64") ~= nil
+if not arm then
+  lsp_configs["clangd"] = require("fengwk.plugins.lsp.lsp-clangd")
+end
+
+-- { "css", "scss", "less" }
+table.insert(lsp_configs, "cssls")
+
+-- { "go", "gomod", "gowork", "gotmpl" }
+lsp_configs["gopls"] = require("fengwk.plugins.lsp.lsp-gopls")
+
+-- { "groovy" }
+table.insert(lsp_configs, "groovyls")
+
+-- { "lua" }
+lsp_configs["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls")
+
+-- { "python" }
+table.insert(lsp_configs, "pylsp")
+
+-- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+lsp_configs["ts_ls"] = require("fengwk.plugins.lsp.lsp-ts_ls")
+
+-- eslint
+table.insert(lsp_configs, "eslint")
+
+-- { "vim" }
+table.insert(lsp_configs, "vimls")
+
+-- { "yaml", "yaml.docker-compose" }
+table.insert(lsp_configs, "yamlls")
+
+-- { "dockerfile" }
+table.insert(lsp_configs, "dockerls")
+
+-- local lsp_configs = {
+--   "bashls",                                                  -- { "sh" }
+--   ["clangd"] = arm and nil or require("fengwk.plugins.lsp.lsp-clangd"),     -- { "c", "cpp", "objc", "objcpp", "cuda", "proto" }
+--   "cssls",                                                   -- { "css", "scss", "less" }
+--   ["gopls"] = require("fengwk.plugins.lsp.lsp-gopls"),       -- { "go", "gomod", "gowork", "gotmpl" }
+--   "groovyls",                                                -- { "groovy" }
+--   "html",                                                    -- { "html" }
+--   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),     -- { "lua" }
+--   -- utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
+--   "pylsp",                                                   -- { "python" }
+--   ["ts_ls"] = require("fengwk.plugins.lsp.lsp-ts_ls"),    -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+--   "eslint",
+--   "vimls",                                                   -- { "vim" }
+--   "yamlls",                                                  -- { "yaml", "yaml.docker-compose" }
+--   -- "lemminx",                                                  -- { "xml", "xsd", "xsl", "xslt", "svg" }
+--   "dockerls",                                                -- { "dockerfile" }
+--   ["jsonls"] = require("fengwk.plugins.lsp.lsp-jsonls"),     -- { "json", "jsonc" }
+-- }
 
 -- 使用mason安装lsp服务
 local ok_mason_lspconfig, mason_lspconfig = pcall(require, "mason-lspconfig")

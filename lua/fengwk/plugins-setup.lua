@@ -122,6 +122,9 @@ return packer.startup(function(use)
   }
   use "nvim-telescope/telescope-live-grep-args.nvim"                                     -- live grep增强
   use { "nvim-telescope/telescope-fzf-native.nvim", run = "make" }                       -- 模糊搜索增强
+  -- sudo pacman -S sqlite # Arch
+  -- sudo apt-get install sqlite3 libsqlite3-dev # Ubuntu
+  -- sudo dnf install sqlite sqlite-devel # Fedora
   use { "nvim-telescope/telescope-smart-history.nvim", requires = "kkharji/sqlite.lua" } -- 将telescope历史与cwd绑定，依赖kkharji/sqlite.lua
   use "nvim-telescope/telescope-ui-select.nvim"
 
