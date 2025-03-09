@@ -12,8 +12,10 @@ else
 end
 
 sys.open = function(uri)
-  if vim.fn.has('mac') > 0 then
+  if sys.os == "macos" then
     sys.system("open '" .. uri .. "'", true)
+  elseif sys.os == "win" then
+    sys.system("start " .. uri, false)
   else
     sys.system("xdg-open '" .. uri .. "'", true)
   end

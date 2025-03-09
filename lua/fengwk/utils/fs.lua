@@ -176,6 +176,10 @@ fs.regularize_path = function(path)
     if path and #path > 0 and path:sub(-1) == fs.sp then
       path = path:sub(1, -2)
     end
+    -- windows不区分大小写处理时全部转为小写
+    if sys.os == "win" then
+      path = string.lower(path)
+    end
   end
   return path
 end
