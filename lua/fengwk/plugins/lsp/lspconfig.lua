@@ -257,10 +257,10 @@ table.insert(lsp_configs, "eslint")
 table.insert(lsp_configs, "vimls")
 
 -- { "yaml", "yaml.docker-compose" }
-table.insert(lsp_configs, "yamlls")
+-- table.insert(lsp_configs, "yamlls")
 
 -- { "dockerfile" }
-table.insert(lsp_configs, "dockerls")
+-- table.insert(lsp_configs, "dockerls")
 
 -- local lsp_configs = {
 --   "bashls",                                                  -- { "sh" }
