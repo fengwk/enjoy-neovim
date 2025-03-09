@@ -226,7 +226,7 @@ local lsp_configs = {
   "groovyls",                                                -- { "groovy" }
   "html",                                                    -- { "html" }
   ["lua_ls"] = require("fengwk.plugins.lsp.lsp-lua_ls"),     -- { "lua" }
-  utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
+  -- utils.sys.os == "win" and "powershell_es" or nil,          -- { "ps1" }
   "pylsp",                                                   -- { "python" }
   ["ts_ls"] = require("fengwk.plugins.lsp.lsp-ts_ls"),    -- { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   "eslint",

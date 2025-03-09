@@ -14,20 +14,23 @@ local cache_path = vim.fn.stdpath("cache")
 local config_path = vim.fn.stdpath("config")
 
 local java_home_preset = {
-  java_home_5 = os.getenv("JAVA_HOME_5"),
-  java_home_6 = os.getenv("JAVA_HOME_6"),
-  java_home_7 = os.getenv("JAVA_HOME_7"),
-  java_home_8 = os.getenv("JAVA_HOME_8"),
-  java_home_9 = os.getenv("JAVA_HOME_9"),
-  java_home_10 = os.getenv("JAVA_HOME_10"),
-  java_home_11 = os.getenv("JAVA_HOME_11"),
-  java_home_12 = os.getenv("JAVA_HOME_12"),
-  java_home_13 = os.getenv("JAVA_HOME_13"),
-  java_home_14 = os.getenv("JAVA_HOME_14"),
-  java_home_15 = os.getenv("JAVA_HOME_15"),
-  java_home_16 = os.getenv("JAVA_HOME_16"),
-  java_home_17 = os.getenv("JAVA_HOME_17"),
-  java_home_18 = os.getenv("JAVA_HOME_18"),
+  java_home_5 = os.getenv("JAVA_HOME_5") or "",
+  java_home_6 = os.getenv("JAVA_HOME_6") or "",
+  java_home_7 = os.getenv("JAVA_HOME_7") or "",
+  java_home_8 = os.getenv("JAVA_HOME_8") or "",
+  java_home_9 = os.getenv("JAVA_HOME_9") or "",
+  java_home_10 = os.getenv("JAVA_HOME_10") or "",
+  java_home_11 = os.getenv("JAVA_HOME_11") or "",
+  java_home_12 = os.getenv("JAVA_HOME_12") or "",
+  java_home_13 = os.getenv("JAVA_HOME_13") or "",
+  java_home_14 = os.getenv("JAVA_HOME_14") or "",
+  java_home_15 = os.getenv("JAVA_HOME_15") or "",
+  java_home_16 = os.getenv("JAVA_HOME_16") or "",
+  java_home_17 = os.getenv("JAVA_HOME_17") or "",
+  java_home_18 = os.getenv("JAVA_HOME_18") or "",
+  java_home_19 = os.getenv("JAVA_HOME_19") or "",
+  java_home_20 = os.getenv("JAVA_HOME_20") or "",
+  java_home_21 = os.getenv("JAVA_HOME_21") or "",
 }
 
 local java_home_17 = java_home_preset.java_home_17
@@ -129,6 +132,18 @@ local runtimes_preset = {
     path = java_home_preset.java_home_19,
     sources = vim.fs.joinpath(java_home_preset.java_home_19, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/19/docs/api",
+  },
+  {
+    name = "JavaSE-20",
+    path = java_home_preset.java_home_20,
+    sources = vim.fs.joinpath(java_home_preset.java_home_20, "lib", "src.zip"),
+    javadoc = "https://docs.oracle.com/javase/20/docs/api",
+  },
+  {
+    name = "JavaSE-21",
+    path = java_home_preset.java_home_21,
+    sources = vim.fs.joinpath(java_home_preset.java_home_21, "lib", "src.zip"),
+    javadoc = "https://docs.oracle.com/javase/21/docs/api",
   },
 }
 
