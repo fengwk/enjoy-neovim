@@ -162,7 +162,8 @@ chatgpt.setup {
     -- model = "gpt-4-0613",
     -- model = "gpt-3.5-turbo-16k",
     -- model = "gpt-3.5-turbo",
-    model = "deepseek-chat",
+    -- model = "deepseek-chat",
+    model = "deepseek-coder-v2:latest",
     temperature = 1.0,     -- 值越大越有随机性，建议和top_p修改一个即可
     top_p = 1.0,           -- 值越大越有多样性
     presence_penalty = 0,  -- 话题新鲜度，值越大, 越可能是用到新的话题
