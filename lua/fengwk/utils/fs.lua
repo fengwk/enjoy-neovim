@@ -122,10 +122,13 @@ end
 
 -- 检查文件是否存在
 fs.exists = function(filename)
-  return vim.loop.fs_stat(filename) ~= nil
+  return filename and vim.loop.fs_stat(filename) ~= nil
 end
 
 fs.is_dir = function(path)
+  if not path then
+    return false
+  end
   local stat = vim.loop.fs_stat(path)
   if stat and stat.type == "directory" then
     return true
