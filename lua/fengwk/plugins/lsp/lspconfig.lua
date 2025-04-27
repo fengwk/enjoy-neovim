@@ -79,7 +79,7 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 local function get_closeable_lsp_clients_by_bufnr(bufnr)
   local closeable_clients = {}
   if bufnr and bufnr > 0 then
-    local clients = vim.lsp.get_active_clients()
+    local clients = vim.lsp.get_clients()
     -- 遍历所有lsp客户端
     for _, c in pairs(clients) do
       -- copilot会在所有缓冲区打开因此不做处理

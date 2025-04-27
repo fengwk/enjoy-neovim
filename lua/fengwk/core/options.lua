@@ -155,7 +155,30 @@ vim.o.listchars = "tab:>-,trail:·,precedes:«,extends:»,"
 -- vim.o.clipboard = 'unnamed'
 -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
 -- vim.cmd("set clipboard^=unnamed,unnamedplus")
-vim.cmd("set clipboard=unnamedplus")
+vim.o.clipboard = 'unnamedplus'
+-- 支持osc52，使ssh连接也能共享剪切板
+local function no_paste(reg)
+  return function(lines)
+    -- Do nothing! We can't paste with OSC52
+  end
+end
+vim.g.clipboard = {
+  name = 'OSC 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+    ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+  },
+  -- paste会卡住且无效
+  -- https://github.com/neovim/neovim/issues/28611
+  -- paste = {
+  --   ['+'] = require('vim.ui.clipboard.osc52').paste '+',
+  --   ['*'] = require('vim.ui.clipboard.osc52').paste '*',
+  -- },
+  paste = {
+    ['+'] = no_paste('+'),
+    ['*'] = no_paste('*'),
+  },
+}
 
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true

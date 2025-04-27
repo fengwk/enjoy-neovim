@@ -269,7 +269,7 @@ local lsp_blacklist = {
 }
 
 local function select_client(bufnr)
-  local candidates = vim.lsp.get_active_clients({ bufnr = bufnr })
+  local candidates = vim.lsp.get_clients({ bufnr = bufnr })
   if candidates and #candidates > 0 then
     for _, candidate in ipairs(candidates) do
       if not vim.tbl_contains(lsp_blacklist, candidate.name) then

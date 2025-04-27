@@ -139,7 +139,7 @@ end
 -- end
 
 local function select_client(bufnr)
-  local candidates = vim.lsp.get_active_clients({ name = "jdtls", bufnr = bufnr })
+  local candidates = vim.lsp.get_clients({ name = "jdtls", bufnr = bufnr })
   if candidates and #candidates > 0 then
     return candidates[1]
   end

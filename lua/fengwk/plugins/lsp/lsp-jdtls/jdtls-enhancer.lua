@@ -44,7 +44,7 @@ end
 -- 复制引用
 local function copy_reference()
   local bufnr = vim.api.nvim_get_current_buf()
-  local candidates = vim.lsp.get_active_clients({ name = "jdtls", bufnr = bufnr })
+  local candidates = vim.lsp.get_clients({ name = "jdtls", bufnr = bufnr })
   if not candidates or #candidates == 0 then
     print("lsp client not found")
     return
