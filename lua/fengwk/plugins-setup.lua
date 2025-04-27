@@ -149,7 +149,7 @@ return packer.startup(function(use)
   use {
     "theHamsta/nvim-dap-virtual-text",
     -- 更新的commit会导致userdata错误
-    commit="9578276dfdc5420624699744377ddd74be2d9a19"
+    -- commit="9578276dfdc5420624699744377ddd74be2d9a19"
   }
   -- use "rcarriga/nvim-dap-ui" -- 现有问题：让java应用debug变得很慢
   use "mfussenegger/nvim-dap-python"

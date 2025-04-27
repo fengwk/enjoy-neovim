@@ -152,7 +152,7 @@ local function location_handler(prompt_title, opts)
       return
     end
 
-    if not vim.tbl_islist(res) then
+    if not vim.islist(res) then
       lsp_util.jump_to_location(res, client.offset_encoding)
       return
     end

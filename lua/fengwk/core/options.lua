@@ -156,29 +156,26 @@ vim.o.listchars = "tab:>-,trail:·,precedes:«,extends:»,"
 -- https://stackoverflow.com/questions/30691466/what-is-difference-between-vims-clipboard-unnamed-and-unnamedplus-settings
 -- vim.cmd("set clipboard^=unnamed,unnamedplus")
 vim.o.clipboard = 'unnamedplus'
--- 支持osc52，使ssh连接也能共享剪切板
-local function no_paste(reg)
-  return function(lines)
-    -- Do nothing! We can't paste with OSC52
-  end
+-- ssh环境支持osc52，使ssh连接也能共享剪切板
+if os.getenv("SSH_TTY") ~= nil then
+  vim.g.clipboard = {
+    name = 'OSC 52',
+    copy = {
+      ['+'] = require('vim.ui.clipboard.osc52').copy '+',
+      ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+    },
+    -- osc52的黏贴会卡住
+    -- https://zhuanlan.zhihu.com/p/712125953
+    paste = {
+      ["+"] = function(_)
+        return vim.split(vim.fn.getreg '"', "\n")
+      end,
+      ["*"] = function(_)
+        return vim.split(vim.fn.getreg '"', "\n")
+      end,
+    },
+  }
 end
-vim.g.clipboard = {
-  name = 'OSC 52',
-  copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy '+',
-    ['*'] = require('vim.ui.clipboard.osc52').copy '*',
-  },
-  -- paste会卡住且无效
-  -- https://github.com/neovim/neovim/issues/28611
-  -- paste = {
-  --   ['+'] = require('vim.ui.clipboard.osc52').paste '+',
-  --   ['*'] = require('vim.ui.clipboard.osc52').paste '*',
-  -- },
-  paste = {
-    ['+'] = no_paste('+'),
-    ['*'] = no_paste('*'),
-  },
-}
 
 -- 持久化undo日志，使得退出重进也能进行undo操作
 vim.o.undofile = true
@@ -205,10 +202,22 @@ vim.o.fileencoding = "utf-8" -- 文件编码
 
 -- 非tty环境下更改诊断提示样式
 if not utils.sys.is_tty() then
-  vim.fn.sign_define("DiagnosticSignError", { text = " ", texthl = "DiagnosticSignError" })
-  vim.fn.sign_define("DiagnosticSignWarn", { text = " ", texthl = "DiagnosticSignWarn" })
-  vim.fn.sign_define("DiagnosticSignInfo", { text = " ", texthl = "DiagnosticSignInfo" })
-  vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+  vim.diagnostic.config {
+    signs = {
+      text = {
+        [vim.diagnostic.severity.ERROR] = "",
+        [vim.diagnostic.severity.WARN] = "",
+        [vim.diagnostic.severity.INFO] = "",
+        [vim.diagnostic.severity.HINT] = "",
+      },
+      numhl = {
+        [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+        [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+        [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+        [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+      },
+    },
+  }
 end
 
 -- 判断是否是用户窗口
