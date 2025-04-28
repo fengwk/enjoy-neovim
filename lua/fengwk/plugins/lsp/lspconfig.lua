@@ -185,9 +185,13 @@ local function build_on_attach(opts)
 
     keymap.set("n", "gs", "<Cmd>Telescope lsp_document_symbols<CR>",
       { silent = true, buffer = bufnr, desc = "Lsp Document Symbols" })
-    keymap.set("n", "gw", "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols<CR>",
+    -- keymap.set("n", "gw", "<Cmd>Telescope lsp_handlers dynamic_workspace_symbols<CR>",
+    --   { buffer = bufnr, desc = "Lsp Workspace Symbol" })
+    keymap.set("n", "gw", "<Cmd>Telescope lsp_dynamic_workspace_symbols<CR>",
       { buffer = bufnr, desc = "Lsp Workspace Symbol" })
-    keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Lsp References" })
+    -- keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Lsp References" })
+    keymap.set("n", "gr", "<Cmd>Telescope lsp_references<CR>",
+      { buffer = bufnr, desc = "Lsp References" })
     keymap.set("n", "g<leader>", vim.lsp.buf.implementation,
       { silent = true, buffer = bufnr, desc = "Lsp Implementation" })
     keymap.set("n", "gd", vim.lsp.buf.definition, { silent = true, buffer = bufnr, desc = "Lsp Definition" })

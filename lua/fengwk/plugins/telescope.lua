@@ -13,7 +13,7 @@ local function jdtls_exclude_prompt(prompt)
 end
 
 local function jdtls_sort_prompt_pre_process(prompt)
-  -- jdtls中可能会使用*进行模糊匹配查询，这与最后fzf时的sort冲突，因此在进行fzf搜索前先将*过滤掉
+  -- jdtls中可能会使用*进行模糊匹配查询，这与最后fzf时的sort冲突，因此在进行fzf搜索前先将*过滤掉gw"
   prompt = string.gsub(prompt, "*", "")
   return prompt
 end
@@ -211,42 +211,42 @@ telescope.setup {
       },
     },
 
-    ["lsp_handlers"] = {
-      location = {
-        telescope = require('telescope.themes').get_dropdown({
-          path_display = {
-            truncate = 1,
-          },
-        }),
-        telescope_jdtls = require('telescope.themes').get_dropdown({
-          path_display = {
-            tail = true,
-          },
-        }),
-      },
-      symbol = {
-        telescope = require('telescope.themes').get_dropdown({}),
-      },
-      call_hierarchy = {
-        telescope = require('telescope.themes').get_dropdown({
-          path_display = {
-            truncate = 1,
-          },
-        }),
-      },
-      code_action = {
-        telescope = require('telescope.themes').get_dropdown({}),
-      },
-      dynamic_workspace_symbols = {
-        telescope = require('telescope.themes').get_dropdown({
-          path_display = {
-            truncate = 1,
-          },
-          exclude_prompt = jdtls_exclude_prompt,
-          sort_prompt_pre_process = jdtls_sort_prompt_pre_process,
-        }),
-      },
-    },
+    -- ["lsp_handlers"] = {
+    --   location = {
+    --     telescope = require('telescope.themes').get_dropdown({
+    --       path_display = {
+    --         truncate = 1,
+    --       },
+    --     }),
+    --     telescope_jdtls = require('telescope.themes').get_dropdown({
+    --       path_display = {
+    --         tail = true,
+    --       },
+    --     }),
+    --   },
+    --   symbol = {
+    --     telescope = require('telescope.themes').get_dropdown({}),
+    --   },
+    --   call_hierarchy = {
+    --     telescope = require('telescope.themes').get_dropdown({
+    --       path_display = {
+    --         truncate = 1,
+    --       },
+    --     }),
+    --   },
+    --   code_action = {
+    --     telescope = require('telescope.themes').get_dropdown({}),
+    --   },
+    --   dynamic_workspace_symbols = {
+    --     telescope = require('telescope.themes').get_dropdown({
+    --       path_display = {
+    --         truncate = 1,
+    --       },
+    --       exclude_prompt = jdtls_exclude_prompt,
+    --       sort_prompt_pre_process = jdtls_sort_prompt_pre_process,
+    --     }),
+    --   },
+    -- },
 
     fzf = {
       fuzzy = true,                    -- false will only do exact matching
@@ -272,7 +272,7 @@ telescope.setup {
 telescope.load_extension("ui-select")
 telescope.load_extension("workspace")
 telescope.load_extension("live_grep_args")
-telescope.load_extension("lsp_handlers")
+-- telescope.load_extension("lsp_handlers")
 telescope.load_extension("jdtls")
 -- Token      Match type                    Description
 -- sbtrkt     fuzzy-match                   Items that match sbtrkt

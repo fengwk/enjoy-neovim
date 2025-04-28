@@ -156,9 +156,9 @@ local function execute(client, method, params, bufnr)
   return coroutine.yield()
 end
 
-local function make_pos(uri)
+local function make_pos(uri, position_encoding)
   if not uri then
-    uri = vim.lsp.util.make_position_params(0).textDocument.uri
+    uri = vim.lsp.util.make_position_params(0, position_encoding).textDocument.uri
   end
   return {
     position = {
@@ -174,7 +174,7 @@ end
 local function parent_type_hierarchy(client, bufnr, uri)
   local params = {
     command = 'java.navigate.openTypeHierarchy',
-    arguments = { vim.fn.json_encode(make_pos(uri)), "1", "1" }
+    arguments = { vim.fn.json_encode(make_pos(uri, client.offset_encoding or 'utf-16')), "1", "1" }
   }
   local _, resp = execute(client, "workspace/executeCommand", params, bufnr)
   return resp
@@ -204,10 +204,10 @@ local function collect_types(types, client, bufnr)
 end
 
 local function collect_symbols(inherited_members, flags, client, bufnr, uri)
-  local pos = make_pos(uri)
+  local pos = make_pos(uri, client.offset_encoding or 'utf-16')
   local filename = vim.uri_to_fname(pos.textDocument.uri)
   local _, resp = execute(client, "textDocument/documentSymbol", pos, bufnr)
-  local items = vim.lsp.util.symbols_to_items(resp)
+  local items = vim.lsp.util.symbols_to_items(resp, bufnr, client.offset_encoding or 'utf-16')
   if resp and #resp > 0 then
     for _, item in ipairs(items) do
       item.filename = filename
