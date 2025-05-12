@@ -122,7 +122,7 @@ chatgpt.setup {
     prompt = "  ",
     border = {
       highlight = "FloatBorder",
-      style = "rounded",
+      style = vim.g.__border,
       text = {
         top_align = "center",
         top = " Prompt ",
@@ -137,7 +137,7 @@ chatgpt.setup {
   },
   settings_window = {
     border = {
-      style = "rounded",
+      style = vim.g.__border,
       text = {
         top = " Settings ",
       },
@@ -149,7 +149,7 @@ chatgpt.setup {
   help_window = {
     setting_sign = "  ",
     border = {
-      style = "rounded",
+      style = vim.g.__border,
       text = {
         top = " Help ",
       },

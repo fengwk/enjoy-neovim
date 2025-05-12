@@ -337,6 +337,15 @@ vim.keymap.set("n", "]E", "<Cmd>lua require('telescope.builtin').diagnostics()<C
 -- 打开带有所有诊断信息的quickfix
 -- vim.keymap.set("n", "ge", vim.diagnostic.setloclist, { silent = true, desc = "Diagnostic Quickfix" })
 
+
+-- 配置lsp ui
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  opts = opts or {}
+  opts.border = vim.g.__border  -- 指定lsp预览的边框样式
+  return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
 return {
   build_on_attach = build_on_attach,
   make_capabilities = make_capabilities,
