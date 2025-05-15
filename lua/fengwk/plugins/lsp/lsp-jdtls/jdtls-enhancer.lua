@@ -50,7 +50,7 @@ local function copy_reference()
     return
   end
   local client = candidates[1]
-  client.request("textDocument/hover", vim.lsp.util.make_position_params(), function(_, res, _, _)
+  client.request("textDocument/hover", vim.lsp.util.make_position_params(0, client.offset_encoding or 'utf-16'), function(_, res, _, _)
     if res and res.contents then
       local sign = #res.contents > 1 and res.contents[1].value or res.contents.value
       vim.fn.setreg('+', sign)
