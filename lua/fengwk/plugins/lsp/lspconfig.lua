@@ -294,7 +294,12 @@ if ok_mason_lspconfig then
       table.insert(lsp_servers, lsp)
     end
   end
-  mason_lspconfig.setup({ ensure_installed = lsp_servers, automatic_installation = true })
+  mason_lspconfig.setup({
+    ensure_installed = lsp_servers,
+    automatic_installation = true,
+    -- jdtls需要手动启动, 主动进行配置, 禁止masonlsp自动启动LSP
+    automatic_enable = false
+  })
 end
 
 local function setup_lsp(lsp, conf)
