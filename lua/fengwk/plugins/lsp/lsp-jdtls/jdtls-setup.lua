@@ -31,10 +31,10 @@ local java_home_preset = {
   java_home_19 = os.getenv("JAVA_HOME_19") or "",
   java_home_20 = os.getenv("JAVA_HOME_20") or "",
   java_home_21 = os.getenv("JAVA_HOME_21") or "",
+  java_home_22 = os.getenv("JAVA_HOME_22") or "",
 }
 
-local java_home_21 = java_home_preset.java_home_21
-local java = vim.fs.joinpath(java_home_21, "bin", "java")
+local java = vim.fs.joinpath(java_home_preset.java_home_21, "bin", "java")
 local jdtls_home = vim.fs.joinpath(data_path, "mason", "packages", "jdtls")
 local lombok_jar = vim.fs.joinpath(jdtls_home, "lombok.jar")
 local launcher_jar = vim.fn.glob(vim.fs.joinpath(jdtls_home, "plugins", "org.eclipse.equinox.launcher_*.jar"))
@@ -141,6 +141,12 @@ local runtimes_preset = {
     path = java_home_preset.java_home_21,
     sources = vim.fs.joinpath(java_home_preset.java_home_21, "lib", "src.zip"),
     javadoc = "https://docs.oracle.com/javase/21/docs/api",
+  },
+  {
+    name = "JavaSE-22",
+    path = java_home_preset.java_home_22,
+    sources = vim.fs.joinpath(java_home_preset.java_home_22, "lib", "src.zip"),
+    javadoc = "https://docs.oracle.com/javase/22/docs/api",
   },
 }
 
