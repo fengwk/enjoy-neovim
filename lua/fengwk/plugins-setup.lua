@@ -64,7 +64,7 @@ return packer.startup(function(use)
   use "aserowy/tmux.nvim"
 
   -- markdown
-  use { "iamcco/markdown-preview.nvim", run = "cd app && yarn install" } -- 在浏览器中预览Markdown
+  use { "iamcco/markdown-preview.nvim", run = "cd app && npm install" } -- 在浏览器中预览Markdown
   use { "md-img-paste-devs/md-img-paste.vim" }                           -- 黏贴剪切板中的图片到Markdown
 
   -- editor enhancer
